@@ -1,0 +1,49 @@
+{
+  "date": "2026-07-01",
+  "window": "7d",
+  "git_available": false,
+  "metrics": {
+    "commits": 0,
+    "contributors": 1,
+    "prs_merged": 0,
+    "insertions": 1613,
+    "deletions": 0,
+    "net_loc": 1613,
+    "test_loc": 210,
+    "test_ratio": 0.13,
+    "active_days": 1,
+    "sessions": 2,
+    "deep_sessions": 0,
+    "avg_session_minutes": 12,
+    "loc_per_session_hour": 4850,
+    "feat_pct": 1.0,
+    "fix_pct": 0.0,
+    "peak_hour": 15,
+    "ai_assisted_commits": 0,
+    "source_files": 23,
+    "tests_passing": 10
+  },
+  "authors": {
+    "Jubblin": {
+      "commits": 0,
+      "insertions": 1613,
+      "deletions": 0,
+      "test_ratio": 0.13,
+      "top_area": "Online/Probes/"
+    }
+  },
+  "version_range": null,
+  "streak_days": 0,
+  "tweetable": "Week of Jun 24: greenfield Online menu bar app, 1.6k LOC, 13% tests, 0 commits (no git yet) | 1 ship day",
+  "test_health": {
+    "total_test_files": 3,
+    "tests_added_this_period": 3,
+    "regression_test_commits": 0,
+    "test_files_changed": 3
+  },
+  "artifacts": {
+    "design": "richardw-main-design-20260701-154125.md",
+    "eng_review": "richardw-main-eng-review-20260701-155200.md",
+    "dmg": "build/Online.dmg"
+  }
+}

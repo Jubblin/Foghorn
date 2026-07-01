@@ -1,0 +1,472 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B10000000000000000000001 /* OnlineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000001 /* OnlineApp.swift */; };
+		B10000000000000000000002 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000002 /* AppCoordinator.swift */; };
+		B10000000000000000000003 /* ProbeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000003 /* ProbeResult.swift */; };
+		B10000000000000000000004 /* ConnectivityState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000004 /* ConnectivityState.swift */; };
+		B10000000000000000000005 /* OutageRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000005 /* OutageRecord.swift */; };
+		B10000000000000000000006 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000006 /* AppSettings.swift */; };
+		B10000000000000000000007 /* PathProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000007 /* PathProbe.swift */; };
+		B10000000000000000000008 /* HTTPProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000008 /* HTTPProbe.swift */; };
+		B10000000000000000000009 /* GatewayProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000009 /* GatewayProbe.swift */; };
+		B1000000000000000000000A /* DNSProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000A /* DNSProbe.swift */; };
+		B1000000000000000000000B /* CustomHostProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000B /* CustomHostProbe.swift */; };
+		B1000000000000000000000C /* ProbeEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000C /* ProbeEngine.swift */; };
+		B1000000000000000000000D /* ConnectivityStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000D /* ConnectivityStateMachine.swift */; };
+		B1000000000000000000000E /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000E /* AlertService.swift */; };
+		B1000000000000000000000F /* OutageLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000F /* OutageLog.swift */; };
+		B10000000000000000000010 /* WakeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000010 /* WakeObserver.swift */; };
+		B10000000000000000000011 /* LaunchAtLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000011 /* LaunchAtLoginService.swift */; };
+		B10000000000000000000012 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000012 /* MenuBarView.swift */; };
+		B10000000000000000000013 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000013 /* SettingsView.swift */; };
+		B10000000000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000014 /* Assets.xcassets */; };
+		B10000000000000000000015 /* GatewayResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000017 /* GatewayResolver.swift */; };
+		B10000000000000000000016 /* ProbeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000018 /* ProbeSnapshotTests.swift */; };
+		B10000000000000000000017 /* ConnectivityStateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000019 /* ConnectivityStateMachineTests.swift */; };
+		B10000000000000000000018 /* HTTPProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001A /* HTTPProbeTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F10000000000000000000001 /* OnlineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineApp.swift; sourceTree = "<group>"; };
+		F10000000000000000000002 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		F10000000000000000000003 /* ProbeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeResult.swift; sourceTree = "<group>"; };
+		F10000000000000000000004 /* ConnectivityState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityState.swift; sourceTree = "<group>"; };
+		F10000000000000000000005 /* OutageRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageRecord.swift; sourceTree = "<group>"; };
+		F10000000000000000000006 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		F10000000000000000000007 /* PathProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathProbe.swift; sourceTree = "<group>"; };
+		F10000000000000000000008 /* HTTPProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPProbe.swift; sourceTree = "<group>"; };
+		F10000000000000000000009 /* GatewayProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayProbe.swift; sourceTree = "<group>"; };
+		F1000000000000000000000A /* DNSProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSProbe.swift; sourceTree = "<group>"; };
+		F1000000000000000000000B /* CustomHostProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHostProbe.swift; sourceTree = "<group>"; };
+		F1000000000000000000000C /* ProbeEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeEngine.swift; sourceTree = "<group>"; };
+		F1000000000000000000000D /* ConnectivityStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityStateMachine.swift; sourceTree = "<group>"; };
+		F1000000000000000000000E /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
+		F1000000000000000000000F /* OutageLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageLog.swift; sourceTree = "<group>"; };
+		F10000000000000000000010 /* WakeObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeObserver.swift; sourceTree = "<group>"; };
+		F10000000000000000000011 /* LaunchAtLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginService.swift; sourceTree = "<group>"; };
+		F10000000000000000000012 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		F10000000000000000000013 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F10000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F10000000000000000000015 /* Online.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Online.entitlements; sourceTree = "<group>"; };
+		F10000000000000000000016 /* Online.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Online.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F10000000000000000000017 /* GatewayResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayResolver.swift; sourceTree = "<group>"; };
+		F10000000000000000000018 /* ProbeSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeSnapshotTests.swift; sourceTree = "<group>"; };
+		F10000000000000000000019 /* ConnectivityStateMachineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityStateMachineTests.swift; sourceTree = "<group>"; };
+		F1000000000000000000001A /* HTTPProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPProbeTests.swift; sourceTree = "<group>"; };
+		F1000000000000000000001B /* OnlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		P10000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		P10000000000000000000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXContainerItemProxy section */
+		CP100000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PR1000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = T10000000000000000000001;
+			remoteInfo = Online;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXGroup section */
+		G10000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				G10000000000000000000002 /* Online */,
+				G10000000000000000000009 /* OnlineTests */,
+				G10000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		G10000000000000000000002 /* Online */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000001 /* OnlineApp.swift */,
+				F10000000000000000000002 /* AppCoordinator.swift */,
+				G10000000000000000000004 /* Models */,
+				G10000000000000000000005 /* Probes */,
+				G10000000000000000000006 /* State */,
+				G10000000000000000000007 /* Services */,
+				G10000000000000000000008 /* Views */,
+				F10000000000000000000014 /* Assets.xcassets */,
+				F10000000000000000000015 /* Online.entitlements */,
+			);
+			path = Online;
+			sourceTree = "<group>";
+		};
+		G10000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000016 /* Online.app */,
+				F1000000000000000000001B /* OnlineTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		G10000000000000000000004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000003 /* ProbeResult.swift */,
+				F10000000000000000000004 /* ConnectivityState.swift */,
+				F10000000000000000000005 /* OutageRecord.swift */,
+				F10000000000000000000006 /* AppSettings.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		G10000000000000000000005 /* Probes */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000007 /* PathProbe.swift */,
+				F10000000000000000000008 /* HTTPProbe.swift */,
+				F10000000000000000000009 /* GatewayProbe.swift */,
+				F10000000000000000000017 /* GatewayResolver.swift */,
+				F1000000000000000000000A /* DNSProbe.swift */,
+				F1000000000000000000000B /* CustomHostProbe.swift */,
+				F1000000000000000000000C /* ProbeEngine.swift */,
+			);
+			path = Probes;
+			sourceTree = "<group>";
+		};
+		G10000000000000000000009 /* OnlineTests */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000018 /* ProbeSnapshotTests.swift */,
+				F10000000000000000000019 /* ConnectivityStateMachineTests.swift */,
+				F1000000000000000000001A /* HTTPProbeTests.swift */,
+			);
+			path = OnlineTests;
+			sourceTree = "<group>";
+		};
+		G10000000000000000000006 /* State */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000000000000000000D /* ConnectivityStateMachine.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		G10000000000000000000007 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000000000000000000E /* AlertService.swift */,
+				F1000000000000000000000F /* OutageLog.swift */,
+				F10000000000000000000010 /* WakeObserver.swift */,
+				F10000000000000000000011 /* LaunchAtLoginService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		G10000000000000000000008 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000012 /* MenuBarView.swift */,
+				F10000000000000000000013 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		T10000000000000000000001 /* Online */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C10000000000000000000003 /* Build configuration list for PBXNativeTarget "Online" */;
+			buildPhases = (
+				P10000000000000000000001 /* Sources */,
+				P10000000000000000000002 /* Frameworks */,
+				P10000000000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Online;
+			productName = Online;
+			productReference = F10000000000000000000016 /* Online.app */;
+			productType = "com.apple.product-type.application";
+		};
+		T10000000000000000000002 /* OnlineTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C10000000000000000000004 /* Build configuration list for PBXNativeTarget "OnlineTests" */;
+			buildPhases = (
+				P10000000000000000000005 /* Sources */,
+				P10000000000000000000004 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D10000000000000000000001 /* PBXTargetDependency */,
+			);
+			name = OnlineTests;
+			productName = OnlineTests;
+			productReference = F1000000000000000000001B /* OnlineTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXTargetDependency section */
+		D10000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = T10000000000000000000001 /* Online */;
+			targetProxy = CP100000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXProject section */
+		PR1000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = C10000000000000000000001 /* Build configuration list for PBXProject "Online" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = G10000000000000000000001;
+			productRefGroup = G10000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				T10000000000000000000001 /* Online */,
+				T10000000000000000000002 /* OnlineTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		P10000000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000014 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		P10000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000001 /* OnlineApp.swift in Sources */,
+				B10000000000000000000002 /* AppCoordinator.swift in Sources */,
+				B10000000000000000000003 /* ProbeResult.swift in Sources */,
+				B10000000000000000000004 /* ConnectivityState.swift in Sources */,
+				B10000000000000000000005 /* OutageRecord.swift in Sources */,
+				B10000000000000000000006 /* AppSettings.swift in Sources */,
+				B10000000000000000000007 /* PathProbe.swift in Sources */,
+				B10000000000000000000008 /* HTTPProbe.swift in Sources */,
+				B10000000000000000000009 /* GatewayProbe.swift in Sources */,
+				B1000000000000000000000A /* DNSProbe.swift in Sources */,
+				B1000000000000000000000B /* CustomHostProbe.swift in Sources */,
+				B1000000000000000000000C /* ProbeEngine.swift in Sources */,
+				B1000000000000000000000D /* ConnectivityStateMachine.swift in Sources */,
+				B1000000000000000000000E /* AlertService.swift in Sources */,
+				B1000000000000000000000F /* OutageLog.swift in Sources */,
+				B10000000000000000000010 /* WakeObserver.swift in Sources */,
+				B10000000000000000000011 /* LaunchAtLoginService.swift in Sources */,
+				B10000000000000000000012 /* MenuBarView.swift in Sources */,
+				B10000000000000000000013 /* SettingsView.swift in Sources */,
+				B10000000000000000000015 /* GatewayResolver.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		P10000000000000000000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000016 /* ProbeSnapshotTests.swift in Sources */,
+				B10000000000000000000017 /* ConnectivityStateMachineTests.swift in Sources */,
+				B10000000000000000000018 /* HTTPProbeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		X10000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		X10000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		X10000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Online/Online.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				INFOPLIST_KEY_CFBundleDisplayName = Online;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		X10000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Online/Online.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				INFOPLIST_KEY_CFBundleDisplayName = Online;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		X10000000000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Online.app/Contents/MacOS/Online";
+			};
+			name = Debug;
+		};
+		X10000000000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Online.app/Contents/MacOS/Online";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C10000000000000000000001 /* Build configuration list for PBXProject "Online" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				X10000000000000000000001 /* Debug */,
+				X10000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C10000000000000000000003 /* Build configuration list for PBXNativeTarget "Online" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				X10000000000000000000003 /* Debug */,
+				X10000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C10000000000000000000004 /* Build configuration list for PBXNativeTarget "OnlineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				X10000000000000000000005 /* Debug */,
+				X10000000000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = PR1000000000000000000001 /* Project object */;
+}
