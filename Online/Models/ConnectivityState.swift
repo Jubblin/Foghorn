@@ -19,17 +19,9 @@ enum ConnectivityState: String, Equatable {
         }
     }
 
+    /// Traffic-light menu bar indicator (always `circle.fill`; color encodes state).
     var menuBarSymbol: String {
-        switch self {
-        case .healthy:
-            return "circle.fill"
-        case .degraded:
-            return "exclamationmark.circle.fill"
-        case .outage:
-            return "wifi.slash"
-        case .recovering:
-            return "arrow.clockwise.circle.fill"
-        }
+        "circle.fill"
     }
 
     var showsAlert: Bool {

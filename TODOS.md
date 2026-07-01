@@ -22,16 +22,6 @@ In-app viewer for `~/Library/Application Support/Online/outages.json`.
 
 ## P2 — Polish
 
-### 3. Traffic-light menu bar icons
-Replace current SF Symbol status icons with traffic-light style indicators.
-
-- [ ] **Green** — healthy / online
-- [ ] **Yellow** — degraded / partial failure
-- [ ] **Red** — outage
-- [ ] **Gray** (optional) — recovering or unknown
-- [ ] Update `ConnectivityState.menuBarSymbol` (or custom `Image` assets) in `MenuBarView` and `OnlineApp` menu bar label
-- [ ] Match alert-first UX: subtle when green, obvious when red/yellow
-
 ## Completed
 
-<!-- Move items here with date when done, e.g. - [x] Feature name (2026-07-08) -->
+- [x] Traffic-light menu bar icons (2026-07-01) — green/yellow/red/gray `circle.fill` in menu bar

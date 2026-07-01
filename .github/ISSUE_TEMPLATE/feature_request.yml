@@ -1,0 +1,54 @@
+name: Feature request
+description: Suggest a new feature or improvement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Online is **alert-first**: invisible when healthy, notifies on real outages.
+        Features that add constant menu bar clutter need strong justification.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What pain are you trying to solve?
+      placeholder: I miss outages when the menu bar icon is hidden...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      placeholder: Add a toggle to hide the menu bar icon while keeping probes running
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      placeholder: Use macOS Do Not Disturb, use a different app...
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: How important is this to you?
+      options:
+        - Nice to have
+        - Would use daily
+        - Blocking my adoption
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and TODOS.md for duplicates
+          required: true
+        - label: This fits the alert-first product (not a metrics dashboard)
+          required: true

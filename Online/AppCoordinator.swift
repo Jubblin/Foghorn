@@ -76,17 +76,17 @@ final class AppCoordinator: ObservableObject {
     private func updatePresentation() {
         switch stateMachine.status.state {
         case .healthy:
-            menuBarOpacity = 0.25
-            iconColor = .secondary
+            menuBarOpacity = 0.45
+            iconColor = .green
         case .degraded:
-            menuBarOpacity = 0.7
-            iconColor = .orange
+            menuBarOpacity = 0.95
+            iconColor = .yellow
         case .outage:
             menuBarOpacity = 1.0
             iconColor = .red
         case .recovering:
             menuBarOpacity = 0.85
-            iconColor = .yellow
+            iconColor = Color(white: 0.55)
         }
     }
 }

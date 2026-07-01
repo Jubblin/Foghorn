@@ -14,9 +14,10 @@ struct OnlineApp: App {
                 .environmentObject(coordinator)
         } label: {
             Image(systemName: coordinator.status.state.menuBarSymbol)
-                .symbolRenderingMode(.monochrome)
+                .symbolRenderingMode(.palette)
                 .foregroundStyle(coordinator.iconColor)
                 .opacity(coordinator.menuBarOpacity)
+                .accessibilityLabel(coordinator.status.state.displayName)
         }
         .menuBarExtraStyle(.menu)
 

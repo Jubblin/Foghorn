@@ -1,110 +1,199 @@
 # Online
 
-A native macOS menu bar app that monitors **real** internet connectivity and alerts you when the connection drops. The icon stays subtle when everything works.
+[![CI](https://github.com/Jubblin/online/actions/workflows/ci.yml/badge.svg)](https://github.com/Jubblin/online/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![macOS](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/)
+[![Swift](https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white)](https://swift.org)
 
-macOS WiFi can show "connected" while pages fail to load. Online probes your network in layers and only surfaces alerts when something is actually wrong.
+A native macOS menu bar app that monitors **real** internet connectivity and alerts you when the connection drops. Stays subtle when everything works.
+
+macOS can show Wi‑Fi as connected while pages fail to load — router issues, ISP outages, captive portals, and DNS failures all leave the system indicator green. **Online** probes your network in layers and only surfaces alerts when something is actually wrong.
+
+## Why Online?
+
+| macOS indicator | Online |
+|-----------------|--------|
+| Link up (Wi‑Fi/Ethernet) | Layered reachability probes |
+| No failure attribution | Router, DNS, ISP, captive portal, custom host |
+| Silent failures | Notification on confirmed outage + restore |
+| No history | JSON outage log with timestamps |
+
+**Alert-first by design** — the opposite of menu bar clutter. You forget it exists until your VPN dies mid-call and macOS never told you.
 
 ## Features
 
-- **Alert-first UX** — low-opacity menu bar icon when healthy; visible icon and notification on outage
-- **Layered probes** — interface path, gateway TCP, DNS resolution, HTTP HEAD (`captive.apple.com` + `cloudflare.com`), optional custom hosts
-- **Debounced state machine** — 15s evaluation window, 15s wake-from-sleep grace, 2-tick recovery confirmation
-- **Failure attribution** — router, DNS, ISP, captive portal, or custom host
-- **Outage log** — JSON history in `~/Library/Application Support/Online/outages.json`
-- **Battery-aware polling** — longer intervals on battery power
+- **Layered Sentinel probes** — `NWPathMonitor`, gateway TCP, DNS lookup, HTTP HEAD (`captive.apple.com` + `cloudflare.com`), optional custom hosts
+- **Smart debouncing** — 15s evaluation window, 15s wake-from-sleep grace, 2-tick recovery confirmation, 3-tick rapid outage detection
+- **Failure attribution** — know whether it's your router, DNS, ISP, captive portal, or a custom endpoint
+- **Outage log** — local JSON history at `~/Library/Application Support/Online/outages.json`
+- **Battery-aware** — longer poll intervals on battery power
 - **Launch at login** — via `SMAppService`
+- **Native Swift/SwiftUI** — macOS 14+, no Electron, no dependencies
 
-## Requirements
+## Screenshots
 
-- macOS 14 Sonoma or later
-- Xcode 15+
+**Healthy — menu bar popover**
 
-## Build
+![Online menu bar popover showing healthy status](docs/screenshots/menu-bar-healthy.png)
+
+**Traffic-light states** — green (online), yellow (degraded), red (offline), gray (recovering)
+
+![Traffic-light menu bar icons for all connectivity states](docs/screenshots/traffic-lights.png)
+
+## Install
+
+### From GitHub Releases (recommended)
+
+1. Download **Online.dmg** from [Releases](https://github.com/Jubblin/online/releases)
+2. Open the DMG and drag **Online** to Applications
+3. Launch Online and grant notification permission when prompted
+
+> Releases are **unsigned**. macOS may block the first launch. Right-click → Open, or sign locally (see [Signing](#signing)).
+
+### Build from source
+
+**Requirements:** macOS 14 Sonoma or later, Xcode 15+
 
 ```bash
-# Open in Xcode
+git clone https://github.com/Jubblin/online.git
+cd online
 open Online.xcodeproj
+```
 
-# Or build from CLI
+Or from the command line:
+
+```bash
 xcodebuild -project Online.xcodeproj -scheme Online -configuration Release build
+# App: build/Build/Products/Release/Online.app
 
-# Run tests
-xcodebuild test -project Online.xcodeproj -scheme Online -configuration Debug
-
-# Build release DMG (unsigned by default)
 chmod +x scripts/build-dmg.sh
 ./scripts/build-dmg.sh Release
+# DMG: build/Online.dmg
 ```
 
-Output: `build/Build/Products/Release/Online.app` and `build/Online.dmg`.
+## Usage
 
-## Run
+1. **Online** appears in the menu bar (subtle when healthy)
+2. Click the icon to see current status, last probe time, and the most recent outage
+3. Open **Settings** to configure:
+   - **Polling interval** — 2s, 5s, 10s, or 30s (doubles on battery, capped at 8s)
+   - **Custom hosts** — hostnames probed via HTTPS HEAD (e.g. work VPN endpoint)
+   - **Launch at login**
 
-1. Build and run from Xcode, or open `Online.app`
-2. Grant notification permission when prompted
-3. Optional: Online → Settings to add custom hosts (e.g. work VPN endpoint) and enable launch at login
+Notifications fire on **confirmed outage** and when connectivity **restores**.
 
-## Settings
-
-- **Polling interval** — 2s, 5s, 10s, or 30s (doubles on battery, max 8s)
-- **Custom hosts** — hostnames probed via HTTPS HEAD
-- **Launch at login** — register with `SMAppService`
-
-## Architecture
+## How it works
 
 ```
-ProbeEngine (tick loop)
-  → PathProbe, GatewayProbe, DNSProbe, HTTPProbe, CustomHostProbe
-  → ConnectivityStateMachine (debounce + wake grace)
-  → AlertService + OutageLog + MenuBarExtra UI
+ProbeEngine (2s tick, battery backoff)
+  ├── PathProbe        NWPathMonitor — interface up?
+  ├── GatewayProbe     TCP to default gateway
+  ├── DNSProbe         Resolve cloudflare.com
+  ├── HTTPProbe        HEAD captive.apple.com + cloudflare.com
+  └── CustomHostProbe  User-defined hosts
+
+ConnectivityStateMachine
+  ├── 15s evaluation window
+  ├── 15s wake grace (suppress sleep/wake blips)
+  └── States: Healthy → Degraded → Outage → Recovering
+
+Outputs
+  ├── MenuBarExtra UI (alert-first)
+  ├── UserNotifications
+  └── OutageLog (JSON on disk)
 ```
 
-## Distribution
+### Connectivity states
 
-v0.1 is intended for local builds and [GitHub Releases](https://github.com/Jubblin/online/releases).
+| State | Menu bar | Alerts |
+|-------|----------|--------|
+| Healthy | Subtle green dot | None |
+| Degraded | Warning icon | None |
+| Outage | Wi‑Fi slash | Notification |
+| Recovering | Spinner | None |
 
-### CI
+## Development
 
-Every push to `main` and every pull request runs:
+```bash
+# Run unit tests
+xcodebuild test \
+  -project Online.xcodeproj \
+  -scheme Online \
+  -configuration Debug \
+  -destination 'platform=macOS'
 
-- **Test** — `xcodebuild test` on `macos-15` (unit tests)
-- **Build** — Release `Online.app` artifact (7-day retention)
+# Bump version locally (CI does this on PRs)
+./scripts/bump-version.sh patch
+```
 
-### Release
+See [CONTRIBUTING.md](CONTRIBUTING.md) for PR workflow, version labels, and code guidelines.
 
-Push a version tag to publish a DMG:
+### Project structure
+
+```
+Online/
+  Probes/     PathProbe, GatewayProbe, DNSProbe, HTTPProbe, ProbeEngine
+  State/      ConnectivityStateMachine
+  Services/   AlertService, OutageLog, WakeObserver, LaunchAtLoginService
+  Models/     ProbeResult, ConnectivityState, AppSettings
+  Views/      MenuBarView, SettingsView
+OnlineTests/  State machine, snapshot, HTTP mock tests
+scripts/      build-dmg.sh, bump-version.sh
+```
+
+## CI / Release
+
+| Workflow | Trigger | What it does |
+|----------|---------|--------------|
+| [CI](.github/workflows/ci.yml) | Push to `main`, PRs | Test + build Release artifact |
+| [Release](.github/workflows/release.yml) | Tag `v*` | Build DMG → GitHub Release |
+| [Version bump](.github/workflows/version-bump.yml) | PR to `main` | Auto-bump semver + build number |
+
+**Cut a release:**
 
 ```bash
 git tag v0.1.0
 git push origin v0.1.0
 ```
 
-The [Release workflow](.github/workflows/release.yml) builds `Online.dmg` and attaches it to a GitHub Release. Tags matching `v*` trigger the workflow; tags with a hyphen (e.g. `v0.2.0-beta.1`) are marked pre-release.
+**PR version labels:** `version:patch` (default), `version:minor`, `version:major`
 
-### Version bumps on pull requests
+[Renovate](https://github.com/apps/renovate) keeps GitHub Actions up to date ([`renovate.json`](renovate.json)).
 
-The [Version bump workflow](.github/workflows/version-bump.yml) updates `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `Online.xcodeproj` when a PR targets `main`:
+## Signing
 
-| Event | What bumps |
-|-------|------------|
-| PR opened | Patch semver + build number (default) |
-| PR synchronized (new commits) | Build number only |
-| Label `version:major` / `version:minor` / `version:patch` added | Matching semver + build number |
-
-The workflow commits back to the PR branch and comments with the new version. Fork PRs are skipped (cannot push to forks). Use labels on the PR to control semver bumps before merge.
-
-### Dependency updates
-
-[Renovate](https://github.com/apps/renovate) is configured via [`renovate.json`](renovate.json) to keep GitHub Actions (and Swift packages when added) up to date. Install the [Renovate GitHub App](https://github.com/apps/renovate) on this repository to enable it.
-
-### Local signing
-
-Sign the app with your Developer ID before distributing outside your machine:
+Release builds are unsigned. To distribute outside your machine:
 
 ```bash
-codesign --force --deep --sign "Developer ID Application: Your Name" build/Build/Products/Release/Online.app
+codesign --force --deep --sign "Developer ID Application: Your Name" \
+  build/Build/Products/Release/Online.app
 ```
+
+## Roadmap
+
+Tracked in [TODOS.md](TODOS.md):
+
+- [ ] Menu bar visibility toggle (hide icon, keep probing)
+- [ ] In-app outage log viewer (JSON → table)
+- [x] Traffic-light menu bar icons
+
+## Related projects
+
+- [Online Check](https://onmymenubar.app/online-check/) by Sindre Sorhus — alert-first HEAD probes (inspiration)
+- [Pulse](https://github.com/altuzar/pulse-app) — Swift menu bar network monitor (MIT)
+
+## Contributing
+
+Contributions welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+- [Report a bug](.github/ISSUE_TEMPLATE/bug_report.yml)
+- [Request a feature](.github/ISSUE_TEMPLATE/feature_request.yml)
+- [Security policy](SECURITY.md)
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
-MIT
+[MIT](LICENSE) © 2026 [Jubblin](https://github.com/Jubblin)

@@ -25,6 +25,7 @@ struct MenuBarView: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Image(systemName: status.state.menuBarSymbol)
+                    .symbolRenderingMode(.palette)
                     .foregroundStyle(coordinator.iconColor)
                 Text(status.state.displayName)
                     .font(.headline)

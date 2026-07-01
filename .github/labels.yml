@@ -1,0 +1,7 @@
+# Suggested labels — apply via GitHub UI or gh CLI:
+#   gh label create "bug" --color "d73a4a" --description "Something isn't working"
+#   gh label create "enhancement" --color "a2eeef" --description "New feature or request"
+#   gh label create "version:patch" --color "0e8a16" --description "Patch semver bump on PR"
+#   gh label create "version:minor" --color "fbca04" --description "Minor semver bump on PR"
+#   gh label create "version:major" --color "b60205" --description "Major semver bump on PR"
+#   gh label create "dependencies" --color "0366d6" --description "Dependency updates (Renovate)"
