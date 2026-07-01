@@ -61,7 +61,33 @@ ProbeEngine (tick loop)
 
 ## Distribution
 
-v0.1 is intended for local builds and GitHub Releases. Sign the app with your Developer ID before distributing outside your machine:
+v0.1 is intended for local builds and [GitHub Releases](https://github.com/Jubblin/online/releases).
+
+### CI
+
+Every push to `main` and every pull request runs:
+
+- **Test** — `xcodebuild test` on `macos-15` (unit tests)
+- **Build** — Release `Online.app` artifact (7-day retention)
+
+### Release
+
+Push a version tag to publish a DMG:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+The [Release workflow](.github/workflows/release.yml) builds `Online.dmg` and attaches it to a GitHub Release. Tags matching `v*` trigger the workflow; tags with a hyphen (e.g. `v0.2.0-beta.1`) are marked pre-release.
+
+### Dependency updates
+
+[Renovate](https://github.com/apps/renovate) is configured via [`renovate.json`](renovate.json) to keep GitHub Actions (and Swift packages when added) up to date. Install the [Renovate GitHub App](https://github.com/apps/renovate) on this repository to enable it.
+
+### Local signing
+
+Sign the app with your Developer ID before distributing outside your machine:
 
 ```bash
 codesign --force --deep --sign "Developer ID Application: Your Name" build/Build/Products/Release/Online.app

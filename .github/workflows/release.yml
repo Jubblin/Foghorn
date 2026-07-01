@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Build DMG
+        run: |
+          chmod +x scripts/build-dmg.sh
+          CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=NO ./scripts/build-dmg.sh Release
+
+      - name: Prepare release notes
+        id: notes
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          cat >> "$GITHUB_OUTPUT" <<EOF
+          body<<NOTES
+          ## Online ${VERSION}
+
+          macOS menu bar connectivity checker — unsigned build for local install.
+
+          ### Install
+          1. Download \`Online.dmg\` below
+          2. Open the DMG and drag **Online** to Applications
+          3. Grant notification permission on first launch
+
+          **Requirements:** macOS 14 Sonoma or later
+
+          > Unsigned build. For distribution outside your machine, sign with your Developer ID (see README).
+          NOTES
+          EOF
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Online ${{ github.ref_name }}
+          body: ${{ steps.notes.outputs.body }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: build/Online.dmg
+          generate_release_notes: true
