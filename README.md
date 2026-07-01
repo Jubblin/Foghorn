@@ -81,6 +81,18 @@ git push origin v0.1.0
 
 The [Release workflow](.github/workflows/release.yml) builds `Online.dmg` and attaches it to a GitHub Release. Tags matching `v*` trigger the workflow; tags with a hyphen (e.g. `v0.2.0-beta.1`) are marked pre-release.
 
+### Version bumps on pull requests
+
+The [Version bump workflow](.github/workflows/version-bump.yml) updates `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `Online.xcodeproj` when a PR targets `main`:
+
+| Event | What bumps |
+|-------|------------|
+| PR opened | Patch semver + build number (default) |
+| PR synchronized (new commits) | Build number only |
+| Label `version:major` / `version:minor` / `version:patch` added | Matching semver + build number |
+
+The workflow commits back to the PR branch and comments with the new version. Fork PRs are skipped (cannot push to forks). Use labels on the PR to control semver bumps before merge.
+
 ### Dependency updates
 
 [Renovate](https://github.com/apps/renovate) is configured via [`renovate.json`](renovate.json) to keep GitHub Actions (and Swift packages when added) up to date. Install the [Renovate GitHub App](https://github.com/apps/renovate) on this repository to enable it.

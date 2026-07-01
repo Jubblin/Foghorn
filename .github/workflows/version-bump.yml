@@ -1,0 +1,106 @@
+name: Version bump
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled]
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    name: Bump version on PR
+    runs-on: ubuntu-latest
+    # Cannot push to forks from the base repo workflow
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Skip if last commit is a version bump
+        id: skip
+        run: |
+          MSG=$(git log -1 --pretty=%s)
+          if [[ "$MSG" == chore\(version\):* ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Skipping — last commit is already a version bump"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Determine bump type
+        if: steps.skip.outputs.skip != 'true'
+        id: bump_type
+        env:
+          EVENT_ACTION: ${{ github.event.action }}
+          EVENT_LABEL: ${{ github.event.label.name }}
+        run: |
+          TYPE="patch"
+
+          if [[ "$EVENT_ACTION" == "opened" ]]; then
+            LABELS=$(jq -r '.pull_request.labels[].name' "$GITHUB_EVENT_PATH")
+            if echo "$LABELS" | grep -qx 'version:major'; then
+              TYPE="major"
+            elif echo "$LABELS" | grep -qx 'version:minor'; then
+              TYPE="minor"
+            elif echo "$LABELS" | grep -qx 'version:patch'; then
+              TYPE="patch"
+            fi
+          elif [[ "$EVENT_ACTION" == "labeled" ]]; then
+            case "$EVENT_LABEL" in
+              version:major) TYPE="major" ;;
+              version:minor) TYPE="minor" ;;
+              version:patch) TYPE="patch" ;;
+              *)
+                echo "skip=true" >> "$GITHUB_OUTPUT"
+                echo "Ignoring non-version label: $EVENT_LABEL"
+                exit 0
+                ;;
+            esac
+          elif [[ "$EVENT_ACTION" == "synchronize" ]]; then
+            TYPE="build"
+          fi
+
+          echo "type=$TYPE" >> "$GITHUB_OUTPUT"
+
+      - name: Bump version
+        if: steps.skip.outputs.skip != 'true' && steps.bump_type.outputs.skip != 'true'
+        id: bump
+        run: |
+          chmod +x scripts/bump-version.sh
+          OUTPUT=$(./scripts/bump-version.sh "${{ steps.bump_type.outputs.type }}")
+          echo "$OUTPUT"
+          while IFS='=' read -r key value; do
+            echo "${key}=${value}" >> "$GITHUB_OUTPUT"
+          done <<< "$OUTPUT"
+
+      - name: Commit and push
+        if: steps.skip.outputs.skip != 'true' && steps.bump_type.outputs.skip != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Online.xcodeproj/project.pbxproj
+          git commit -m "chore(version): bump to ${{ steps.bump.outputs.marketing_version }} (build ${{ steps.bump.outputs.build_number }})"
+          git push
+
+      - name: Comment on PR
+        if: steps.skip.outputs.skip != 'true' && steps.bump_type.outputs.skip != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ steps.bump.outputs.marketing_version }}';
+            const build = '${{ steps.bump.outputs.build_number }}';
+            const type = '${{ steps.bump.outputs.bump_type }}';
+            const body = `**Version bumped** (\`${type}\`): \`${version}\` (build \`${build}\`)`;
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
