@@ -29,6 +29,11 @@ final class AppCoordinator: ObservableObject {
         }
         wakeObserver.start()
 
+        if let ongoing = outageLog.lastRecord, ongoing.isOngoing {
+            stateMachine.adoptOngoingOutage(ongoing)
+            updatePresentation()
+        }
+
         stateMachine.onOutageStarted = { [weak self] record in
             Task { @MainActor in
                 self?.outageLog.startOutage(record)
@@ -71,6 +76,10 @@ final class AppCoordinator: ObservableObject {
         Task {
             await probeEngine.runTickNow()
         }
+    }
+
+    func quit() {
+        NSApplication.shared.terminate(nil)
     }
 
     private func updatePresentation() {

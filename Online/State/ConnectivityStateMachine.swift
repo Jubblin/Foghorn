@@ -24,6 +24,19 @@ final class ConnectivityStateMachine: ObservableObject {
         wakeGraceUntil = Date().addingTimeInterval(seconds)
     }
 
+    /// Re-attach to an outage that was still ongoing when the app last quit so a
+    /// subsequent recovery can close it out with a real end time. Without this,
+    /// a fresh launch starts with no `currentOutageID`, leaving the record stuck
+    /// as "ongoing" forever.
+    func adoptOngoingOutage(_ record: OutageRecord) {
+        guard record.isOngoing else { return }
+        currentOutageID = record.id
+        currentOutageProbeSummary = record.probeSummary
+        status.state = .outage
+        status.outageStartedAt = record.startedAt
+        status.failureReason = record.reason
+    }
+
     func process(snapshot: ProbeSnapshot) {
         status.lastCheck = snapshot.timestamp
         status.lastSnapshot = snapshot

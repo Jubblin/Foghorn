@@ -1,60 +1,37 @@
 import Foundation
-import Network
 
 enum GatewayProbe {
+    private static let pingTimeoutMilliseconds = 2_000
+
     static func probe() async -> SingleProbeResult {
         guard let gateway = await GatewayResolver.gatewayAddress() else {
             return SingleProbeResult(kind: .gateway, success: true, detail: "no gateway (skipped)")
         }
 
-        let reachable = await tcpReachable(host: gateway, port: 80, timeout: 2)
-        if reachable {
-            return SingleProbeResult(kind: .gateway, success: true, detail: gateway)
-        }
-
-        let fallback = await tcpReachable(host: gateway, port: 443, timeout: 2)
+        let reachable = await icmpPing(host: gateway, timeoutMilliseconds: pingTimeoutMilliseconds)
         return SingleProbeResult(
             kind: .gateway,
-            success: fallback,
-            detail: fallback ? gateway : "unreachable \(gateway)"
+            success: reachable,
+            detail: reachable ? gateway : "unreachable \(gateway)"
         )
     }
 
-    private static func tcpReachable(host: String, port: UInt16, timeout: TimeInterval) async -> Bool {
-        await withCheckedContinuation { continuation in
-            let nwHost = NWEndpoint.Host(host)
-            guard let nwPort = NWEndpoint.Port(rawValue: port) else {
-                continuation.resume(returning: false)
-                return
-            }
+    private static func icmpPing(host: String, timeoutMilliseconds: Int) async -> Bool {
+        await Task.detached(priority: .utility) {
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: "/sbin/ping")
+            process.arguments = ["-c", "1", "-W", String(timeoutMilliseconds), host]
+            process.standardOutput = FileHandle.nullDevice
+            process.standardError = FileHandle.nullDevice
 
-            let connection = NWConnection(host: nwHost, port: nwPort, using: .tcp)
-            let queue = DispatchQueue(label: "online.gateway-\(host)-\(port)")
-            var finished = false
-
-            func finish(_ value: Bool) {
-                guard !finished else { return }
-                finished = true
-                connection.cancel()
-                continuation.resume(returning: value)
+            do {
+                try process.run()
+                process.waitUntilExit()
+                return process.terminationStatus == 0
+            } catch {
+                return false
             }
-
-            connection.stateUpdateHandler = { state in
-                switch state {
-                case .ready:
-                    finish(true)
-                case .failed, .cancelled:
-                    finish(false)
-                default:
-                    break
-                }
-            }
-
-            connection.start(queue: queue)
-            queue.asyncAfter(deadline: .now() + timeout) {
-                finish(false)
-            }
-        }
+        }.value
     }
 }
 

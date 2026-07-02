@@ -76,7 +76,7 @@ struct MenuBarView: View {
             }
             Divider()
             Button("Quit Online") {
-                NSApplication.shared.terminate(nil)
+                coordinator.quit()
             }
         }
     }
