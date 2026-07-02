@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-07-02
+
+### Fixed
+
+- Gateway probe now uses ICMP ping instead of TCP to ports 80/443, avoiding false `routerUnreachable` outages on routers without a web UI
+- Menu bar visibility binding no longer triggers an infinite SwiftUI render loop that pinned the main thread
+- Menu bar app no longer quits when the transient menu closes
+- Outages that were still ongoing at quit are adopted on startup so recovery records a real ended time
+
 ## [0.2.0] - 2026-07-02
 
 ### Added
@@ -33,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Actions: CI (test + build), release on `v*` tags, version bump on PRs
 - Renovate config for GitHub Actions updates
 
-[Unreleased]: https://github.com/Jubblin/online/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Jubblin/online/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/Jubblin/online/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/Jubblin/online/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Jubblin/online/releases/tag/v0.1.0
