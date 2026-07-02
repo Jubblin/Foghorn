@@ -14,6 +14,7 @@ final class ConnectivityStateMachine: ObservableObject {
     private var consecutiveCriticalFailures = 0
     private var wakeGraceUntil: Date?
     private var currentOutageID: UUID?
+    private var currentOutageProbeSummary: String?
 
     var onOutageStarted: ((OutageRecord) -> Void)?
     var onOutageEnded: ((OutageRecord, TimeInterval) -> Void)?
@@ -120,9 +121,11 @@ final class ConnectivityStateMachine: ObservableObject {
         let record = OutageRecord(
             startedAt: snapshot.timestamp,
             reason: resolvedReason,
-            reasonDetail: detail
+            reasonDetail: detail,
+            probeSummary: OutageRecord.probeSummary(from: snapshot)
         )
         currentOutageID = record.id
+        currentOutageProbeSummary = record.probeSummary
         onOutageStarted?(record)
     }
 
@@ -137,12 +140,14 @@ final class ConnectivityStateMachine: ObservableObject {
                 startedAt: startedAt,
                 endedAt: endedAt,
                 reason: status.failureReason ?? .ispOutage,
-                reasonDetail: status.failureReason?.message(host: status.customHost) ?? "Recovered"
+                reasonDetail: status.failureReason?.message(host: status.customHost) ?? "Recovered",
+                probeSummary: currentOutageProbeSummary
             )
             onOutageEnded?(record, duration)
         }
 
         currentOutageID = nil
+        currentOutageProbeSummary = nil
         status.state = .healthy
         status.outageStartedAt = nil
         status.failureReason = nil

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MenuBarView: View {
     @EnvironmentObject private var coordinator: AppCoordinator
+    @Environment(\.openWindow) private var openWindow
     @ObservedObject private var outageLog = OutageLog.shared
 
     private var status: ConnectivityStatus {
@@ -63,7 +64,11 @@ struct MenuBarView: View {
             Button("Check now") {
                 coordinator.refreshNow()
             }
-            Button("Open outage log") {
+            Button("View outage log…") {
+                openWindow(id: "outage-log")
+                NSApp.activate(ignoringOtherApps: true)
+            }
+            Button("Reveal log file in Finder") {
                 outageLog.revealInFinder()
             }
             SettingsLink {

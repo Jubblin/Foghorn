@@ -25,7 +25,8 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 - **Layered Sentinel probes** — `NWPathMonitor`, gateway TCP, DNS lookup, HTTP HEAD (`captive.apple.com` + `cloudflare.com`), optional custom hosts
 - **Smart debouncing** — 15s evaluation window, 15s wake-from-sleep grace, 2-tick recovery confirmation, 3-tick rapid outage detection
 - **Failure attribution** — know whether it's your router, DNS, ISP, captive portal, or a custom endpoint
-- **Outage log** — local JSON history at `~/Library/Application Support/Online/outages.json`
+- **Outage log viewer** — sortable in-app table; copy JSON or open file in Finder
+- **Menu bar visibility** — hide the icon in Settings; monitoring and alerts continue
 - **Battery-aware** — longer poll intervals on battery power
 - **Launch at login** — via `SMAppService`
 - **Native Swift/SwiftUI** — macOS 14+, no Electron, no dependencies
@@ -76,9 +77,11 @@ chmod +x scripts/build-dmg.sh
 1. **Online** appears in the menu bar (subtle when healthy)
 2. Click the icon to see current status, last probe time, and the most recent outage
 3. Open **Settings** to configure:
+   - **Show in menu bar** — hide the icon while keeping probes running (re-open Settings from the app menu if hidden)
    - **Polling interval** — 2s, 5s, 10s, or 30s (doubles on battery, capped at 8s)
    - **Custom hosts** — hostnames probed via HTTPS HEAD (e.g. work VPN endpoint)
    - **Launch at login**
+4. **View outage log…** from the menu or Settings for full history in a table
 
 Notifications fire on **confirmed outage** and when connectivity **restores**.
 
@@ -171,11 +174,7 @@ codesign --force --deep --sign "Developer ID Application: Your Name" \
 
 ## Roadmap
 
-Tracked in [TODOS.md](TODOS.md):
-
-- [ ] Menu bar visibility toggle (hide icon, keep probing)
-- [ ] In-app outage log viewer (JSON → table)
-- [x] Traffic-light menu bar icons
+All items from the initial roadmap are shipped. See [TODOS.md](TODOS.md) for future ideas.
 
 ## Related projects
 

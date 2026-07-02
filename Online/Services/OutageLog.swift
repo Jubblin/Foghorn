@@ -46,6 +46,24 @@ final class OutageLog: ObservableObject {
         NSWorkspace.shared.activateFileViewerSelecting([fileURL])
     }
 
+    func reload() {
+        load()
+    }
+
+    func copyJSONToPasteboard() {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        guard let data = try? encoder.encode(records),
+              let json = String(data: data, encoding: .utf8) else { return }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(json, forType: .string)
+    }
+
+    var filePath: String {
+        fileURL.path
+    }
+
     private func load() {
         guard let data = try? Data(contentsOf: fileURL) else { return }
         let decoder = JSONDecoder()

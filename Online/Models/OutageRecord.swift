@@ -6,6 +6,7 @@ struct OutageRecord: Codable, Identifiable, Equatable {
     var endedAt: Date?
     let reason: FailureReason
     let reasonDetail: String
+    let probeSummary: String?
 
     var duration: TimeInterval? {
         guard let endedAt else { return nil }
@@ -27,12 +28,27 @@ struct OutageRecord: Codable, Identifiable, Equatable {
         startedAt: Date,
         endedAt: Date? = nil,
         reason: FailureReason,
-        reasonDetail: String
+        reasonDetail: String,
+        probeSummary: String? = nil
     ) {
         self.id = id
         self.startedAt = startedAt
         self.endedAt = endedAt
         self.reason = reason
         self.reasonDetail = reasonDetail
+        self.probeSummary = probeSummary
+    }
+
+    var isOngoing: Bool {
+        endedAt == nil
+    }
+
+    static func probeSummary(from snapshot: ProbeSnapshot) -> String {
+        snapshot.results
+            .map { result in
+                let label = result.kind.rawValue
+                return "\(label):\(result.success ? "ok" : "fail")"
+            }
+            .joined(separator: " ")
     }
 }

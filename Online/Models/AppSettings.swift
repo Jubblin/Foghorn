@@ -8,6 +8,7 @@ final class AppSettings: ObservableObject {
         static let customHosts = "customHosts"
         static let launchAtLogin = "launchAtLogin"
         static let pollInterval = "pollInterval"
+        static let showInMenuBar = "showInMenuBar"
     }
 
     @Published var customHosts: [String] {
@@ -22,11 +23,21 @@ final class AppSettings: ObservableObject {
         didSet { UserDefaults.standard.set(basePollInterval, forKey: Keys.pollInterval) }
     }
 
+    /// When false, the menu bar icon is hidden but probes and notifications keep running.
+    @Published var showInMenuBar: Bool {
+        didSet { UserDefaults.standard.set(showInMenuBar, forKey: Keys.showInMenuBar) }
+    }
+
     private init() {
         customHosts = UserDefaults.standard.stringArray(forKey: Keys.customHosts) ?? []
         launchAtLogin = UserDefaults.standard.bool(forKey: Keys.launchAtLogin)
         let stored = UserDefaults.standard.double(forKey: Keys.pollInterval)
         basePollInterval = stored > 0 ? stored : 2.0
+        if UserDefaults.standard.object(forKey: Keys.showInMenuBar) == nil {
+            showInMenuBar = true
+        } else {
+            showInMenuBar = UserDefaults.standard.bool(forKey: Keys.showInMenuBar)
+        }
     }
 
     func addCustomHost(_ host: String) {
