@@ -3,8 +3,7 @@
   "extends": [
     "config:recommended",
     ":dependencyDashboard",
-    ":semanticCommits",
-    ":separateMajorMinor"
+    ":semanticCommits"
   ],
   "labels": ["dependencies"],
   "schedule": ["before 6am on Monday"],
