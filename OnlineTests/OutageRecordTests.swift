@@ -6,7 +6,7 @@ final class OutageRecordTests: XCTestCase {
         let snapshot = ProbeSnapshot(timestamp: Date(), results: [
             .init(kind: .path, success: true),
             .init(kind: .gateway, success: false),
-            .init(kind: .dns, success: true),
+            .init(kind: .dns, success: true)
         ])
 
         let summary = OutageRecord.probeSummary(from: snapshot)
@@ -25,11 +25,12 @@ final class OutageRecordTests: XCTestCase {
             "reason": "ispOutage",
             "reasonDetail": "ISP / internet outage"
         }]
-        """.data(using: .utf8)!
+        """
+        let data = Data(json.utf8)
 
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        let records = try decoder.decode([OutageRecord].self, from: json)
+        let records = try decoder.decode([OutageRecord].self, from: data)
 
         XCTAssertEqual(records.count, 1)
         XCTAssertNil(records[0].probeSummary)

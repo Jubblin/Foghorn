@@ -3,6 +3,7 @@ import SwiftUI
 struct MenuBarView: View {
     @EnvironmentObject private var coordinator: AppCoordinator
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.openSettings) private var openSettings
     @Environment(\.colorScheme) private var colorScheme
     @ObservedObject private var outageLog = OutageLog.shared
 
@@ -103,7 +104,10 @@ struct MenuBarView: View {
             PopoverActionRow(title: "Reveal log file in Finder", palette: palette) {
                 outageLog.revealInFinder()
             }
-            PopoverSettingsRow(palette: palette)
+            PopoverActionRow(title: "Settings…", palette: palette) {
+                openSettings()
+                NSApp.activate(ignoringOtherApps: true)
+            }
             paletteDivider
             PopoverActionRow(title: "Quit Online", palette: palette) {
                 coordinator.quit()
@@ -132,20 +136,6 @@ private struct PopoverActionLabel: View {
             .padding(.vertical, 5)
             .background(isHovered ? palette.actionHover : Color.clear)
             .contentShape(Rectangle())
-    }
-}
-
-private struct PopoverSettingsRow: View {
-    let palette: DesignPalette
-
-    @State private var isHovered = false
-
-    var body: some View {
-        SettingsLink {
-            PopoverActionLabel(title: "Settings…", palette: palette, isHovered: isHovered)
-        }
-        .buttonStyle(.plain)
-        .onHover { isHovered = $0 }
     }
 }
 

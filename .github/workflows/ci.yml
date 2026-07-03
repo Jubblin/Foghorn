@@ -11,9 +11,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  quality:
+    name: Quality
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install quality tools
+        run: brew install swiftlint shellcheck
+
+      - name: Run SwiftLint
+        run: swiftlint lint --quiet
+
+      - name: Run ShellCheck
+        run: shellcheck scripts/*.sh
+
   test:
     name: Test
     runs-on: macos-15
+    needs: quality
     steps:
       - name: Checkout
         uses: actions/checkout@v4

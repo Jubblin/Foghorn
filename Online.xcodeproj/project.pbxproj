@@ -215,6 +215,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C10000000000000000000003 /* Build configuration list for PBXNativeTarget "Online" */;
 			buildPhases = (
+				P10000000000000000000006 /* SwiftLint */,
 				P10000000000000000000001 /* Sources */,
 				P10000000000000000000002 /* Frameworks */,
 				P10000000000000000000003 /* Resources */,
@@ -292,6 +293,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		P10000000000000000000006 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if command -v swiftlint >/dev/null 2>&1; then\n  swiftlint lint --strict --config \"${SRCROOT}/.swiftlint.yml\"\nelse\n  echo \"warning: SwiftLint not installed. Run 'brew install swiftlint' to enable lint checks.\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		P10000000000000000000001 /* Sources */ = {

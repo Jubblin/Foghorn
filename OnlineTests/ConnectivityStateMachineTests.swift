@@ -9,7 +9,7 @@ final class ConnectivityStateMachineTests: XCTestCase {
             .init(kind: .gateway, success: true),
             .init(kind: .dns, success: true),
             .init(kind: .httpPrimary, success: false),
-            .init(kind: .httpSecondary, success: false),
+            .init(kind: .httpSecondary, success: false)
         ])
     }
 
@@ -41,7 +41,7 @@ final class ConnectivityStateMachineTests: XCTestCase {
             .init(kind: .gateway, success: true),
             .init(kind: .dns, success: true),
             .init(kind: .httpPrimary, success: true),
-            .init(kind: .httpSecondary, success: true),
+            .init(kind: .httpSecondary, success: true)
         ])
 
         machine.process(snapshot: healthy)
