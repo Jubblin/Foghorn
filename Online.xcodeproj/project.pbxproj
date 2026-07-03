@@ -33,6 +33,7 @@
 		B10000000000000000000018 /* HTTPProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001A /* HTTPProbeTests.swift */; };
 		B1000000000000000000001A /* OutageRecordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001D /* OutageRecordTests.swift */; };
 		B10000000000000000000019 /* OutageLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001C /* OutageLogView.swift */; };
+		B1000000000000000000001B /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001E /* DesignTokens.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		F1000000000000000000001A /* HTTPProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPProbeTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001D /* OutageRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageRecordTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001C /* OutageLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageLogView.swift; sourceTree = "<group>"; };
+		F1000000000000000000001E /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
 		F1000000000000000000001B /* OnlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -114,6 +116,7 @@
 				G10000000000000000000006 /* State */,
 				G10000000000000000000007 /* Services */,
 				G10000000000000000000008 /* Views */,
+				G1000000000000000000000A /* Design */,
 				F10000000000000000000014 /* Assets.xcassets */,
 				F10000000000000000000015 /* Online.entitlements */,
 			);
@@ -192,6 +195,14 @@
 				F1000000000000000000001C /* OutageLogView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		G1000000000000000000000A /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000000000000000001E /* DesignTokens.swift */,
+			);
+			path = Design;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -304,6 +315,7 @@
 				B10000000000000000000012 /* MenuBarView.swift in Sources */,
 				B10000000000000000000013 /* SettingsView.swift in Sources */,
 				B10000000000000000000019 /* OutageLogView.swift in Sources */,
+				B1000000000000000000001B /* DesignTokens.swift in Sources */,
 				B10000000000000000000015 /* GatewayResolver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -86,16 +86,16 @@ final class AppCoordinator: ObservableObject {
         switch stateMachine.status.state {
         case .healthy:
             menuBarOpacity = 0.45
-            iconColor = .green
+            iconColor = DesignTokens.truthGreen
         case .degraded:
             menuBarOpacity = 0.95
-            iconColor = .yellow
+            iconColor = DesignTokens.warningAmber
         case .outage:
             menuBarOpacity = 1.0
-            iconColor = .red
+            iconColor = DesignTokens.outageRed
         case .recovering:
             menuBarOpacity = 0.85
-            iconColor = Color(white: 0.55)
+            iconColor = DesignTokens.recoveringGray
         }
     }
 }
