@@ -3,29 +3,39 @@ import SwiftUI
 struct MenuBarView: View {
     @EnvironmentObject private var coordinator: AppCoordinator
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.colorScheme) private var colorScheme
     @ObservedObject private var outageLog = OutageLog.shared
 
     private var status: ConnectivityStatus {
         coordinator.status
     }
 
+    private var palette: DesignPalette {
+        DesignPalette.palette(colorScheme: colorScheme)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             statusSection
             if !status.probeRows.isEmpty {
-                Divider()
+                paletteDivider
                 probeSection
             }
-            Divider()
+            paletteDivider
             if let last = outageLog.lastRecord {
                 outageSection(last)
-                Divider()
+                paletteDivider
             }
             actionsSection
         }
         .frame(width: 300)
-        .foregroundStyle(DesignTokens.fogText)
-        .background(DesignTokens.graphite)
+        .foregroundStyle(palette.fogText)
+        .background(palette.graphite)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
+    private var paletteDivider: some View {
+        Divider().overlay(palette.divider)
     }
 
     private var statusSection: some View {
@@ -41,11 +51,11 @@ struct MenuBarView: View {
 
             Text("Last check: \(formatted(date: status.lastCheck))")
                 .font(.caption)
-                .foregroundStyle(DesignTokens.mutedLichen)
+                .foregroundStyle(palette.mutedLichen)
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DesignTokens.signalGlass)
+        .background(palette.signalGlass)
     }
 
     private var probeSection: some View {
@@ -64,46 +74,93 @@ struct MenuBarView: View {
                 .padding(.vertical, 6)
             }
         }
-        .background(DesignTokens.abyss.opacity(0.55))
+        .background(palette.abyss.opacity(colorScheme == .dark ? 0.55 : 0.35))
     }
 
     private func outageSection(_ record: OutageRecord) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Last outage")
                 .font(.caption)
-                .foregroundStyle(DesignTokens.mutedLichen)
+                .foregroundStyle(palette.mutedLichen)
             Text(record.reasonDetail)
                 .font(.body)
             Text("\(formatted(date: record.startedAt)) · \(record.durationDescription)")
                 .font(DesignTokens.dataFont)
-                .foregroundStyle(DesignTokens.mutedLichen)
+                .foregroundStyle(palette.mutedLichen)
         }
         .padding()
     }
 
     private var actionsSection: some View {
-        Group {
-            Button("Check now") {
+        VStack(spacing: 0) {
+            PopoverActionRow(title: "Check now", palette: palette) {
                 coordinator.refreshNow()
             }
-            Button("View outage log…") {
+            PopoverActionRow(title: "View outage log…", palette: palette) {
                 openWindow(id: "outage-log")
                 NSApp.activate(ignoringOtherApps: true)
             }
-            Button("Reveal log file in Finder") {
+            PopoverActionRow(title: "Reveal log file in Finder", palette: palette) {
                 outageLog.revealInFinder()
             }
-            SettingsLink {
-                Text("Settings…")
-            }
-            Divider()
-            Button("Quit Online") {
+            PopoverSettingsRow(palette: palette)
+            paletteDivider
+            PopoverActionRow(title: "Quit Online", palette: palette) {
                 coordinator.quit()
             }
         }
+        .padding(.vertical, 4)
+        .background(palette.graphite)
     }
 
     private func formatted(date: Date) -> String {
         date.formatted(date: .omitted, time: .standard)
+    }
+}
+
+private struct PopoverActionLabel: View {
+    let title: String
+    let palette: DesignPalette
+    let isHovered: Bool
+
+    var body: some View {
+        Text(title)
+            .font(.system(size: 13))
+            .foregroundStyle(palette.fogText)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 5)
+            .background(isHovered ? palette.actionHover : Color.clear)
+            .contentShape(Rectangle())
+    }
+}
+
+private struct PopoverSettingsRow: View {
+    let palette: DesignPalette
+
+    @State private var isHovered = false
+
+    var body: some View {
+        SettingsLink {
+            PopoverActionLabel(title: "Settings…", palette: palette, isHovered: isHovered)
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
+    }
+}
+
+private struct PopoverActionRow: View {
+    let title: String
+    let palette: DesignPalette
+    let action: () -> Void
+
+    @State private var isHovered = false
+
+    var body: some View {
+        Button(action: action) {
+            PopoverActionLabel(title: title, palette: palette, isHovered: isHovered)
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
     }
 }

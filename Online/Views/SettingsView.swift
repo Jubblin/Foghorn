@@ -32,6 +32,12 @@ struct SettingsView: View {
         Form {
             Section("When to interrupt me") {
                 Toggle("Show in menu bar", isOn: $settings.showInMenuBar)
+                Picker("Appearance", selection: $settings.appearancePreference) {
+                    ForEach(AppearancePreference.allCases) { preference in
+                        Text(preference.displayName).tag(preference)
+                    }
+                }
+                .pickerStyle(.segmented)
                 Text("When hidden, Online keeps monitoring and sends notifications. Open Settings from the app menu to restore the icon.")
                     .font(.caption)
                     .foregroundStyle(DesignTokens.mutedLichen)

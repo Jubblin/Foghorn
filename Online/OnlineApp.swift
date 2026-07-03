@@ -35,6 +35,7 @@ struct OnlineApp: App {
         MenuBarExtra(isInserted: menuBarInserted) {
             MenuBarView()
                 .environmentObject(coordinator)
+                .preferredColorScheme(settings.appearancePreference.colorScheme)
         } label: {
             Image(systemName: coordinator.status.state.menuBarSymbol)
                 .symbolRenderingMode(.palette)
@@ -42,15 +43,17 @@ struct OnlineApp: App {
                 .opacity(coordinator.menuBarOpacity)
                 .accessibilityLabel(coordinator.status.state.displayName)
         }
-        .menuBarExtraStyle(.menu)
+        .menuBarExtraStyle(.window)
 
         Window("Outage Log", id: "outage-log") {
             OutageLogView()
+                .preferredColorScheme(settings.appearancePreference.colorScheme)
         }
         .defaultSize(width: 800, height: 440)
 
         Settings {
             SettingsView()
+                .preferredColorScheme(settings.appearancePreference.colorScheme)
         }
     }
 }

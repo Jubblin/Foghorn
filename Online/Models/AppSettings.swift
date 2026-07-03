@@ -9,6 +9,7 @@ final class AppSettings: ObservableObject {
         static let launchAtLogin = "launchAtLogin"
         static let pollInterval = "pollInterval"
         static let showInMenuBar = "showInMenuBar"
+        static let appearancePreference = "appearancePreference"
     }
 
     @Published var customHosts: [String] {
@@ -28,6 +29,10 @@ final class AppSettings: ObservableObject {
         didSet { UserDefaults.standard.set(showInMenuBar, forKey: Keys.showInMenuBar) }
     }
 
+    @Published var appearancePreference: AppearancePreference {
+        didSet { UserDefaults.standard.set(appearancePreference.rawValue, forKey: Keys.appearancePreference) }
+    }
+
     private init() {
         customHosts = UserDefaults.standard.stringArray(forKey: Keys.customHosts) ?? []
         launchAtLogin = UserDefaults.standard.bool(forKey: Keys.launchAtLogin)
@@ -37,6 +42,13 @@ final class AppSettings: ObservableObject {
             showInMenuBar = true
         } else {
             showInMenuBar = UserDefaults.standard.bool(forKey: Keys.showInMenuBar)
+        }
+
+        if let raw = UserDefaults.standard.string(forKey: Keys.appearancePreference),
+           let stored = AppearancePreference(rawValue: raw) {
+            appearancePreference = stored
+        } else {
+            appearancePreference = .system
         }
     }
 
