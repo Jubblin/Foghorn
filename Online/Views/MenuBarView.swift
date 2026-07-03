@@ -12,6 +12,10 @@ struct MenuBarView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             statusSection
+            if !status.probeRows.isEmpty {
+                Divider()
+                probeSection
+            }
             Divider()
             if let last = outageLog.lastRecord {
                 outageSection(last)
@@ -19,42 +23,55 @@ struct MenuBarView: View {
             }
             actionsSection
         }
-        .frame(width: 280)
+        .frame(width: 300)
     }
 
     private var statusSection: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .top, spacing: 8) {
                 Image(systemName: status.state.menuBarSymbol)
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(coordinator.iconColor)
-                Text(status.state.displayName)
+                Text(status.statusSentence)
                     .font(.headline)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             Text("Last check: \(formatted(date: status.lastCheck))")
                 .font(.caption)
-                .foregroundStyle(.secondary)
-
-            if let reason = status.failureReason {
-                Text(reason.message(host: status.customHost))
-                    .font(.caption)
-                    .foregroundStyle(.primary)
-            }
+                .foregroundStyle(DesignTokens.mutedLichen)
         }
         .padding()
+    }
+
+    private var probeSection: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(status.probeRows.enumerated()), id: \.offset) { _, row in
+                HStack {
+                    Text(row.label)
+                        .font(DesignTokens.dataFont)
+                        .foregroundStyle(DesignTokens.probeBlue)
+                    Spacer()
+                    Text(row.detail)
+                        .font(DesignTokens.dataFont)
+                        .foregroundStyle(row.success ? DesignTokens.truthGreen : DesignTokens.outageRed)
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 6)
+            }
+        }
     }
 
     private func outageSection(_ record: OutageRecord) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Last outage")
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(DesignTokens.mutedLichen)
             Text(record.reasonDetail)
                 .font(.body)
             Text("\(formatted(date: record.startedAt)) · \(record.durationDescription)")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+                .font(DesignTokens.dataFont)
+                .foregroundStyle(DesignTokens.mutedLichen)
         }
         .padding()
     }

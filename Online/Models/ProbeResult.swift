@@ -142,10 +142,18 @@ enum FailureReason: String, Codable, CaseIterable {
 
     func message(host: String? = nil) -> String {
         switch self {
+        case .noInterface:
+            return "No network interface is up"
+        case .routerUnreachable:
+            return "Router isn't responding"
+        case .dnsFailure:
+            return "DNS is failing"
+        case .ispOutage:
+            return "Internet connection is down"
+        case .captivePortalLikely:
+            return "Captive portal may be blocking access"
         case .customHostDown:
             return "Custom host down: \(host ?? "unknown")"
-        default:
-            return displayName
         }
     }
 }
