@@ -6,7 +6,8 @@ _No open P1 items._
 
 ## P2 — Polish
 
-_No open P2 items._
+- [ ] Bundle Instrument Sans + JetBrains Mono per DESIGN.md (deferred from /design-review 2026-07-03, FINDING-005)
+- [ ] Dark popover surface (Signal Glass #1C2828) for field-instrument feel (deferred from /design-review 2026-07-03)
 
 ## Completed
 
