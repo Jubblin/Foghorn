@@ -34,6 +34,7 @@
 		B1000000000000000000001A /* OutageRecordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001D /* OutageRecordTests.swift */; };
 		B10000000000000000000019 /* OutageLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001C /* OutageLogView.swift */; };
 		B1000000000000000000001B /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001E /* DesignTokens.swift */; };
+		B1000000000000000000001C /* GatewayProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001F /* GatewayProbeTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +67,7 @@
 		F1000000000000000000001D /* OutageRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageRecordTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001C /* OutageLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageLogView.swift; sourceTree = "<group>"; };
 		F1000000000000000000001E /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
+		F1000000000000000000001F /* GatewayProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayProbeTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001B /* OnlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -163,6 +165,7 @@
 				F10000000000000000000018 /* ProbeSnapshotTests.swift */,
 				F10000000000000000000019 /* ConnectivityStateMachineTests.swift */,
 				F1000000000000000000001A /* HTTPProbeTests.swift */,
+				F1000000000000000000001F /* GatewayProbeTests.swift */,
 				F1000000000000000000001D /* OutageRecordTests.swift */,
 			);
 			path = OnlineTests;
@@ -327,6 +330,7 @@
 				B10000000000000000000016 /* ProbeSnapshotTests.swift in Sources */,
 				B10000000000000000000017 /* ConnectivityStateMachineTests.swift in Sources */,
 				B10000000000000000000018 /* HTTPProbeTests.swift in Sources */,
+				B1000000000000000000001C /* GatewayProbeTests.swift in Sources */,
 				B1000000000000000000001A /* OutageRecordTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

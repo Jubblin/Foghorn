@@ -1,22 +1,48 @@
 import Foundation
 
+protocol GatewayResolving {
+    func gatewayAddress() async -> String?
+}
+
+protocol GatewayReachabilityChecking {
+    func isReachable(host: String, timeoutMilliseconds: Int) async -> Bool
+}
+
 enum GatewayProbe {
     private static let pingTimeoutMilliseconds = 2_000
+    private static var resolver: GatewayResolving = DefaultGatewayResolver()
+    private static var reachability: GatewayReachabilityChecking = ICMPGatewayReachability()
+
+    static func injectResolverForTesting(_ resolver: GatewayResolving?) {
+        self.resolver = resolver ?? DefaultGatewayResolver()
+    }
+
+    static func injectReachabilityForTesting(_ reachability: GatewayReachabilityChecking?) {
+        self.reachability = reachability ?? ICMPGatewayReachability()
+    }
 
     static func probe() async -> SingleProbeResult {
-        guard let gateway = await GatewayResolver.gatewayAddress() else {
+        guard let gateway = await resolver.gatewayAddress() else {
             return SingleProbeResult(kind: .gateway, success: true, detail: "no gateway (skipped)")
         }
 
-        let reachable = await icmpPing(host: gateway, timeoutMilliseconds: pingTimeoutMilliseconds)
+        let reachable = await reachability.isReachable(host: gateway, timeoutMilliseconds: pingTimeoutMilliseconds)
         return SingleProbeResult(
             kind: .gateway,
             success: reachable,
             detail: reachable ? gateway : "unreachable \(gateway)"
         )
     }
+}
 
-    private static func icmpPing(host: String, timeoutMilliseconds: Int) async -> Bool {
+struct DefaultGatewayResolver: GatewayResolving {
+    func gatewayAddress() async -> String? {
+        await GatewayResolver.gatewayAddress()
+    }
+}
+
+struct ICMPGatewayReachability: GatewayReachabilityChecking {
+    func isReachable(host: String, timeoutMilliseconds: Int) async -> Bool {
         await Task.detached(priority: .utility) {
             let process = Process()
             process.executableURL = URL(fileURLWithPath: "/sbin/ping")
