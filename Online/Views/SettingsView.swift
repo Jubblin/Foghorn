@@ -30,14 +30,14 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section("Menu bar") {
+            Section("When to interrupt me") {
                 Toggle("Show in menu bar", isOn: $settings.showInMenuBar)
                 Text("When hidden, Online keeps monitoring and sends notifications. Open Settings from the app menu to restore the icon.")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(DesignTokens.mutedLichen)
             }
 
-            Section("Polling") {
+            Section("What Online checks") {
                 Picker("Base interval", selection: $settings.basePollInterval) {
                     Text("2 seconds").tag(2.0)
                     Text("5 seconds").tag(5.0)
@@ -46,13 +46,11 @@ struct SettingsView: View {
                 }
                 Text("Interval doubles on battery power (max 8s).")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+                    .foregroundStyle(DesignTokens.mutedLichen)
 
-            Section("Custom hosts") {
                 if settings.customHosts.isEmpty {
                     Text("No custom hosts configured.")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(DesignTokens.mutedLichen)
                 } else {
                     List {
                         ForEach(settings.customHosts, id: \.self) { host in
@@ -74,7 +72,7 @@ struct SettingsView: View {
                 }
             }
 
-            Section("Startup") {
+            Section("What Online remembers") {
                 Toggle("Launch at login", isOn: $settings.launchAtLogin)
                     .onChange(of: settings.launchAtLogin) { _, enabled in
                         do {
@@ -89,25 +87,23 @@ struct SettingsView: View {
                 if let launchError {
                     Text(launchError)
                         .font(.caption)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(DesignTokens.outageRed)
                 }
-            }
 
-            Section("Outage log") {
                 Button("View outage log…") {
                     openWindow(id: "outage-log")
                     NSApp.activate(ignoringOtherApps: true)
                 }
                 Text("Stored at \(OutageLog.shared.filePath)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(DesignTokens.dataFont)
+                    .foregroundStyle(DesignTokens.mutedLichen)
                     .textSelection(.enabled)
             }
 
             Section("About") {
                 Text("Online monitors real internet connectivity and alerts when the connection drops. The menu bar icon stays subtle when everything works.")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(DesignTokens.mutedLichen)
                 LabeledContent("Version", value: AppInfo.versionString)
                 LabeledContent("Built", value: AppInfo.buildDateString)
             }
