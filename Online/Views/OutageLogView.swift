@@ -30,7 +30,7 @@ struct OutageLogView: View {
                             Text(endedAt, format: .dateTime.day().month().hour().minute().second())
                         } else {
                             Text("ongoing")
-                                .foregroundStyle(.orange)
+                                .foregroundStyle(DesignTokens.warningAmber)
                         }
                     }
                     .width(min: 140, ideal: 160)
@@ -53,8 +53,8 @@ struct OutageLogView: View {
 
                     TableColumn("Probes") { record in
                         Text(record.probeSummary ?? "—")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(DesignTokens.dataFont)
+                            .foregroundStyle(DesignTokens.mutedLichen)
                             .lineLimit(2)
                     }
                     .width(min: 160, ideal: 220)
@@ -66,7 +66,7 @@ struct OutageLogView: View {
             HStack {
                 Text("\(outageLog.records.count) record\(outageLog.records.count == 1 ? "" : "s")")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(DesignTokens.mutedLichen)
 
                 Spacer()
 
