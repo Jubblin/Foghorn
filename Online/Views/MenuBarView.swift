@@ -24,6 +24,8 @@ struct MenuBarView: View {
             actionsSection
         }
         .frame(width: 300)
+        .foregroundStyle(DesignTokens.fogText)
+        .background(DesignTokens.graphite)
     }
 
     private var statusSection: some View {
@@ -42,6 +44,8 @@ struct MenuBarView: View {
                 .foregroundStyle(DesignTokens.mutedLichen)
         }
         .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DesignTokens.signalGlass)
     }
 
     private var probeSection: some View {
@@ -60,6 +64,7 @@ struct MenuBarView: View {
                 .padding(.vertical, 6)
             }
         }
+        .background(DesignTokens.abyss.opacity(0.55))
     }
 
     private func outageSection(_ record: OutageRecord) -> some View {

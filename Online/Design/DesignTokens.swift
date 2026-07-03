@@ -1,6 +1,10 @@
 import SwiftUI
 
 enum DesignTokens {
+    static let abyss = Color(red: 0.02, green: 0.03, blue: 0.03)
+    static let graphite = Color(red: 0.05, green: 0.08, blue: 0.08)
+    static let signalGlass = Color(red: 0.11, green: 0.16, blue: 0.16)
+    static let fogText = Color(red: 0.84, green: 0.89, blue: 0.85)
     static let truthGreen = Color(red: 0.38, green: 0.82, blue: 0.44)
     static let warningAmber = Color(red: 0.95, green: 0.79, blue: 0.26)
     static let outageRed = Color(red: 1.0, green: 0.30, blue: 0.24)
