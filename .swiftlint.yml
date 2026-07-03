@@ -1,0 +1,27 @@
+included:
+  - Online
+  - OnlineTests
+
+excluded:
+  - build
+  - build-health
+  - build-release
+  - .gstack
+
+line_length:
+  warning: 140
+  ignores_comments: true
+  ignores_urls: true
+
+type_body_length:
+  warning: 350
+
+file_length:
+  warning: 500
+  ignore_comment_only_lines: true
+
+identifier_name:
+  excluded:
+    - id
+    - ok
+    - up

@@ -67,6 +67,12 @@ struct DesignPalette {
     }
 }
 
+struct ProbeRow {
+    let label: String
+    let detail: String
+    let success: Bool
+}
+
 enum DesignTokens {
     static let truthGreen = Color(red: 0.38, green: 0.82, blue: 0.44)
     static let warningAmber = Color(red: 0.95, green: 0.79, blue: 0.26)
@@ -95,20 +101,20 @@ extension ConnectivityStatus {
         }
     }
 
-    var probeRows: [(label: String, detail: String, success: Bool)] {
+    var probeRows: [ProbeRow] {
         guard let snapshot = lastSnapshot else { return [] }
 
-        var rows: [(String, String, Bool)] = [
-            ("PATH", snapshot.pathSatisfied ? "ok" : "fail", snapshot.pathSatisfied),
-            ("GATEWAY", snapshot.gatewayOK ? "ok" : "fail", snapshot.gatewayOK),
-            ("DNS", snapshot.dnsOK ? "ok" : "fail", snapshot.dnsOK),
-            ("HTTP", snapshot.allHTTPOK ? "ok" : "fail", snapshot.allHTTPOK),
+        var rows = [
+            ProbeRow(label: "PATH", detail: snapshot.pathSatisfied ? "ok" : "fail", success: snapshot.pathSatisfied),
+            ProbeRow(label: "GATEWAY", detail: snapshot.gatewayOK ? "ok" : "fail", success: snapshot.gatewayOK),
+            ProbeRow(label: "DNS", detail: snapshot.dnsOK ? "ok" : "fail", success: snapshot.dnsOK),
+            ProbeRow(label: "HTTP", detail: snapshot.allHTTPOK ? "ok" : "fail", success: snapshot.allHTTPOK)
         ]
 
         let customResults = snapshot.customResults
         if !customResults.isEmpty {
             let allCustomOK = snapshot.allCustomOK
-            rows.append(("CUSTOM", allCustomOK ? "ok" : "fail", allCustomOK))
+            rows.append(ProbeRow(label: "CUSTOM", detail: allCustomOK ? "ok" : "fail", success: allCustomOK))
         }
 
         return rows

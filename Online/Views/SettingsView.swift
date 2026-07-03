@@ -107,7 +107,10 @@ struct SettingsView: View {
             }
 
             Section("About") {
-                Text("Online monitors real internet connectivity and alerts when the connection drops. The menu bar icon stays subtle when everything works.")
+                Text(
+                    "Online monitors real internet connectivity and alerts when the connection drops. " +
+                        "The menu bar icon stays subtle when everything works."
+                )
                     .font(.caption)
                     .foregroundStyle(DesignTokens.mutedLichen)
                 LabeledContent("Version", value: AppInfo.versionString)
