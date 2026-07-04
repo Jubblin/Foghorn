@@ -1,14 +1,54 @@
+import AppKit
 import Foundation
 import UserNotifications
+
+enum NotificationAuthorizationDisplay: Equatable {
+    case granted
+    case notDetermined
+    case denied
+
+    var statusText: String {
+        switch self {
+        case .granted:
+            return "Alerts enabled"
+        case .notDetermined:
+            return "Not set up"
+        case .denied:
+            return "Denied"
+        }
+    }
+}
 
 @MainActor
 final class AlertService: NSObject, ObservableObject {
     static let shared = AlertService()
 
     @Published private(set) var isAuthorized = false
+    @Published private(set) var authorizationDisplay: NotificationAuthorizationDisplay = .notDetermined
 
     private override init() {
         super.init()
+    }
+
+    func refreshAuthorizationStatus() async {
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+
+        let settings = await center.notificationSettings()
+        switch settings.authorizationStatus {
+        case .authorized, .provisional, .ephemeral:
+            isAuthorized = true
+            authorizationDisplay = .granted
+        case .notDetermined:
+            isAuthorized = false
+            authorizationDisplay = .notDetermined
+        case .denied:
+            isAuthorized = false
+            authorizationDisplay = .denied
+        @unknown default:
+            isAuthorized = false
+            authorizationDisplay = .denied
+        }
     }
 
     func requestAuthorizationIfNeeded() async {
@@ -19,16 +59,28 @@ final class AlertService: NSObject, ObservableObject {
         switch settings.authorizationStatus {
         case .authorized, .provisional, .ephemeral:
             isAuthorized = true
+            authorizationDisplay = .granted
         case .notDetermined:
             do {
                 let granted = try await center.requestAuthorization(options: [.alert, .sound])
                 isAuthorized = granted
+                authorizationDisplay = granted ? .granted : .denied
             } catch {
                 isAuthorized = false
+                authorizationDisplay = .denied
             }
         default:
             isAuthorized = false
+            authorizationDisplay = .denied
         }
+    }
+
+    static func openSystemNotificationSettings() {
+        guard let bundleID = Bundle.main.bundleIdentifier,
+              let url = URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension?id=\(bundleID)") else {
+            return
+        }
+        NSWorkspace.shared.open(url)
     }
 
     func notifyOutage(record: OutageRecord) {

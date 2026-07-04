@@ -14,11 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SwiftLint configuration, CI quality job (SwiftLint + ShellCheck), and Xcode lint build phase
 - Injectable gateway probe seams and `GatewayProbeTests`
 - `scripts/health.sh` to run the local Health Stack (lint, shellcheck, build, test)
+- Settings **Help & privacy** section with Privacy Policy, Support, and Report an issue links
+- `PRIVACY.md` and notification permission status in Settings
 
 ### Changed
 
 - Gateway probe documentation now describes ICMP ping instead of TCP
-- Settings grouped by user promises; popover status and outage log typography aligned to design system
+- Settings redesigned with `DesignPalette` section cards, five promise-based groups, and 480×560 layout per `DESIGN.md`
 
 ### Fixed
 

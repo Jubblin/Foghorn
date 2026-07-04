@@ -61,6 +61,8 @@
   - When to interrupt me
   - What Online checks
   - What Online remembers
+  - Help & privacy
+  - About
 - **Outage Log:** Treat as evidence. Rows should emphasize started, ended, duration, failure layer, and probe summary.
 - **Grid:** Single-column in the popover, two-column only in wider Settings windows, table-first for logs.
 - **Max content width:** Popover around 280-360px. Settings around 460-560px. Log window around 800px minimum.
@@ -81,6 +83,107 @@
 - **Outage records:** Show ended time and duration as first-class fields. An ongoing record should be visually distinct but not alarming unless the outage is active.
 - **Color usage:** Green, amber, red, and blue are semantic. Do not use them as decoration.
 
+## Settings Screen
+
+The Settings window is a **configuration panel for a field instrument**, not a preferences junk drawer. It should feel as calm and precise as the popover: readable at a glance, dense but not cramped, and honest about what Online does with permissions and data.
+
+### Window chrome
+
+- **Size:** 480×560pt fixed (within the 460–560pt width range).
+- **Background:** `graphite` from `DesignPalette` (not system default window gray).
+- **Scroll:** Vertical scroll when content exceeds height; no horizontal scroll.
+- **Title:** "Settings" (system window title). No marketing hero inside the window.
+
+### Section structure
+
+Use five promise-based sections in this order:
+
+| Section | User promise | Controls |
+|---------|--------------|----------|
+| **When to interrupt me** | I control visibility and alerts | Menu bar toggle, appearance segmented control, notification permission status |
+| **What Online checks** | I control probe cadence and targets | Base interval picker, custom hosts list + add field |
+| **What Online remembers** | I control persistence and history | Launch at login, View outage log, log file path |
+| **Help & privacy** | I can get help and understand data use | Privacy Policy, Support, Report an issue (external links) |
+| **About** | I know what this app is | One-line description, version, build date |
+
+Do not add sections for features that do not exist. Keep the sentinel posture: every row earns its place.
+
+### Visual treatment
+
+Apply the same palette as the menu bar popover (`DesignPalette.palette(colorScheme:)`), not vanilla `Form` system chrome alone.
+
+- **Section container:** `signalGlass` background, 12px corner radius (`lg`), 16px (`md`) inner padding, 12px (`sm`) vertical gap between sections.
+- **Section title:** 18px (`lg`) semibold, `fogText`. Use `Section` headers or explicit `Text` with `.font(.headline)` until Instrument Sans is bundled.
+- **Control labels:** 15px (`md`) regular, `fogText`.
+- **Helper / caption text:** 12px (`xs`), `mutedLichen`. Max two lines where possible; link to Support for longer explanations.
+- **Dividers:** `palette.divider` (12% white/black opacity), not system `Divider` default.
+- **Destructive / error text:** `outageRed` only for real errors (e.g. launch-at-login failure), never decoration.
+- **Data paths and hostnames:** `JetBrains Mono` / `DesignTokens.dataFont`, `mutedLichen`, `.textSelection(.enabled)`.
+
+Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surfaces and typography follow the design system. This matches user expectations for a Mac utility while avoiding the "stock Settings clone" look.
+
+### Section copy and behavior
+
+**When to interrupt me**
+
+- **Show in menu bar:** Existing toggle. Helper: "When hidden, Online keeps monitoring and sends notifications. Open Settings from the app menu to restore the icon."
+- **Appearance:** Segmented control — Follow System / Light / Dark. Applies to popover and Settings immediately.
+- **Notifications:** Show permission status as `LabeledContent`:
+  - Granted → "Alerts enabled"
+  - Not determined → "Not set up" + subtle prompt to grant on next outage (no nag modal in Settings)
+  - Denied → "Denied" + button **Open Notification Settings** (deep link to System Settings → Notifications → Online)
+- Do not use red for denied unless the user is in an active outage context.
+
+**What Online checks**
+
+- **Base interval:** Picker with 2s / 5s / 10s / 30s. Helper: "Interval doubles on battery power (max 8×)."
+- **Custom hosts:** Empty state: "No custom hosts configured." (muted). List with swipe/delete. Add row: placeholder `vpn.company.com`, **Add** disabled when empty.
+- Host rows: monospace hostname, no decorative icons.
+
+**What Online remembers**
+
+- **Launch at login:** Toggle with error caption on failure (red, one line).
+- **View outage log…** — opens outage log window; does not navigate away from Settings.
+- **Log path:** Monospace, muted, selectable. Treat as evidence location, not a secret.
+
+**Help & privacy** (required for Mac App Store metadata alignment)
+
+- **Privacy Policy** — link opens default browser to hosted policy URL (GitHub Pages or project site). One line helper: "Online does not collect or transmit personal data. Probes run locally."
+- **Support** — link to support URL (GitHub issues or dedicated support page).
+- **Report an issue** — link to GitHub issue chooser (can match Support URL if same destination).
+- Use `Link` or `Button` that opens `NSWorkspace.shared.open`. No in-app WebView for policy pages in v1.
+
+**About**
+
+- One caption block (muted): "Online monitors real internet connectivity and alerts when the connection drops. The menu bar icon stays subtle when everything works."
+- **Version:** `LabeledContent` with marketing version + build number.
+- **Built:** `LabeledContent` with executable modification date (existing `AppInfo` behavior).
+
+### App Store and review alignment
+
+- Privacy Policy and Support URLs in **Help & privacy** must match App Store Connect entries exactly.
+- Notification permission UX must be discoverable without a first-run blocking modal; Settings is the recovery path when users deny alerts.
+- No analytics, ads, or account UI in Settings.
+- Export compliance (`ITSAppUsesNonExemptEncryption` = NO) is Info.plist, not Settings UI.
+
+### Motion
+
+- Window appear: system default (no custom animation).
+- Section expand/collapse: none in v1 (flat list of sections).
+- Status changes (e.g. notification permission after returning from System Settings): refresh on `onAppear` / `scenePhase` active; no celebratory animation.
+
+### Accessibility
+
+- All controls must have accessibility labels matching visible text.
+- Helper text associated with controls via `accessibilityHint` where SwiftUI allows.
+- Color is never the only signal for notification status; always pair with text ("Denied", "Granted").
+
+### Implementation notes
+
+- Prefer a single `SettingsView` composed of section subviews (`SettingsInterruptSection`, etc.) for testability.
+- `Help & privacy` link URLs should be constants (e.g. `AppLinks.privacyPolicy`, `AppLinks.support`) shared with App Store Connect copy.
+- Until fonts are bundled (`TODOS.md`), use system fonts with `.headline` / `.caption` / `.monospaced` roles that map to the scale above.
+
 ## Decisions Log
 
 | Date | Decision | Rationale |
@@ -88,3 +191,4 @@
 | 2026-07-03 | Initial design system created | Created by `/design-consultation` for a native macOS menu bar utility whose memorable idea is "a quiet sentinel: invisible until the network lies." |
 | 2026-07-03 | Keep category-safe native restraint | Users expect a Mac utility to be quiet, compact, and reliable. |
 | 2026-07-03 | Take risk on field-instrument identity | The product is more memorable when it feels like evidence capture, not another generic network dashboard. |
+| 2026-07-04 | Settings uses DesignPalette surfaces + five promise sections | Brings Settings in line with popover; adds Help & privacy and notification permission recovery for App Store readiness while keeping the quiet sentinel posture. |
