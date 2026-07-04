@@ -92,13 +92,29 @@ Online/           App target
   Models/         Shared types
   Views/          SwiftUI menu bar and settings
 OnlineTests/      Unit tests
-scripts/          build-dmg.sh, bump-version.sh, health.sh
+scripts/          build-dmg.sh, bump-version.sh, extract-changelog-section.sh, health.sh
 .github/          Workflows, issue/PR templates
 ```
 
 ## Changelog
 
 User-facing changes should be noted in [CHANGELOG.md](CHANGELOG.md) under `[Unreleased]`.
+
+### Releasing
+
+GitHub Releases are created when you push a `v*` tag. The release body is taken from the matching `CHANGELOG.md` section (see [release workflow](.github/workflows/release.yml)).
+
+Before tagging:
+
+1. Move `[Unreleased]` entries into a new `## [X.Y.Z] - YYYY-MM-DD` section (version should match the tag without the `v` prefix).
+2. Leave `[Unreleased]` empty (or remove empty subsection headings).
+3. Push the tag: `git tag vX.Y.Z && git push origin vX.Y.Z`
+
+Preview the section locally:
+
+```bash
+./scripts/extract-changelog-section.sh 0.2.1
+```
 
 ## Code of Conduct
 
