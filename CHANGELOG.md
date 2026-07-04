@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Appearance preference and adaptive popover theming
+- Design tokens and semantic status colors across popover, settings, and outage log
+- SwiftLint configuration, CI quality job (SwiftLint + ShellCheck), and Xcode lint build phase
+- Injectable gateway probe seams and `GatewayProbeTests`
+- `scripts/health.sh` to run the local Health Stack (lint, shellcheck, build, test)
+
+### Changed
+
+- Gateway probe documentation now describes ICMP ping instead of TCP
+- Settings grouped by user promises; popover status and outage log typography aligned to design system
+
+### Fixed
+
+- Menu bar Settings row in popover (`openSettings` instead of broken `SettingsLink`)
+- Renovate configuration invalid `:separateMajorMinor` preset
+- SwiftLint warnings in app sources and tests
+
 ## [0.2.1] - 2026-07-02
 
 ### Fixed

@@ -22,7 +22,7 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 
 ## Features
 
-- **Layered Sentinel probes** — `NWPathMonitor`, gateway TCP, DNS lookup, HTTP HEAD (`captive.apple.com` + `cloudflare.com`), optional custom hosts
+- **Layered Sentinel probes** — `NWPathMonitor`, gateway ICMP ping, DNS lookup, HTTP HEAD (`captive.apple.com` + `cloudflare.com`), optional custom hosts
 - **Smart debouncing** — 15s evaluation window, 15s wake-from-sleep grace, 2-tick recovery confirmation, 3-tick rapid outage detection
 - **Failure attribution** — know whether it's your router, DNS, ISP, captive portal, or a custom endpoint
 - **Outage log viewer** — sortable in-app table; copy JSON or open file in Finder
@@ -90,7 +90,7 @@ Notifications fire on **confirmed outage** and when connectivity **restores**.
 ```
 ProbeEngine (2s tick, battery backoff)
   ├── PathProbe        NWPathMonitor — interface up?
-  ├── GatewayProbe     TCP to default gateway
+  ├── GatewayProbe     ICMP ping to default gateway
   ├── DNSProbe         Resolve cloudflare.com
   ├── HTTPProbe        HEAD captive.apple.com + cloudflare.com
   └── CustomHostProbe  User-defined hosts
@@ -118,7 +118,11 @@ Outputs
 ## Development
 
 ```bash
-# Run unit tests
+# Run the full local health stack (lint, shellcheck, build, test)
+chmod +x scripts/health.sh
+./scripts/health.sh
+
+# Or run unit tests only
 xcodebuild test \
   -project Online.xcodeproj \
   -scheme Online \
@@ -141,7 +145,7 @@ Online/
   Models/     ProbeResult, ConnectivityState, AppSettings
   Views/      MenuBarView, SettingsView
 OnlineTests/  State machine, snapshot, HTTP mock tests
-scripts/      build-dmg.sh, bump-version.sh
+scripts/      build-dmg.sh, bump-version.sh, health.sh
 ```
 
 ## CI / Release

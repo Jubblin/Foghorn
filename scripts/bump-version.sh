@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 # Bump MARKETING_VERSION and/or CURRENT_PROJECT_VERSION in the Xcode project.
-# Usage: bump-version.sh [patch|minor|major|build]
+# Usage: bump-version.sh <patch|minor|major|build>
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PBXPROJ="$ROOT/Online.xcodeproj/project.pbxproj"
-BUMP_TYPE="${1:-patch}"
+
+if [[ $# -lt 1 ]]; then
+  echo "usage: bump-version.sh <patch|minor|major|build>" >&2
+  exit 1
+fi
+
+BUMP_TYPE="$1"
 
 if [[ ! -f "$PBXPROJ" ]]; then
   echo "error: project file not found at $PBXPROJ" >&2

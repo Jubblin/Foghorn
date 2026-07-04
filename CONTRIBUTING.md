@@ -29,6 +29,23 @@ xcodebuild test \
   -destination 'platform=macOS'
 ```
 
+### Local quality checks
+
+CI runs SwiftLint and ShellCheck before tests. Match that locally before opening a PR:
+
+```bash
+brew install swiftlint shellcheck   # once
+chmod +x scripts/health.sh
+./scripts/health.sh                 # lint + shellcheck + build + test
+```
+
+Or run individual checks (also documented in [CLAUDE.md](CLAUDE.md)):
+
+```bash
+swiftlint lint --quiet
+shellcheck scripts/*.sh
+```
+
 ## Pull Request Process
 
 1. Fork the repository and create a branch from `main`
@@ -56,7 +73,7 @@ Each new commit on the PR increments the build number automatically.
 
 ### CI
 
-PRs run [CI](.github/workflows/ci.yml): unit tests and a Release build on `macos-15`.
+PRs run [CI](.github/workflows/ci.yml) on `macos-15`: SwiftLint + ShellCheck (`quality` job), unit tests, then a Release build.
 
 ## Code Guidelines
 
@@ -75,7 +92,7 @@ Online/           App target
   Models/         Shared types
   Views/          SwiftUI menu bar and settings
 OnlineTests/      Unit tests
-scripts/          build-dmg.sh, bump-version.sh
+scripts/          build-dmg.sh, bump-version.sh, health.sh
 .github/          Workflows, issue/PR templates
 ```
 
@@ -89,4 +106,4 @@ This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). Be respectf
 
 ## Questions
 
-Open a [GitHub Discussion](https://github.com/Jubblin/online/discussions) or a question issue if Discussions are not enabled.
+Open a [GitHub issue](https://github.com/Jubblin/online/issues/new/choose) using the bug or feature template, or start with a short description if neither fits.
