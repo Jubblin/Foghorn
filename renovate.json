@@ -11,6 +11,7 @@
     {
       "description": "Group GitHub Actions updates",
       "matchManagers": ["github-actions"],
+      "pinDigests": true,
       "groupName": "github-actions",
       "commitMessageTopic": "GitHub Actions"
     },
