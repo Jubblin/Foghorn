@@ -36,6 +36,7 @@ final class AppCoordinator: ObservableObject {
 
         stateMachine.onOutageStarted = { [weak self] record in
             Task { @MainActor in
+                await self?.alertService.requestAuthorizationIfNeeded()
                 self?.outageLog.startOutage(record)
                 self?.alertService.notifyOutage(record: record)
                 self?.updatePresentation()
@@ -61,10 +62,6 @@ final class AppCoordinator: ObservableObject {
                 self?.stateMachine.process(snapshot: snapshot)
             }
         }
-
-        Task {
-            await alertService.requestAuthorizationIfNeeded()
-        }
     }
 
     func stop() {
@@ -85,7 +82,7 @@ final class AppCoordinator: ObservableObject {
     private func updatePresentation() {
         switch stateMachine.status.state {
         case .healthy:
-            menuBarOpacity = 0.45
+            menuBarOpacity = 0.25
             iconColor = DesignTokens.truthGreen
         case .degraded:
             menuBarOpacity = 0.95

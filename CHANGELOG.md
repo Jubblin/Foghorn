@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Gateway probe documentation now describes ICMP ping instead of TCP
 - Settings redesigned with `DesignPalette` section cards, five promise-based groups, and 480×560 layout per `DESIGN.md`
+- Notification permission is requested on first confirmed outage instead of at launch (alert-first UX)
+- Healthy menu bar icon uses near-zero opacity (0.25) per Layered Sentinel spec
 
 ### Fixed
 

@@ -18,7 +18,7 @@ enum HTTPProbe {
         testSession = session
     }
 
-  static func probe(urlString: String, kind: ProbeKind) async -> SingleProbeResult {
+    static func probe(urlString: String, kind: ProbeKind) async -> SingleProbeResult {
         guard let url = URL(string: urlString) else {
             return SingleProbeResult(kind: kind, success: false, detail: "invalid url")
         }
