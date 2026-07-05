@@ -1,0 +1,47 @@
+{
+  "platform": "macOS-native",
+  "app": "Online",
+  "version": "0.2.1",
+  "timestamp": "2026-07-03T10:48:00Z",
+  "branch": "main",
+  "baseline_comparison": "first_run_establishes_baseline",
+  "build": {
+    "clean_build_s": 9.09,
+    "incremental_build_s": 1.87,
+    "test_suite_s": 7.69,
+    "test_count": 12,
+    "tests_passing": 12
+  },
+  "binary": {
+    "debug_executable_bytes": 40960,
+    "debug_bundle_bytes": 1992294,
+    "release_executable_bytes": 1258291,
+    "release_bundle_bytes": 1258291
+  },
+  "runtime": {
+    "launch_open_s": 0.07,
+    "idle_rss_debug_kb": 87728,
+    "idle_rss_release_kb": 90416,
+    "idle_cpu_pct": 0.0
+  },
+  "codebase": {
+    "swift_files": 22,
+    "swift_loc": 1720
+  },
+  "probes": {
+    "default_interval_s": 2.0,
+    "battery_backoff": true,
+    "parallel_probes_per_tick": 6
+  },
+  "budget": {
+    "release_bundle_mb": { "budget": 5.0, "actual": 1.2, "status": "PASS" },
+    "idle_memory_mb": { "budget": 100.0, "actual": 88.3, "status": "PASS" },
+    "incremental_build_s": { "budget": 30.0, "actual": 1.87, "status": "PASS" },
+    "test_suite_s": { "budget": 60.0, "actual": 7.69, "status": "PASS" },
+    "launch_s": { "budget": 1.0, "actual": 0.07, "status": "PASS" },
+    "grade": "A",
+    "passing": 5,
+    "total": 5
+  },
+  "regressions": []
+}
