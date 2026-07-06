@@ -35,6 +35,7 @@
 		B10000000000000000000019 /* OutageLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001C /* OutageLogView.swift */; };
 		B1000000000000000000001B /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001E /* DesignTokens.swift */; };
 		B1000000000000000000001C /* GatewayProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001F /* GatewayProbeTests.swift */; };
+		B1000000000000000000001D /* AppLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000020 /* AppLinks.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +69,7 @@
 		F1000000000000000000001C /* OutageLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageLogView.swift; sourceTree = "<group>"; };
 		F1000000000000000000001E /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
 		F1000000000000000000001F /* GatewayProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayProbeTests.swift; sourceTree = "<group>"; };
+		F10000000000000000000020 /* AppLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLinks.swift; sourceTree = "<group>"; };
 		F1000000000000000000001B /* OnlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -141,6 +143,7 @@
 				F10000000000000000000004 /* ConnectivityState.swift */,
 				F10000000000000000000005 /* OutageRecord.swift */,
 				F10000000000000000000006 /* AppSettings.swift */,
+				F10000000000000000000020 /* AppLinks.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 				B10000000000000000000019 /* OutageLogView.swift in Sources */,
 				B1000000000000000000001B /* DesignTokens.swift in Sources */,
 				B10000000000000000000015 /* GatewayResolver.swift in Sources */,
+				B1000000000000000000001D /* AppLinks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
