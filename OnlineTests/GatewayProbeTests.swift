@@ -1,4 +1,5 @@
 import XCTest
+import Network
 @testable import Online
 
 private struct StubGatewayResolver: GatewayResolving {
@@ -66,5 +67,41 @@ final class GatewayProbeTests: XCTestCase {
 
         XCTAssertFalse(result.success)
         XCTAssertEqual(result.detail, "unreachable 192.168.1.1")
+    }
+
+    func testReachabilityEvaluatorTreatsReadyAsReachable() {
+        XCTAssertEqual(GatewayReachabilityEvaluator.evaluate(state: .ready), true)
+    }
+
+    func testReachabilityEvaluatorTreatsConnectionRefusedAsReachable() {
+        XCTAssertEqual(
+            GatewayReachabilityEvaluator.evaluate(error: .posix(.ECONNREFUSED)),
+            true
+        )
+        XCTAssertEqual(
+            GatewayReachabilityEvaluator.evaluate(state: .failed(.posix(.ECONNREFUSED))),
+            true
+        )
+        XCTAssertEqual(
+            GatewayReachabilityEvaluator.evaluate(state: .waiting(.posix(.ECONNREFUSED))),
+            true
+        )
+    }
+
+    func testReachabilityEvaluatorTreatsHostUnreachableAsUnreachable() {
+        XCTAssertEqual(
+            GatewayReachabilityEvaluator.evaluate(error: .posix(.EHOSTUNREACH)),
+            false
+        )
+        XCTAssertEqual(
+            GatewayReachabilityEvaluator.evaluate(state: .failed(.posix(.ENETUNREACH))),
+            false
+        )
+    }
+
+    func testReachabilityEvaluatorKeepsInProgressStatesPending() {
+        XCTAssertNil(GatewayReachabilityEvaluator.evaluate(state: .preparing))
+        XCTAssertNil(GatewayReachabilityEvaluator.evaluate(state: .setup))
+        XCTAssertNil(GatewayReachabilityEvaluator.evaluate(state: .cancelled))
     }
 }

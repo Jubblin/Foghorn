@@ -24,7 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Gateway probe documentation now describes ICMP ping instead of TCP
+- Gateway probe now uses `SCDynamicStore` + `NWConnection` (sandbox-compatible) instead of `/sbin/route` and `/sbin/ping`
+- App Sandbox enabled in `Online.entitlements`
 - Settings notification permission can be enabled explicitly from Settings (Enable alerts)
 - Settings layout compacts to four sections without outer scroll; Help links on one line
 - Notification permission is requested on first confirmed outage instead of at launch (alert-first UX)

@@ -22,7 +22,7 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 
 ## Features
 
-- **Layered Sentinel probes** — `NWPathMonitor`, gateway ICMP ping, DNS lookup, HTTP HEAD (`captive.apple.com` + `cloudflare.com`), optional custom hosts
+- **Layered Sentinel probes** — `NWPathMonitor`, gateway TCP reachability via `NWConnection`, DNS lookup, HTTP HEAD (`captive.apple.com` + `cloudflare.com`), optional custom hosts
 - **Smart debouncing** — 15s evaluation window, 15s wake-from-sleep grace, 2-tick recovery confirmation, 3-tick rapid outage detection
 - **Failure attribution** — know whether it's your router, DNS, ISP, captive portal, or a custom endpoint
 - **Outage log viewer** — sortable in-app table; copy JSON or open file in Finder
@@ -90,7 +90,7 @@ Notifications fire on **confirmed outage** and when connectivity **restores**.
 ```
 ProbeEngine (2s tick, battery backoff)
   ├── PathProbe        NWPathMonitor — interface up?
-  ├── GatewayProbe     ICMP ping to default gateway
+  ├── GatewayProbe     SCDynamicStore resolver + TCP reachability (NWConnection)
   ├── DNSProbe         Resolve cloudflare.com
   ├── HTTPProbe        HEAD captive.apple.com + cloudflare.com
   └── CustomHostProbe  User-defined hosts

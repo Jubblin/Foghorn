@@ -29,7 +29,7 @@ a fix and disclosure timeline before any public announcement.
 
 Online is a local macOS menu bar utility. It:
 
-- Performs outbound network probes (HTTP HEAD, DNS, TCP to gateway)
+- Performs outbound network probes (HTTP HEAD, DNS, TCP reachability to default gateway)
 - Stores outage history locally at `~/Library/Application Support/Online/outages.json`
 - Requests notification permission via `UserNotifications`
 - Does **not** use the App Sandbox (see `Online.entitlements`)
