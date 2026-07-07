@@ -2,7 +2,19 @@ import SwiftUI
 
 final class AppLifecycleDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return false
+        false
+    }
+
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        guard UITestConfiguration.shouldUseRegularActivationPolicy else { return }
+        NSApp.setActivationPolicy(.regular)
+    }
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        guard UITestConfiguration.isActive else { return }
+        Task { @MainActor in
+            UITestConfiguration.presentInitialWindowsIfNeeded()
+        }
     }
 }
 
@@ -12,7 +24,9 @@ struct OnlineApp: App {
     @ObservedObject private var settings = AppSettings.shared
     @StateObject private var coordinator: AppCoordinator = {
         let coordinator = AppCoordinator()
-        coordinator.start()
+        if !UITestConfiguration.isActive, !UITestConfiguration.isXCTestProcess {
+            coordinator.start()
+        }
         return coordinator
     }()
 
@@ -20,10 +34,6 @@ struct OnlineApp: App {
         Binding(
             get: { settings.showInMenuBar },
             set: { newValue in
-                // Guard equal writes: SwiftUI re-asserts this binding on every
-                // app-graph update. Without this check the @Published setter
-                // fires objectWillChange on identical values, which rebuilds the
-                // scene tree and loops forever, pinning the main thread.
                 if settings.showInMenuBar != newValue {
                     settings.showInMenuBar = newValue
                 }

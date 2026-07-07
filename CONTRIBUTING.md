@@ -73,7 +73,7 @@ Each new commit on the PR increments the build number automatically.
 
 ### CI
 
-PRs run [CI](.github/workflows/ci.yml) on `macos-15`: SwiftLint + ShellCheck (`quality` job), unit tests, then a Release build.
+PRs run [CI](.github/workflows/ci.yml) on `macos-26`: SwiftLint + ShellCheck (`quality` job), unit tests, UI smoke tests (soft-fail initially), then a Release build.
 
 ## Code Guidelines
 
@@ -92,6 +92,7 @@ Online/           App target
   Models/         Shared types
   Views/          SwiftUI menu bar and settings
 OnlineTests/      Unit tests
+OnlineUITests/    UI smoke tests (XCUITest)
 scripts/          build-dmg.sh, bump-version.sh, extract-changelog-section.sh, health.sh
 .github/          Workflows, issue/PR templates
 ```

@@ -30,7 +30,17 @@ final class AlertService: NSObject, ObservableObject {
         super.init()
     }
 
+    func applyUITestAuthorization(_ display: NotificationAuthorizationDisplay) {
+        authorizationDisplay = display
+        isAuthorized = display == .granted
+    }
+
     func refreshAuthorizationStatus() async {
+        if UITestConfiguration.isActive, let mock = UITestConfiguration.mockNotificationAuthorization {
+            applyUITestAuthorization(mock)
+            return
+        }
+
         let center = UNUserNotificationCenter.current()
         center.delegate = self
 
