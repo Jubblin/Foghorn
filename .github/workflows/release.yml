@@ -17,9 +17,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
       - name: Set up Xcode
-        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
-        with:
-          xcode-version: latest-stable
+        uses: ./.github/actions/setup-xcode
 
       - name: Build DMG
         id: build
@@ -77,10 +75,13 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3
-        with:
-          name: Online ${{ github.ref_name }}
-          body: ${{ steps.notes.outputs.body }}
-          draft: false
-          prerelease: ${{ contains(github.ref_name, '-') }}
-          files: build/Online.dmg
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          ARGS=(release create "$REF_NAME" --title "Online $REF_NAME" --notes-file release-notes.md build/Online.dmg)
+          if [[ "$REF_NAME" == *-* ]]; then
+            ARGS+=(--prerelease)
+          fi
+          gh "${ARGS[@]}"
