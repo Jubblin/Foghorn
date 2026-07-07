@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Release dispatch workflow (`release-dispatch.yml`) — validate gates, auto-finalize CHANGELOG, tag
+- Signed DMG pipeline (`build-signed-dmg.sh`) with optional notarization via App Store Connect API
+- TestFlight upload workflow (`release-store.yml`) and `upload-testflight.sh`
+- Release helper scripts: `read-marketing-version.sh`, `changelog-has-unreleased-content.sh`, `finalize-changelog.sh`, `ci-setup-keychain.sh`
 - `PrivacyInfo.xcprivacy` (no tracking; UserDefaults + file timestamp API reasons)
 - `docs/privacy.html` for GitHub Pages hosting
 - `docs/APP_REVIEW_NOTES.md` for Mac App Store submission
