@@ -90,17 +90,216 @@ You can also trigger **Release Store** manually from Actions (useful for re-uplo
 
 ## CI signing secrets
 
-Configure these in **Settings → Secrets and variables → Actions**:
+Configure these in **Settings → Secrets and variables → Actions** (repo **Settings → Secrets and variables → Actions → New repository secret**).
 
-| Secret | Purpose |
-|--------|---------|
-| `DEVELOPMENT_TEAM` | Apple Team ID |
-| `DEVELOPER_ID_CERTIFICATE_P12` | Base64 `.p12` for GitHub DMG (Developer ID Application) |
-| `APP_STORE_CERTIFICATE_P12` | Base64 `.p12` for TestFlight (Apple Distribution) |
-| `APPLE_CERTIFICATE_P12` | Fallback if you use one cert for both workflows |
-| `P12_PASSWORD` | Export password for the `.p12` |
-| `APP_STORE_CONNECT_API_KEY_ID` | API key ID (notarization + TestFlight) |
-| `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID |
-| `APP_STORE_CONNECT_API_KEY` | Contents of the `.p8` key file |
+### What each secret is for
 
-Without signing secrets, `release.yml` still publishes an unsigned DMG. `release-store.yml` exits successfully without uploading.
+| Secret | Used by | Required when |
+|--------|---------|---------------|
+| `DEVELOPMENT_TEAM` | All signed builds | Any signing or TestFlight upload |
+| `DEVELOPER_ID_CERTIFICATE_P12` | `release.yml` (GitHub DMG) | Signed + notarized DMG |
+| `APP_STORE_CERTIFICATE_P12` | `release-store.yml` (TestFlight) | App Store upload |
+| `APPLE_CERTIFICATE_P12` | Either workflow | Fallback if you only export one `.p12` |
+| `P12_PASSWORD` | Both signing workflows | Whenever a `.p12` secret is set |
+| `APP_STORE_CONNECT_API_KEY_ID` | Notarization + TestFlight | Notarized DMG or TestFlight upload |
+| `APP_STORE_CONNECT_ISSUER_ID` | Notarization + TestFlight | Same as above |
+| `APP_STORE_CONNECT_API_KEY` | Notarization + TestFlight | Same as above |
+
+Without signing secrets, `release.yml` still publishes an **unsigned** DMG. `release-store.yml` exits successfully without uploading.
+
+### Prerequisites (one-time)
+
+1. **Apple Developer Program** — enroll at [developer.apple.com/programs/enroll](https://developer.apple.com/programs/enroll/) (£99/year). Approval can take up to 48 hours for new accounts.
+2. **Verify membership** — [developer.apple.com/account](https://developer.apple.com/account/) → **Membership** shows **Active**.
+3. **Register bundle ID** — [Identifiers](https://developer.apple.com/account/resources/identifiers/list) → **+** → **App IDs** → explicit `com.online.menu` (must match `Online.xcodeproj`). Enable **App Sandbox**.
+4. **App Store Connect app** (for TestFlight only) — [appstoreconnect.apple.com](https://appstoreconnect.apple.com/) → **Apps** → **+** → macOS app using bundle ID `com.online.menu`.
+5. **Mac with Keychain Access** — certificates are created and exported on a Mac (not in CI).
+
+---
+
+### `DEVELOPMENT_TEAM` — Apple Team ID
+
+**What it is:** Your 10-character Apple Developer Team ID (e.g. `AB12CD34EF`).
+
+**How to get it:**
+
+1. Sign in at [developer.apple.com/account](https://developer.apple.com/account/).
+2. Open **Membership details**.
+3. Copy **Team ID**.
+
+**GitHub secret value:** paste the Team ID as plain text (no quotes).
+
+---
+
+### `DEVELOPER_ID_CERTIFICATE_P12` — GitHub DMG signing
+
+**What it is:** Base64-encoded PKCS#12 (`.p12`) containing your **Developer ID Application** certificate **and its private key**. Used to sign the `.dmg` for GitHub Releases.
+
+**How to get it:**
+
+1. **Create the certificate** (skip if already in Keychain):
+   - [Certificates](https://developer.apple.com/account/resources/certificates/list) → **+**.
+   - Choose **Developer ID Application** → Continue.
+   - On your Mac: **Keychain Access** → **Certificate Assistant** → **Request a Certificate From a Certificate Authority**.
+     - Email: your Apple ID email.
+     - Common Name: e.g. `Online Developer ID`.
+     - Select **Saved to disk** → save the `.certSigningRequest` file.
+   - Upload the CSR → Download the `.cer` → double-click to install.
+   - In Keychain Access → **My Certificates**, confirm **Developer ID Application: … (TEAMID)** appears.
+
+2. **Export as `.p12`:**
+   - Keychain Access → **My Certificates**.
+   - Expand **Developer ID Application: …**.
+   - Select **both** the certificate **and** the private key beneath it (⌘-click).
+   - **File → Export Items…** → format **Personal Information Exchange (.p12)**.
+   - Set an export password — you will store this as `P12_PASSWORD`.
+
+3. **Base64-encode for GitHub:**
+
+   ```bash
+   base64 -i ~/Downloads/Online-DeveloperID.p12 | pbcopy
+   ```
+
+   Paste the entire output (one long line) into the secret value.
+
+**GitHub secret value:** base64 string of the `.p12` file.
+
+**Note:** Developer ID DMG builds do **not** need a provisioning profile. CI uses automatic signing with this certificate.
+
+---
+
+### `APP_STORE_CERTIFICATE_P12` — TestFlight / App Store
+
+**What it is:** Base64-encoded `.p12` containing your **Apple Distribution** certificate **and private key**. Used to archive and upload to TestFlight.
+
+**How to get it:**
+
+1. **Create the certificate** (skip if already in Keychain):
+   - [Certificates](https://developer.apple.com/account/resources/certificates/list) → **+**.
+   - Choose **Apple Distribution** → Continue.
+   - Upload a CSR (same process as Developer ID above, or reuse a saved CSR).
+   - Download `.cer` → double-click to install.
+   - Confirm **Apple Distribution: … (TEAMID)** in Keychain Access.
+
+2. **Provisioning profile** (recommended before first store archive):
+   - [Profiles](https://developer.apple.com/account/resources/profiles/list) → **+** → **Mac App Store Connect**.
+   - App ID: `com.online.menu`.
+   - Certificate: your **Apple Distribution** cert.
+   - Download and double-click to install.
+   - CI also passes `-allowProvisioningUpdates` so Xcode can refresh profiles if needed.
+
+3. **Export as `.p12`** (same steps as Developer ID, but select **Apple Distribution** cert + private key).
+
+4. **Base64-encode:**
+
+   ```bash
+   base64 -i ~/Downloads/Online-Distribution.p12 | pbcopy
+   ```
+
+**GitHub secret value:** base64 string of the `.p12` file.
+
+---
+
+### `APPLE_CERTIFICATE_P12` — optional fallback
+
+**What it is:** Same format as above. Only needed if you use **one** exported `.p12` for both workflows instead of separate Developer ID and Distribution secrets.
+
+**When to use:** Rare — only if you intentionally export a single cert. Normally set `DEVELOPER_ID_CERTIFICATE_P12` and `APP_STORE_CERTIFICATE_P12` separately.
+
+---
+
+### `P12_PASSWORD` — certificate export password
+
+**What it is:** The password you chose when exporting the `.p12` from Keychain Access.
+
+**How to get it:** You set this during **File → Export Items…** in Keychain Access. It is **not** your Apple ID password.
+
+**GitHub secret value:** the export password as plain text.
+
+**Important:** Use the **same** password if both `.p12` files were exported with the same password. If they differ, export both with one shared password before adding to GitHub (simplest for CI).
+
+---
+
+### `APP_STORE_CONNECT_API_KEY_ID`, `APP_STORE_CONNECT_ISSUER_ID`, `APP_STORE_CONNECT_API_KEY`
+
+**What they are:** App Store Connect API credentials. Used for:
+
+- **DMG notarization** (`xcrun notarytool` in `build-signed-dmg.sh`)
+- **TestFlight upload** (`xcrun altool` in `upload-testflight.sh`)
+
+**How to get them:**
+
+1. Sign in at [appstoreconnect.apple.com](https://appstoreconnect.apple.com/).
+2. **Users and Access** → **Integrations** → **App Store Connect API**.
+3. Click **+** to generate a key:
+   - **Name:** e.g. `GitHub Actions Online`
+   - **Access:** **Developer** (minimum — can upload builds) or **Admin**
+4. Click **Generate**.
+5. **Download the `.p8` file immediately** — Apple only allows one download. Store it in a password manager.
+6. On the same page, note:
+   - **Issuer ID** (top of the API keys section, UUID format)
+   - **Key ID** (shown in the key's row, 10 characters)
+
+**GitHub secret values:**
+
+| Secret | Value |
+|--------|-------|
+| `APP_STORE_CONNECT_API_KEY_ID` | Key ID (e.g. `AB12CD34EF`) |
+| `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID (UUID) |
+| `APP_STORE_CONNECT_API_KEY` | **Full contents** of the `.p8` file, including `-----BEGIN PRIVATE KEY-----` / `-----END PRIVATE KEY-----` lines |
+
+To copy the key contents:
+
+```bash
+pbcopy < ~/Downloads/AuthKey_AB12CD34EF.p8
+```
+
+**Do not** base64-encode the `.p8` — paste the raw PEM text into the secret.
+
+---
+
+### Add secrets to GitHub
+
+1. Open `https://github.com/Jubblin/online/settings/secrets/actions`.
+2. **New repository secret** for each name above.
+3. Paste the value → **Add secret**.
+
+**Recommended minimum setups:**
+
+| Goal | Secrets to set |
+|------|----------------|
+| Unsigned GitHub DMG only | *(none — default)* |
+| Signed + notarized GitHub DMG | `DEVELOPMENT_TEAM`, `DEVELOPER_ID_CERTIFICATE_P12`, `P12_PASSWORD`, `APP_STORE_CONNECT_API_KEY_*` (all three) |
+| TestFlight upload | `DEVELOPMENT_TEAM`, `APP_STORE_CERTIFICATE_P12`, `P12_PASSWORD`, `APP_STORE_CONNECT_API_KEY_*` (all three) |
+| Full dual distribution | All of the above |
+
+### Verify secrets locally (optional)
+
+After exporting certs to your Mac keychain, you can dry-run before pushing secrets:
+
+```bash
+export DEVELOPMENT_TEAM=YOUR_TEAM_ID
+./scripts/build-signed-dmg.sh Release    # needs Developer ID cert in keychain
+./scripts/upload-testflight.sh Release   # needs Distribution cert + API key env vars
+```
+
+For notarization locally with the API key:
+
+```bash
+export APP_STORE_CONNECT_API_KEY_ID=...
+export APP_STORE_CONNECT_ISSUER_ID=...
+export APP_STORE_CONNECT_API_KEY="$(cat AuthKey_XXXXX.p8)"
+```
+
+### Setup checklist
+
+- [ ] Developer Program membership **Active**
+- [ ] Team ID → `DEVELOPMENT_TEAM`
+- [ ] Bundle ID `com.online.menu` registered with App Sandbox
+- [ ] Developer ID Application cert exported → `DEVELOPER_ID_CERTIFICATE_P12`
+- [ ] Apple Distribution cert exported → `APP_STORE_CERTIFICATE_P12`
+- [ ] Export password → `P12_PASSWORD`
+- [ ] App Store Connect API key downloaded → `APP_STORE_CONNECT_API_KEY_*` (all three)
+- [ ] App Store Connect macOS app record created (TestFlight)
+- [ ] Privacy policy live at https://jubblin.github.io/online/privacy.html
+- [ ] Run **Release dispatch** with **Validate only** to confirm gates before first real release
