@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Release dispatch workflow (`release-dispatch.yml`) — validate gates, auto-finalize CHANGELOG, tag
+- Signed DMG pipeline (`build-signed-dmg.sh`) with optional notarization via App Store Connect API
+- TestFlight upload workflow (`release-store.yml`) and `upload-testflight.sh`
+- Release helper scripts: `read-marketing-version.sh`, `changelog-has-unreleased-content.sh`, `finalize-changelog.sh`, `ci-setup-keychain.sh`
 - `PrivacyInfo.xcprivacy` (no tracking; UserDefaults + file timestamp API reasons)
 - `docs/privacy.html` for GitHub Pages hosting
 - `docs/APP_REVIEW_NOTES.md` for Mac App Store submission
@@ -21,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Privacy policy link now points to GitHub Pages URL (`jubblin.github.io/online/privacy.html`)
+- CI/release workflows use repo-owned Xcode setup action (org allowlist compliance)
 - Export compliance: `ITSAppUsesNonExemptEncryption` = NO in generated Info.plist
 - Gateway probe now uses `SCDynamicStore` + `NWConnection` (sandbox-compatible) instead of `/sbin/route` and `/sbin/ping`
 - App Sandbox enabled in `Online.entitlements`

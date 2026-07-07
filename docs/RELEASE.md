@@ -31,19 +31,40 @@ Online ships on two channels with the **same version number**:
 
 This URL is used in App Store Connect and in-app Help links.
 
-## GitHub release (today)
+## GitHub release (dispatch workflow)
 
-1. Move `[Unreleased]` entries into `## [X.Y.Z] - YYYY-MM-DD` (version matches tag without `v`).
-2. Push the tag:
+Use **Actions → Release dispatch → Run workflow** on `main`.
+
+1. Enter the version **without** the `v` prefix (must match `MARKETING_VERSION` on `main`, e.g. `0.2.6`).
+2. Leave **Validate only** unchecked to auto-finalize the changelog and tag.
+
+The workflow ([release-dispatch.yml](../.github/workflows/release-dispatch.yml)) will:
+
+1. Validate `[Unreleased]` has at least one bullet (or an existing `## [VERSION]` section when validating only).
+2. Validate `MARKETING_VERSION` matches the input version.
+3. Move `[Unreleased]` → `## [VERSION] - YYYY-MM-DD` and commit to `main`.
+4. Create and push tag `vX.Y.Z`.
+
+Tag push triggers:
+
+| Workflow | Artifact |
+|----------|----------|
+| [release.yml](../.github/workflows/release.yml) | Developer ID signed + notarized DMG → GitHub Release |
+| [release-store.yml](../.github/workflows/release-store.yml) | Mac App Store archive → TestFlight |
+
+### Validate only (dry run)
+
+Check **Validate only — do not auto-move [Unreleased]** to run gates without committing or tagging. Use this before the real dispatch when you want to confirm version alignment and changelog state.
+
+### Manual tag (fallback)
 
 ```bash
+# After moving [Unreleased] manually in CHANGELOG.md
 git tag vX.Y.Z
 git push origin vX.Y.Z
 ```
 
-3. [release.yml](../.github/workflows/release.yml) builds the DMG and publishes release notes from CHANGELOG.
-
-Preview notes locally:
+Preview release notes locally:
 
 ```bash
 ./scripts/extract-changelog-section.sh X.Y.Z
@@ -53,25 +74,33 @@ Preview notes locally:
 
 Tags containing `-` (e.g. `v1.0.0-beta.1`) are marked as GitHub prereleases automatically.
 
-## GitHub release (planned — dispatch workflow)
-
-A `workflow_dispatch` release will:
-
-1. Validate `[Unreleased]` is non-empty.
-2. Validate `MARKETING_VERSION` matches the input version.
-3. Auto-move `[Unreleased]` → version section and commit.
-4. Create tag `vX.Y.Z` and trigger build workflows.
-
 ## Version alignment
 
 - Tag `vX.Y.Z` must match `MARKETING_VERSION` in `project.pbxproj` at the tagged commit.
 - Do **not** hand-edit version numbers in `project.pbxproj`; use PR labels (`version:patch`, `version:minor`, `version:major`).
 
-## Dual distribution builds (planned)
+## Dual distribution builds
 
-On tag `v*`:
+On tag `v*`, both workflows run from the same commit:
 
-- `release.yml` → Developer ID signed + notarized DMG for GitHub.
-- `release-store.yml` → Apple Distribution archive → TestFlight.
+- **GitHub** — `scripts/build-signed-dmg.sh` archives with Developer ID, notarizes the DMG, and publishes via `release.yml`. Falls back to an unsigned DMG when signing secrets are not configured.
+- **App Store** — `scripts/upload-testflight.sh` archives with Apple Distribution and uploads to TestFlight via `release-store.yml`. Skips gracefully when App Store Connect API credentials are missing.
 
-Same source, same version; different export/signing method.
+You can also trigger **Release Store** manually from Actions (useful for re-uploading a build without re-tagging).
+
+## CI signing secrets
+
+Configure these in **Settings → Secrets and variables → Actions**:
+
+| Secret | Purpose |
+|--------|---------|
+| `DEVELOPMENT_TEAM` | Apple Team ID |
+| `DEVELOPER_ID_CERTIFICATE_P12` | Base64 `.p12` for GitHub DMG (Developer ID Application) |
+| `APP_STORE_CERTIFICATE_P12` | Base64 `.p12` for TestFlight (Apple Distribution) |
+| `APPLE_CERTIFICATE_P12` | Fallback if you use one cert for both workflows |
+| `P12_PASSWORD` | Export password for the `.p12` |
+| `APP_STORE_CONNECT_API_KEY_ID` | API key ID (notarization + TestFlight) |
+| `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID |
+| `APP_STORE_CONNECT_API_KEY` | Contents of the `.p8` key file |
+
+Without signing secrets, `release.yml` still publishes an unsigned DMG. `release-store.yml` exits successfully without uploading.

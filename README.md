@@ -49,7 +49,7 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 2. Open the DMG and drag **Online** to Applications
 3. Launch Online and grant notification permission when prompted
 
-> Releases are **unsigned**. macOS may block the first launch. Right-click → Open, or sign locally (see [Signing](#signing)).
+> Signed and notarized DMGs are published when repo signing secrets are configured. Otherwise releases are unsigned — right-click → Open on first launch (see [Signing](#signing)).
 
 ### Build from source
 
@@ -153,15 +153,12 @@ scripts/      build-dmg.sh, bump-version.sh, health.sh
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
 | [CI](.github/workflows/ci.yml) | Push to `main`, PRs | Test + build Release artifact |
-| [Release](.github/workflows/release.yml) | Tag `v*` | Build DMG → GitHub Release |
+| [Release dispatch](.github/workflows/release-dispatch.yml) | Manual | Finalize CHANGELOG + tag `v*` |
+| [Release](.github/workflows/release.yml) | Tag `v*` | Signed/notarized DMG → GitHub Release |
+| [Release Store](.github/workflows/release-store.yml) | Tag `v*` or manual | Upload to TestFlight |
 | [Version bump](.github/workflows/version-bump.yml) | PR to `main` | Auto-bump semver + build number |
 
-**Cut a release:**
-
-```bash
-git tag v0.1.0
-git push origin v0.1.0
-```
+**Cut a release:** Actions → **Release dispatch** on `main`, or see [docs/RELEASE.md](docs/RELEASE.md).
 
 **PR version labels:** `version:patch` (default), `version:minor`, `version:major`
 
@@ -169,11 +166,12 @@ git push origin v0.1.0
 
 ## Signing
 
-Release builds are unsigned. To distribute outside your machine:
+CI can produce Developer ID signed and notarized DMGs when [signing secrets](docs/RELEASE.md#ci-signing-secrets) are configured. For local distribution:
 
 ```bash
-codesign --force --deep --sign "Developer ID Application: Your Name" \
-  build/Build/Products/Release/Online.app
+./scripts/build-signed-dmg.sh Release   # requires DEVELOPMENT_TEAM + cert in keychain
+# or unsigned:
+./scripts/build-dmg.sh Release
 ```
 
 ## Roadmap

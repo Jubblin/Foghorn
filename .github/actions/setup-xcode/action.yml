@@ -1,0 +1,12 @@
+name: Set up Xcode
+description: Select the default Xcode toolchain on GitHub-hosted macOS runners.
+
+runs:
+  using: composite
+  steps:
+    - name: Select Xcode
+      shell: bash
+      run: |
+        set -euo pipefail
+        sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+        xcodebuild -version

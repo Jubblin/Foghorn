@@ -1,0 +1,90 @@
+name: Release dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version without v prefix (e.g. 0.3.0)'
+        required: true
+      skip_changelog_finalize:
+        description: 'Validate only — do not auto-move [Unreleased]'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-dispatch
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    name: Finalize changelog and tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate release gates
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          SKIP_FINALIZE: ${{ inputs.skip_changelog_finalize }}
+        run: |
+          set -euo pipefail
+          chmod +x scripts/*.sh
+
+          if [[ "$SKIP_FINALIZE" != "true" ]]; then
+            ./scripts/changelog-has-unreleased-content.sh
+          else
+            ./scripts/changelog-has-version-section.sh "$INPUT_VERSION"
+          fi
+
+          MARKETING_VERSION="$(./scripts/read-marketing-version.sh)"
+          if [[ "$MARKETING_VERSION" != "$INPUT_VERSION" ]]; then
+            echo "MARKETING_VERSION ($MARKETING_VERSION) does not match input ($INPUT_VERSION)" >&2
+            echo "Merge the version-bump PR or choose the version on main." >&2
+            exit 1
+          fi
+
+          if [[ "$SKIP_FINALIZE" != "true" ]] && ./scripts/changelog-has-version-section.sh "$INPUT_VERSION"; then
+            echo "CHANGELOG already contains ## [$INPUT_VERSION]" >&2
+            exit 1
+          fi
+
+      - name: Finalize CHANGELOG
+        if: inputs.skip_changelog_finalize != true
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          ./scripts/finalize-changelog.sh "$INPUT_VERSION"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "chore(release): prepare changelog for ${INPUT_VERSION}"
+          git push origin main
+
+      - name: Create and push tag
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          git tag "v${INPUT_VERSION}"
+          git push origin "v${INPUT_VERSION}"
+
+      - name: Summary
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          {
+            echo "### Release dispatched"
+            echo "- Version: \`${INPUT_VERSION}\`"
+            echo "- Tag: \`v${INPUT_VERSION}\`"
+            echo "- GitHub DMG workflow: release.yml"
+            echo "- TestFlight workflow: release-store.yml"
+          } >> "$GITHUB_STEP_SUMMARY"
