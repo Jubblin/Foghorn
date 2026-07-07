@@ -18,6 +18,7 @@ struct OutageLogView: View {
                     Text("When Online detects a confirmed outage, it will appear here.")
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityIdentifier("outageLog.emptyState")
             } else {
                 Table(sortedRecords, sortOrder: $sortOrder) {
                     TableColumn("Started", value: \.startedAt) { record in

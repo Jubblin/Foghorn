@@ -80,6 +80,7 @@ struct SettingsView: View {
 
 private struct SettingsSectionCard<Content: View>: View {
     let title: String
+    let sectionIdentifier: String
     let palette: DesignPalette
     @ViewBuilder let content: Content
 
@@ -88,6 +89,7 @@ private struct SettingsSectionCard<Content: View>: View {
             Text(title)
                 .font(.headline)
                 .foregroundStyle(palette.fogText)
+                .accessibilityIdentifier(sectionIdentifier)
             content
         }
         .padding(12)
@@ -117,9 +119,10 @@ private struct SettingsInterruptSection: View {
     let palette: DesignPalette
 
     var body: some View {
-        SettingsSectionCard(title: "When to interrupt me", palette: palette) {
+        SettingsSectionCard(title: "When to interrupt me", sectionIdentifier: "settings.section.interrupt", palette: palette) {
             VStack(alignment: .leading, spacing: 8) {
                 Toggle("Show in menu bar", isOn: $settings.showInMenuBar)
+                    .accessibilityIdentifier("settings.showInMenuBar")
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Appearance")
@@ -131,6 +134,7 @@ private struct SettingsInterruptSection: View {
                     }
                     .pickerStyle(.segmented)
                     .labelsHidden()
+                    .accessibilityIdentifier("settings.appearancePicker")
                 }
 
                 SettingsHelperText(
@@ -159,10 +163,12 @@ private struct SettingsInterruptSection: View {
             Button("Enable alerts") {
                 Task { await alertService.requestAuthorizationIfNeeded() }
             }
+            .accessibilityIdentifier("settings.enableAlerts")
         case .denied:
             Button("Open Notification Settings") {
                 AlertService.openSystemNotificationSettings()
             }
+            .accessibilityIdentifier("settings.openNotificationSettings")
         }
     }
 
@@ -187,7 +193,7 @@ private struct SettingsChecksSection: View {
     let palette: DesignPalette
 
     var body: some View {
-        SettingsSectionCard(title: "What Online checks", palette: palette) {
+        SettingsSectionCard(title: "What Online checks", sectionIdentifier: "settings.section.checks", palette: palette) {
             VStack(alignment: .leading, spacing: 8) {
                 Picker("Base interval", selection: $settings.basePollInterval) {
                     Text("2 seconds").tag(2.0)
@@ -231,16 +237,19 @@ private struct SettingsChecksSection: View {
                         HStack {
                             TextField("vpn.company.com", text: $newHost)
                                 .textFieldStyle(.roundedBorder)
+                                .accessibilityIdentifier("settings.customHostField")
                             Button("Add") {
                                 settings.addCustomHost(newHost)
                                 newHost = ""
                                 customHostsExpanded = true
                             }
+                            .accessibilityIdentifier("settings.customHostAdd")
                             .disabled(newHost.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                         }
                     }
                     .padding(.top, 4)
                 }
+                .accessibilityIdentifier("settings.customHosts")
             }
         }
     }
@@ -259,9 +268,10 @@ private struct SettingsRemembersSection: View {
     let palette: DesignPalette
 
     var body: some View {
-        SettingsSectionCard(title: "What Online remembers", palette: palette) {
+        SettingsSectionCard(title: "What Online remembers", sectionIdentifier: "settings.section.remembers", palette: palette) {
             VStack(alignment: .leading, spacing: 8) {
                 Toggle("Launch at login", isOn: $settings.launchAtLogin)
+                    .accessibilityIdentifier("settings.launchAtLogin")
                     .onChange(of: settings.launchAtLogin) { _, enabled in
                         do {
                             try LaunchAtLoginService.setEnabled(enabled)
@@ -292,7 +302,7 @@ private struct SettingsHelpPrivacySection: View {
     let palette: DesignPalette
 
     var body: some View {
-        SettingsSectionCard(title: "Help & privacy", palette: palette) {
+        SettingsSectionCard(title: "Help & privacy", sectionIdentifier: "settings.section.help", palette: palette) {
             VStack(alignment: .leading, spacing: 8) {
                 SettingsHelperText(
                     text: "Online monitors connectivity locally — no personal data collected or transmitted.",
@@ -300,11 +310,11 @@ private struct SettingsHelpPrivacySection: View {
                 )
 
                 HStack(spacing: 6) {
-                    linkButton("Privacy", url: AppLinks.privacyPolicy)
+                    linkButton("Privacy", url: AppLinks.privacyPolicy, identifier: "settings.link.privacy")
                     linkSeparator
-                    linkButton("Support", url: AppLinks.support)
+                    linkButton("Support", url: AppLinks.support, identifier: "settings.link.support")
                     linkSeparator
-                    linkButton("Report", url: AppLinks.reportIssue)
+                    linkButton("Report", url: AppLinks.reportIssue, identifier: "settings.link.report")
                     Spacer(minLength: 0)
                 }
 
@@ -322,11 +332,12 @@ private struct SettingsHelpPrivacySection: View {
             .foregroundStyle(palette.mutedLichen)
     }
 
-    private func linkButton(_ title: String, url: URL) -> some View {
+    private func linkButton(_ title: String, url: URL, identifier: String) -> some View {
         Button(title) {
             AppLinks.openInBrowser(url)
         }
         .buttonStyle(.plain)
         .foregroundStyle(DesignTokens.probeBlue)
+        .accessibilityIdentifier(identifier)
     }
 }

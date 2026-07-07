@@ -36,6 +36,8 @@
 		B1000000000000000000001B /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001E /* DesignTokens.swift */; };
 		B1000000000000000000001C /* GatewayProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001F /* GatewayProbeTests.swift */; };
 		B1000000000000000000001D /* AppLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000020 /* AppLinks.swift */; };
+		B1000000000000000000001E /* SettingsSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000022 /* SettingsSmokeTests.swift */; };
+		B1000000000000000000001F /* UITestConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000023 /* UITestConfiguration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +73,9 @@
 		F1000000000000000000001F /* GatewayProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayProbeTests.swift; sourceTree = "<group>"; };
 		F10000000000000000000020 /* AppLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLinks.swift; sourceTree = "<group>"; };
 		F1000000000000000000001B /* OnlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F10000000000000000000021 /* OnlineUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F10000000000000000000022 /* SettingsSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSmokeTests.swift; sourceTree = "<group>"; };
+		F10000000000000000000023 /* UITestConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestConfiguration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,10 +93,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		P10000000000000000000008 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXContainerItemProxy section */
 		CP100000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PR1000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = T10000000000000000000001;
+			remoteInfo = Online;
+		};
+		CP100000000000000000002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = PR1000000000000000000001 /* Project object */;
 			proxyType = 1;
@@ -106,6 +125,7 @@
 			children = (
 				G10000000000000000000002 /* Online */,
 				G10000000000000000000009 /* OnlineTests */,
+				G1000000000000000000000B /* OnlineUITests */,
 				G10000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -120,6 +140,7 @@
 				G10000000000000000000006 /* State */,
 				G10000000000000000000007 /* Services */,
 				G10000000000000000000008 /* Views */,
+				G1000000000000000000000C /* UITest */,
 				G1000000000000000000000A /* Design */,
 				F10000000000000000000014 /* Assets.xcassets */,
 				F10000000000000000000015 /* Online.entitlements */,
@@ -132,6 +153,7 @@
 			children = (
 				F10000000000000000000016 /* Online.app */,
 				F1000000000000000000001B /* OnlineTests.xctest */,
+				F10000000000000000000021 /* OnlineUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -172,6 +194,22 @@
 				F1000000000000000000001D /* OutageRecordTests.swift */,
 			);
 			path = OnlineTests;
+			sourceTree = "<group>";
+		};
+		G1000000000000000000000B /* OnlineUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000022 /* SettingsSmokeTests.swift */,
+			);
+			path = OnlineUITests;
+			sourceTree = "<group>";
+		};
+		G1000000000000000000000C /* UITest */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000023 /* UITestConfiguration.swift */,
+			);
+			path = UITest;
 			sourceTree = "<group>";
 		};
 		G10000000000000000000006 /* State */ = {
@@ -249,6 +287,23 @@
 			productReference = F1000000000000000000001B /* OnlineTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		T10000000000000000000003 /* OnlineUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C10000000000000000000005 /* Build configuration list for PBXNativeTarget "OnlineUITests" */;
+			buildPhases = (
+				P10000000000000000000007 /* Sources */,
+				P10000000000000000000008 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D10000000000000000000002 /* PBXTargetDependency */,
+			);
+			name = OnlineUITests;
+			productName = OnlineUITests;
+			productReference = F10000000000000000000021 /* OnlineUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXTargetDependency section */
@@ -256,6 +311,11 @@
 			isa = PBXTargetDependency;
 			target = T10000000000000000000001 /* Online */;
 			targetProxy = CP100000000000000000001 /* PBXContainerItemProxy */;
+		};
+		D10000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = T10000000000000000000001 /* Online */;
+			targetProxy = CP100000000000000000002 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -282,6 +342,7 @@
 			targets = (
 				T10000000000000000000001 /* Online */,
 				T10000000000000000000002 /* OnlineTests */,
+				T10000000000000000000003 /* OnlineUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -347,6 +408,7 @@
 				B1000000000000000000001B /* DesignTokens.swift in Sources */,
 				B10000000000000000000015 /* GatewayResolver.swift in Sources */,
 				B1000000000000000000001D /* AppLinks.swift in Sources */,
+				B1000000000000000000001F /* UITestConfiguration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -359,6 +421,14 @@
 				B10000000000000000000018 /* HTTPProbeTests.swift in Sources */,
 				B1000000000000000000001C /* GatewayProbeTests.swift in Sources */,
 				B1000000000000000000001A /* OutageRecordTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		P10000000000000000000007 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1000000000000000000001E /* SettingsSmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -487,6 +557,42 @@
 			};
 			name = Release;
 		};
+		X10000000000000000000007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Online;
+			};
+			name = Debug;
+		};
+		X10000000000000000000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Online;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -513,6 +619,15 @@
 			buildConfigurations = (
 				X10000000000000000000005 /* Debug */,
 				X10000000000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C10000000000000000000005 /* Build configuration list for PBXNativeTarget "OnlineUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				X10000000000000000000007 /* Debug */,
+				X10000000000000000000008 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

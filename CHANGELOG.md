@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Appearance preference and adaptive popover theming
+- `OnlineUITests` XCUITest target with eight Settings/outage-log smoke tests
+- `UITestConfiguration` launch-argument harness (`-ui_testing`, open Settings/outage log, mock notifications)
+- Accessibility identifiers on Settings and outage log empty state
+- `docs/RELEASE.md`, `docs/PRE_RELEASE_CHECKLIST.md`, and `docs/UI_TESTING.md`
+- CI `ui-test` job (soft-fail while menu bar XCTest bootstrap stabilises)
+- Shared `Online.xcscheme` including unit and UI test targets
 - Design tokens and semantic status colors across popover, settings, and outage log
 - SwiftLint configuration, CI quality job (SwiftLint + ShellCheck), and Xcode lint build phase
 - Injectable gateway probe seams and `GatewayProbeTests`
