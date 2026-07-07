@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy — Online</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      max-width: 42rem;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    h1, h2 { line-height: 1.25; }
+    a { color: #0a84ff; }
+  </style>
+</head>
+<body>
+  <h1>Privacy Policy — Online</h1>
+  <p><strong>Last updated:</strong> 2026-07-07</p>
+
+  <p>Online is a native macOS menu bar utility. This policy describes what the app does with your data.</p>
+
+  <h2>Summary</h2>
+  <p>Online does <strong>not</strong> collect, transmit, or sell personal data. Network probes run <strong>locally on your Mac</strong>. Outage history is stored <strong>only on your device</strong>.</p>
+
+  <h2>Data stored on your device</h2>
+  <ul>
+    <li><strong>Settings</strong> — poll interval, custom hosts, appearance, and menu bar preferences (UserDefaults).</li>
+    <li><strong>Outage log</strong> — JSON file at <code>~/Library/Application Support/Online/outages.json</code> with timestamps, failure reasons, and probe summaries.</li>
+  </ul>
+  <p>You can view, copy, or delete outage records from the app.</p>
+
+  <h2>Network activity</h2>
+  <p>Online performs connectivity checks (path monitor, gateway, DNS, HTTP HEAD, optional custom hosts) to determine whether your internet connection is working. These requests go to your network and configured endpoints only. Online does not phone home to a developer server.</p>
+
+  <h2>Notifications</h2>
+  <p>If you grant permission, macOS delivers local alerts when Online detects a confirmed outage or recovery. Notification content is generated on device.</p>
+
+  <h2>Analytics and tracking</h2>
+  <p>Online includes no analytics SDKs, advertising, or third-party tracking.</p>
+
+  <h2>Contact</h2>
+  <p>Questions or concerns: <a href="https://github.com/Jubblin/online/issues/new/choose">open a GitHub issue</a>.</p>
+</body>
+</html>

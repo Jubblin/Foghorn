@@ -23,6 +23,14 @@ Online ships on two channels with the **same version number**:
 3. Run [PRE_RELEASE_CHECKLIST.md](PRE_RELEASE_CHECKLIST.md) on a Release build locally.
 4. Run `./scripts/health.sh` (or rely on green CI).
 
+## Hosting the privacy policy (one-time)
+
+1. Repo **Settings → Pages**
+2. Source: **Deploy from branch** → `main` → `/docs`
+3. Verify https://jubblin.github.io/online/privacy.html loads
+
+This URL is used in App Store Connect and in-app Help links.
+
 ## GitHub release (today)
 
 1. Move `[Unreleased]` entries into `## [X.Y.Z] - YYYY-MM-DD` (version matches tag without `v`).
