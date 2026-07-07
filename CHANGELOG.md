@@ -9,22 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `PrivacyInfo.xcprivacy` (no tracking; UserDefaults + file timestamp API reasons)
+- `docs/privacy.html` for GitHub Pages hosting
+- `docs/APP_REVIEW_NOTES.md` for Mac App Store submission
 - `OnlineUITests` XCUITest target with eight Settings/outage-log smoke tests
 - `UITestConfiguration` launch-argument harness (`-ui_testing`, open Settings/outage log, mock notifications)
 - Accessibility identifiers on Settings and outage log empty state
 - `docs/RELEASE.md`, `docs/PRE_RELEASE_CHECKLIST.md`, and `docs/UI_TESTING.md`
 - CI `ui-test` job (soft-fail while menu bar XCTest bootstrap stabilises)
 - Shared `Online.xcscheme` including unit and UI test targets
-- Design tokens and semantic status colors across popover, settings, and outage log
-- SwiftLint configuration, CI quality job (SwiftLint + ShellCheck), and Xcode lint build phase
-- Injectable gateway probe seams and `GatewayProbeTests`
-- `scripts/health.sh` to run the local Health Stack (lint, shellcheck, build, test)
-- Settings **Help & privacy** section with Privacy Policy, Support, and Report an issue links
-- `PRIVACY.md` and notification permission status in Settings
 
 ### Changed
 
-- Gateway probe documentation now describes ICMP ping instead of TCP
+- Privacy policy link now points to GitHub Pages URL (`jubblin.github.io/online/privacy.html`)
+- Export compliance: `ITSAppUsesNonExemptEncryption` = NO in generated Info.plist
+- Gateway probe now uses `SCDynamicStore` + `NWConnection` (sandbox-compatible) instead of `/sbin/route` and `/sbin/ping`
+- App Sandbox enabled in `Online.entitlements`
 - Settings notification permission can be enabled explicitly from Settings (Enable alerts)
 - Settings layout compacts to four sections without outer scroll; Help links on one line
 - Notification permission is requested on first confirmed outage instead of at launch (alert-first UX)
