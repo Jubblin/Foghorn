@@ -258,10 +258,17 @@ private struct SettingsChecksSection: View {
             }
 
             HStack {
-                TextField("vpn.company.com", text: $newHost)
-                    .textFieldStyle(UITestConfiguration.isActive ? .plain : .roundedBorder)
-                    .accessibilityIdentifier("settings.customHostField")
-                    .accessibilityLabel("Custom host")
+                Group {
+                    if UITestConfiguration.isActive {
+                        TextField("vpn.company.com", text: $newHost)
+                            .textFieldStyle(.plain)
+                    } else {
+                        TextField("vpn.company.com", text: $newHost)
+                            .textFieldStyle(.roundedBorder)
+                    }
+                }
+                .accessibilityIdentifier("settings.customHostField")
+                .accessibilityLabel("Custom host")
                 Button("Add") {
                     settings.addCustomHost(newHost)
                     newHost = ""
