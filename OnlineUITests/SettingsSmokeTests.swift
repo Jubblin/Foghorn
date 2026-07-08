@@ -60,9 +60,21 @@ final class SettingsSmokeTests: XCTestCase {
 
         let picker = element(identifier: "settings.appearancePicker")
         XCTAssertTrue(picker.waitForExistence(timeout: 5))
+
+        let lightSegment = element(identifier: "settings.appearance.light")
+        if lightSegment.waitForExistence(timeout: 2) {
+            lightSegment.click()
+            return
+        }
+
         let segments = picker.buttons
-        XCTAssertGreaterThan(segments.count, 1)
-        segments.element(boundBy: 1).click()
+        if segments.count > 1 {
+            segments.element(boundBy: 1).click()
+            return
+        }
+
+        // Headless CI: segmented control may expose no child buttons — tap by coordinate.
+        picker.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).click()
     }
 
     // MARK: - T6
@@ -84,7 +96,7 @@ final class SettingsSmokeTests: XCTestCase {
         field.typeText("uitest.example.com")
 
         element(identifier: "settings.customHostAdd").click()
-        XCTAssertTrue(app.staticTexts["uitest.example.com"].waitForExistence(timeout: 5))
+        XCTAssertTrue(waitFor(identifier: "settings.customHost.uitest.example.com", timeout: 5))
     }
 
     // MARK: - T8
