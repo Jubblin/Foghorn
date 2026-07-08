@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `UITestConfiguration` launch-argument harness (`-ui_testing`, open Settings/outage log, mock notifications)
 - Accessibility identifiers on Settings and outage log empty state
 - `docs/RELEASE.md`, `docs/PRE_RELEASE_CHECKLIST.md`, and `docs/UI_TESTING.md`
-- CI `ui-test` job (soft-fail while menu bar XCTest bootstrap stabilises)
+- CI `ui-test` job on `macos-26` runners
 - Shared `Online.xcscheme` including unit and UI test targets
 
 ### Changed
@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- UI tests open Settings via explicit test window (fixes headless CI; `showSettingsWindow:` was unreliable)
 - Menu bar Settings row in popover (`openSettings` instead of broken `SettingsLink`)
 - Renovate configuration invalid `:separateMajorMinor` preset
 - SwiftLint warnings in app sources and tests
