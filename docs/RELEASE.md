@@ -7,6 +7,69 @@ Online ships on two channels with the **same version number**:
 | GitHub Releases | `.dmg` | Developer ID + notarization |
 | Mac App Store | TestFlight → public | Apple Distribution |
 
+## macOS versions
+
+Online uses **two different macOS version concepts** — do not confuse them when cutting a release.
+
+| Context | macOS version | Where it is set |
+|---------|---------------|-----------------|
+| **Running the app** (customers) | **macOS 14 Sonoma or later** | `MACOSX_DEPLOYMENT_TARGET = 14.0` in `Online.xcodeproj` |
+| **Building in CI** (tagged releases) | **`macos-27` GitHub Actions runners** | `runs-on:` in `ci.yml`, `release.yml`, `release-store.yml` |
+| **Local signed release** (optional) | **macOS 26 Tahoe or later**; **macOS 27** when available on your Mac | Your machine + Xcode 26+ (Xcode 27 on macOS 27) |
+
+### CI and release workflows (`macos-27`)
+
+Tagged releases (`release.yml`, `release-store.yml`) and [CI](../.github/workflows/ci.yml) build on GitHub-hosted **`macos-27`** runners (Apple Silicon). Xcode is selected via the repo-owned [`.github/actions/setup-xcode`](../.github/actions/setup-xcode) composite action (default toolchain on the runner image).
+
+| Workflow | Runner | What it produces |
+|----------|--------|------------------|
+| [ci.yml](../.github/workflows/ci.yml) | `macos-27` | Lint, unit tests, UI smoke, Release `.app` artifact |
+| [release.yml](../.github/workflows/release.yml) | `macos-27` | Signed/notarized `Online.dmg` → GitHub Release |
+| [release-store.yml](../.github/workflows/release-store.yml) | `macos-27` | App Store archive → TestFlight |
+
+**Runner labels (GitHub Actions):**
+
+| Label | Use |
+|-------|-----|
+| `macos-27` | Default for this repo (ARM64) |
+| `macos-27-intel` / `macos-27-large` | Intel — avoid; Apple does not ship Intel Macs on macOS 27 |
+
+**Before `macos-27` is GA:** GitHub may still serve **`macos-26`** images. Watch [actions/runner-images](https://github.com/actions/runner-images/issues) for the macOS 27 announcement. Until then, keep `runs-on: macos-26` in workflow files; the table above is the **target** once the image ships (expected fall 2026).
+
+**Do not use** `macos-14` — Sonoma runners began deprecation on 2026-07-06 and are unsupported for new release pipelines.
+
+### GitHub Release notes (customer-facing text)
+
+`release.yml` appends this footer to every published DMG release:
+
+> **Requirements:** macOS 14 Sonoma or later
+
+That is the **minimum OS to run Online**, not the OS used to compile the build. Do not change it to macOS 27 unless you intentionally raise `MACOSX_DEPLOYMENT_TARGET` in Xcode and ship a breaking major release.
+
+### Local release verification
+
+When testing a signed build before dispatch:
+
+```bash
+xcodebuild -version          # Xcode 26+ (27 on macOS 27)
+sw_vers                      # macOS 26+ recommended
+./scripts/build-signed-dmg.sh Release
+```
+
+Match the major Xcode/macOS generation to what CI uses when possible so archive and export behaviour stays consistent.
+
+### Migrating workflows to `macos-27`
+
+When GitHub announces macOS 27 runner GA:
+
+1. Replace `runs-on: macos-26` → `runs-on: macos-27` in:
+   - `.github/workflows/ci.yml` (all macOS jobs)
+   - `.github/workflows/release.yml`
+   - `.github/workflows/release-store.yml`
+2. Merge and wait for green CI on a PR.
+3. Run **Release dispatch** with **Validate only** before the first real tag on the new runners.
+4. Update this section to remove the `macos-26` fallback note.
+
 ## Cadence
 
 | Rhythm | Action |
@@ -113,7 +176,7 @@ Without signing secrets, `release.yml` still publishes an **unsigned** DMG. `rel
 2. **Verify membership** — [developer.apple.com/account](https://developer.apple.com/account/) → **Membership** shows **Active**.
 3. **Register bundle ID** — [Identifiers](https://developer.apple.com/account/resources/identifiers/list) → **+** → **App IDs** → explicit `com.online.menu` (must match `Online.xcodeproj`). Enable **App Sandbox**.
 4. **App Store Connect app** (for TestFlight only) — [appstoreconnect.apple.com](https://appstoreconnect.apple.com/) → **Apps** → **+** → macOS app using bundle ID `com.online.menu`.
-5. **Mac with Keychain Access** — certificates are created and exported on a Mac (not in CI).
+5. **Mac with macOS 26+** (macOS 27 when available) and **Keychain Access** — certificates are created and exported locally, not in CI.
 
 ---
 
