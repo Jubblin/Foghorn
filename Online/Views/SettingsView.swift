@@ -33,7 +33,7 @@ struct SettingsView: View {
     @ObservedObject private var alertService = AlertService.shared
     @State private var newHost = ""
     @State private var launchError: String?
-    @State private var customHostsExpanded = false
+    @State private var customHostsExpanded = UITestConfiguration.isActive
 
     private var palette: DesignPalette {
         DesignPalette.palette(colorScheme: colorScheme)
@@ -129,7 +129,9 @@ private struct SettingsInterruptSection: View {
                         .font(.subheadline)
                     Picker("Appearance", selection: $settings.appearancePreference) {
                         ForEach(AppearancePreference.allCases) { preference in
-                            Text(preference.displayName).tag(preference)
+                            Text(preference.displayName)
+                                .tag(preference)
+                                .accessibilityIdentifier("settings.appearance.\(preference.rawValue)")
                         }
                     }
                     .pickerStyle(.segmented)
@@ -207,51 +209,63 @@ private struct SettingsChecksSection: View {
                     palette: palette
                 )
 
-                DisclosureGroup("Custom hosts", isExpanded: $customHostsExpanded) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        if settings.customHosts.isEmpty {
-                            SettingsHelperText(text: "No custom hosts configured.", palette: palette)
-                        } else {
-                            ScrollView {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    ForEach(settings.customHosts, id: \.self) { host in
-                                        HStack {
-                                            Text(host)
-                                                .font(DesignTokens.dataFont)
-                                            Spacer()
-                                            Button(role: .destructive) {
-                                                removeHost(host)
-                                            } label: {
-                                                Image(systemName: "minus.circle.fill")
-                                            }
-                                            .buttonStyle(.plain)
-                                            .foregroundStyle(palette.mutedLichen)
-                                            .accessibilityLabel("Remove \(host)")
-                                        }
-                                    }
-                                }
-                            }
-                            .frame(maxHeight: 120)
-                        }
-
-                        HStack {
-                            TextField("vpn.company.com", text: $newHost)
-                                .textFieldStyle(.roundedBorder)
-                                .accessibilityIdentifier("settings.customHostField")
-                            Button("Add") {
-                                settings.addCustomHost(newHost)
-                                newHost = ""
-                                customHostsExpanded = true
-                            }
-                            .accessibilityIdentifier("settings.customHostAdd")
-                            .disabled(newHost.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                Group {
+                    if UITestConfiguration.isActive {
+                        customHostsContent
+                    } else {
+                        DisclosureGroup("Custom hosts", isExpanded: $customHostsExpanded) {
+                            customHostsContent
                         }
                     }
-                    .padding(.top, 4)
                 }
                 .accessibilityIdentifier("settings.customHosts")
             }
         }
+    }
+
+    @ViewBuilder
+    private var customHostsContent: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if settings.customHosts.isEmpty {
+                SettingsHelperText(text: "No custom hosts configured.", palette: palette)
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 4) {
+                        ForEach(settings.customHosts, id: \.self) { host in
+                            HStack {
+                                Text(host)
+                                    .font(DesignTokens.dataFont)
+                                    .accessibilityIdentifier("settings.customHost.\(host)")
+                                Spacer()
+                                Button(role: .destructive) {
+                                    removeHost(host)
+                                } label: {
+                                    Image(systemName: "minus.circle.fill")
+                                }
+                                .buttonStyle(.plain)
+                                .foregroundStyle(palette.mutedLichen)
+                                .accessibilityLabel("Remove \(host)")
+                            }
+                        }
+                    }
+                }
+                .frame(maxHeight: 120)
+            }
+
+            HStack {
+                TextField("vpn.company.com", text: $newHost)
+                    .textFieldStyle(.roundedBorder)
+                    .accessibilityIdentifier("settings.customHostField")
+                Button("Add") {
+                    settings.addCustomHost(newHost)
+                    newHost = ""
+                    customHostsExpanded = true
+                }
+                .accessibilityIdentifier("settings.customHostAdd")
+                .disabled(newHost.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+        }
+        .padding(.top, 4)
     }
 
     private func removeHost(_ host: String) {
