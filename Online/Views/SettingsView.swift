@@ -56,7 +56,7 @@ struct SettingsView: View {
             SettingsHelpPrivacySection(palette: palette)
         }
         .padding(12)
-        .frame(width: 480, height: 560)
+        .frame(width: 480, height: UITestConfiguration.isActive ? 720 : 560)
         .background(palette.graphite)
         .foregroundStyle(palette.fogText)
         .onAppear {
@@ -211,13 +211,18 @@ private struct SettingsChecksSection: View {
 
                 Group {
                     if UITestConfiguration.isActive {
-                        customHostsContent
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Custom hosts")
+                                .font(.subheadline)
+                            customHostsContent
+                        }
                     } else {
                         DisclosureGroup("Custom hosts", isExpanded: $customHostsExpanded) {
                             customHostsContent
                         }
                     }
                 }
+                .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("settings.customHosts")
             }
         }
@@ -254,8 +259,9 @@ private struct SettingsChecksSection: View {
 
             HStack {
                 TextField("vpn.company.com", text: $newHost)
-                    .textFieldStyle(.roundedBorder)
+                    .textFieldStyle(UITestConfiguration.isActive ? .plain : .roundedBorder)
                     .accessibilityIdentifier("settings.customHostField")
+                    .accessibilityLabel("Custom host")
                 Button("Add") {
                     settings.addCustomHost(newHost)
                     newHost = ""
