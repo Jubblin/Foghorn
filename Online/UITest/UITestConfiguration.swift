@@ -66,13 +66,27 @@ enum UITestConfiguration {
 
         DispatchQueue.main.async {
             if shouldOpenSettings {
-                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                presentSettingsWindow()
             }
             if shouldOpenOutageLog {
                 presentOutageLogWindow()
             }
             NSApp.activate(ignoringOtherApps: true)
         }
+    }
+
+    @MainActor
+    private static func presentSettingsWindow() {
+        let settings = AppSettings.shared
+        let hostingController = NSHostingController(
+            rootView: SettingsView()
+                .preferredColorScheme(settings.appearancePreference.colorScheme)
+        )
+        let window = NSWindow(contentViewController: hostingController)
+        window.title = "Settings"
+        window.setContentSize(NSSize(width: 480, height: 560))
+        window.center()
+        window.makeKeyAndOrderFront(nil)
     }
 
     @MainActor

@@ -68,7 +68,6 @@ jobs:
         uses: ./.github/actions/setup-xcode
 
       - name: Run UI smoke tests
-        continue-on-error: true
         run: |
           set -o pipefail
           xcodebuild test \
