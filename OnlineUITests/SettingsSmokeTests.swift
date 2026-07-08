@@ -29,7 +29,7 @@ final class SettingsSmokeTests: XCTestCase {
     func testLaunchAtLoginToggle() throws {
         launchSettings()
 
-        let toggle = app.toggles["settings.launchAtLogin"]
+        let toggle = element(identifier: "settings.launchAtLogin")
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         toggle.click()
     }
@@ -39,7 +39,7 @@ final class SettingsSmokeTests: XCTestCase {
     func testShowInMenuBarToggle() throws {
         launchSettings()
 
-        let toggle = app.toggles["settings.showInMenuBar"]
+        let toggle = element(identifier: "settings.showInMenuBar")
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         toggle.click()
     }
@@ -58,10 +58,11 @@ final class SettingsSmokeTests: XCTestCase {
     func testAppearancePickerChanges() throws {
         launchSettings()
 
-        let picker = app.segmentedControls["settings.appearancePicker"]
+        let picker = element(identifier: "settings.appearancePicker")
         XCTAssertTrue(picker.waitForExistence(timeout: 5))
-        XCTAssertGreaterThan(picker.buttons.count, 1)
-        picker.buttons.element(boundBy: 1).click()
+        let segments = picker.buttons
+        XCTAssertGreaterThan(segments.count, 1)
+        segments.element(boundBy: 1).click()
     }
 
     // MARK: - T6
@@ -77,19 +78,12 @@ final class SettingsSmokeTests: XCTestCase {
     func testCustomHostAddRemove() throws {
         launchSettings()
 
-        let disclosure = app.descendants(matching: .any)["settings.customHosts"]
-        if disclosure.waitForExistence(timeout: 3) {
-            disclosure.click()
-        } else if app.buttons["Custom hosts"].waitForExistence(timeout: 3) {
-            app.buttons["Custom hosts"].click()
-        }
-
-        let field = app.textFields["settings.customHostField"]
-        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        XCTAssertTrue(waitFor(identifier: "settings.customHostField", timeout: 8))
+        let field = element(identifier: "settings.customHostField")
         field.click()
         field.typeText("uitest.example.com")
 
-        app.buttons["settings.customHostAdd"].click()
+        element(identifier: "settings.customHostAdd").click()
         XCTAssertTrue(app.staticTexts["uitest.example.com"].waitForExistence(timeout: 5))
     }
 

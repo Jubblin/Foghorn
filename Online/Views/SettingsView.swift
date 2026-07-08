@@ -61,7 +61,7 @@ struct SettingsView: View {
         .foregroundStyle(palette.fogText)
         .onAppear {
             settings.launchAtLogin = LaunchAtLoginService.isEnabled
-            customHostsExpanded = !settings.customHosts.isEmpty
+            customHostsExpanded = !settings.customHosts.isEmpty || UITestConfiguration.isActive
             Task { await alertService.refreshAuthorizationStatus() }
         }
         .onChange(of: scenePhase) { _, phase in
