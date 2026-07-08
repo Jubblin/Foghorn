@@ -90,8 +90,9 @@ final class SettingsSmokeTests: XCTestCase {
     func testCustomHostAddRemove() throws {
         launchSettings()
 
-        XCTAssertTrue(waitFor(identifier: "settings.customHostField", timeout: 8))
-        let field = element(identifier: "settings.customHostField")
+        XCTAssertTrue(waitFor(identifier: "settings.customHosts", timeout: 8))
+        let field = customHostField()
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
         field.click()
         field.typeText("uitest.example.com")
 
@@ -120,6 +121,20 @@ final class SettingsSmokeTests: XCTestCase {
     private func launchOutageLog() {
         app.launchArguments = ["-ui_testing", "-ui_testing_open_outage_log"]
         app.launch()
+    }
+
+    private func customHostField() -> XCUIElement {
+        let byIdentifier = element(identifier: "settings.customHostField")
+        if byIdentifier.exists {
+            return byIdentifier
+        }
+
+        let byLabel = app.textFields["Custom host"]
+        if byLabel.exists {
+            return byLabel
+        }
+
+        return app.textFields["vpn.company.com"]
     }
 
     private func element(identifier: String) -> XCUIElement {
