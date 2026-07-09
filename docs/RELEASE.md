@@ -87,6 +87,8 @@ Commits with message `chore(release): …` (from **Release dispatch**) are skipp
 
 TestFlight ([release-store.yml](../.github/workflows/release-store.yml)) runs only for official `vX.Y.Z` tags, not continuous `-build.N` tags.
 
+**Note:** Tags pushed with `GITHUB_TOKEN` do not trigger other workflows. `release-on-main` and `release-dispatch` explicitly dispatch `release.yml` (and `release-store.yml` for official releases) via `workflow_dispatch`.
+
 ## Before you release
 
 1. Ensure `[Unreleased]` in [CHANGELOG.md](../CHANGELOG.md) has user-facing bullets.

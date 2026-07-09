@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: release-dispatch
@@ -70,12 +71,24 @@ jobs:
           git push origin main
 
       - name: Create and push tag
+        id: tag
         env:
           INPUT_VERSION: ${{ inputs.version }}
         run: |
           set -euo pipefail
-          git tag "v${INPUT_VERSION}"
-          git push origin "v${INPUT_VERSION}"
+          TAG="v${INPUT_VERSION}"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Dispatch release workflow
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          set -euo pipefail
+          gh workflow run release.yml --ref "$TAG"
+          gh workflow run release-store.yml --ref "$TAG"
 
       - name: Summary
         env:
