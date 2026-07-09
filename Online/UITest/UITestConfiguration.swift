@@ -84,7 +84,7 @@ enum UITestConfiguration {
         )
         let window = NSWindow(contentViewController: hostingController)
         window.title = "Settings"
-        window.setContentSize(NSSize(width: 480, height: 720))
+        window.setContentSize(NSSize(width: 480, height: 560))
         window.center()
         window.makeKeyAndOrderFront(nil)
     }
