@@ -65,5 +65,6 @@ struct OnlineApp: App {
             SettingsView()
                 .preferredColorScheme(settings.appearancePreference.colorScheme)
         }
+        .defaultSize(width: 480, height: 560)
     }
 }

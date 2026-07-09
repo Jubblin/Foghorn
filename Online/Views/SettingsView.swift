@@ -40,23 +40,26 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            SettingsInterruptSection(settings: settings, alertService: alertService, palette: palette)
-            SettingsChecksSection(
-                settings: settings,
-                newHost: $newHost,
-                customHostsExpanded: $customHostsExpanded,
-                palette: palette
-            )
-            SettingsRemembersSection(
-                settings: settings,
-                launchError: $launchError,
-                palette: palette
-            )
-            SettingsHelpPrivacySection(palette: palette)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 8) {
+                SettingsInterruptSection(settings: settings, alertService: alertService, palette: palette)
+                SettingsChecksSection(
+                    settings: settings,
+                    newHost: $newHost,
+                    customHostsExpanded: $customHostsExpanded,
+                    palette: palette
+                )
+                SettingsRemembersSection(
+                    settings: settings,
+                    launchError: $launchError,
+                    palette: palette
+                )
+                SettingsHelpPrivacySection(palette: palette)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(12)
-        .frame(width: 480, height: UITestConfiguration.isActive ? 720 : 560)
+        .frame(width: 480)
         .background(palette.graphite)
         .foregroundStyle(palette.fogText)
         .onAppear {
