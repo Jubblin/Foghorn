@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: release-on-main
@@ -45,6 +46,7 @@ jobs:
           esac
 
       - name: Create and push build tag
+        id: tag
         if: steps.skip.outputs.skip != 'true'
         run: |
           set -euo pipefail
@@ -52,9 +54,10 @@ jobs:
           VERSION="$(./scripts/read-marketing-version.sh)"
           BUILD="$(./scripts/read-build-number.sh)"
           TAG="v${VERSION}-build.${BUILD}"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
 
           if git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
-            echo "Tag ${TAG} already exists — skipping"
+            echo "Tag ${TAG} already exists — skipping push"
             exit 0
           fi
 
@@ -63,14 +66,26 @@ jobs:
           git tag -a "$TAG" -m "Continuous build ${VERSION} (${BUILD})"
           git push origin "$TAG"
 
+      - name: Dispatch release workflow
+        if: steps.skip.outputs.skip != 'true' && steps.tag.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release ${TAG} already exists — skipping dispatch"
+            exit 0
+          fi
+          gh workflow run release.yml --ref "$TAG"
+
       - name: Summary
         if: steps.skip.outputs.skip != 'true'
         run: |
-          VERSION="$(./scripts/read-marketing-version.sh)"
-          BUILD="$(./scripts/read-build-number.sh)"
+          TAG="${{ steps.tag.outputs.tag }}"
           {
             echo "### Continuous release tagged"
             echo "- Commit: \`${{ github.event.workflow_run.head_sha }}\`"
-            echo "- Tag: \`v${VERSION}-build.${BUILD}\`"
-            echo "- Triggers: \`release.yml\` (GitHub DMG)"
+            echo "- Tag: \`${TAG}\`"
+            echo "- Dispatched: \`release.yml\` (GitHub DMG)"
           } >> "$GITHUB_STEP_SUMMARY"
