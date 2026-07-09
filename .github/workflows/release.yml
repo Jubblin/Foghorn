@@ -35,13 +35,18 @@ jobs:
         run: |
           set -euo pipefail
           chmod +x scripts/build-dmg.sh scripts/build-signed-dmg.sh scripts/ci-setup-keychain.sh
+          SIGNED=false
           if [[ -n "${DEVELOPER_ID_CERTIFICATE_P12:-}" || -n "${APPLE_CERTIFICATE_P12:-}" ]]; then
-            ./scripts/build-signed-dmg.sh Release
-            echo "signed=true" >> "$GITHUB_OUTPUT"
+            if ./scripts/build-signed-dmg.sh Release; then
+              SIGNED=true
+            else
+              echo "::warning::Signed build failed; falling back to unsigned DMG"
+              CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=NO ./scripts/build-dmg.sh Release
+            fi
           else
             CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=NO ./scripts/build-dmg.sh Release
-            echo "signed=false" >> "$GITHUB_OUTPUT"
           fi
+          echo "signed=${SIGNED}" >> "$GITHUB_OUTPUT"
 
       - name: Prepare release notes
         id: notes
