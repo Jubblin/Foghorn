@@ -10,6 +10,14 @@ enum HTTPProbe {
         return URLSession(configuration: config)
     }()
 
+    private static let customSession: URLSession = {
+        let config = URLSessionConfiguration.ephemeral
+        config.timeoutIntervalForRequest = 8
+        config.timeoutIntervalForResource = 8
+        config.waitsForConnectivity = false
+        return URLSession(configuration: config)
+    }()
+
     private static var session: URLSession {
         testSession ?? defaultSession
     }
@@ -18,7 +26,8 @@ enum HTTPProbe {
         testSession = session
     }
 
-    static func probe(urlString: String, kind: ProbeKind) async -> SingleProbeResult {
+    static func probe(urlString: String, kind: ProbeKind, session: URLSession? = nil) async -> SingleProbeResult {
+        let session = session ?? self.session
         guard let url = URL(string: urlString) else {
             return SingleProbeResult(kind: kind, success: false, detail: "invalid url")
         }
@@ -59,6 +68,6 @@ enum HTTPProbe {
 
     static func probeCustom(host: String) async -> SingleProbeResult {
         let normalized = host.hasPrefix("http") ? host : "https://\(host)"
-        return await probe(urlString: normalized, kind: .custom)
+        return await probe(urlString: normalized, kind: .custom, session: customSession)
     }
 }
