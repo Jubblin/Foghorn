@@ -77,7 +77,7 @@ jobs:
             echo "Release ${TAG} already exists — skipping dispatch"
             exit 0
           fi
-          gh workflow run release.yml --ref "$TAG"
+          gh workflow run release.yml --ref main -f tag="$TAG"
 
       - name: Summary
         if: steps.skip.outputs.skip != 'true'
