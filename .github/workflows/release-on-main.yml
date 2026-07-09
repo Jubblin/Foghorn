@@ -1,0 +1,75 @@
+name: Release on main
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-on-main
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    name: Tag continuous build
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Skip release-only commits
+        id: skip
+        run: |
+          set -euo pipefail
+          MSG=$(git log -1 --pretty=%s)
+          echo "commit_message=$MSG" >> "$GITHUB_OUTPUT"
+          case "$MSG" in
+            chore\(release\):*)
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "Skipping — release dispatch commit"
+              ;;
+            *)
+              echo "skip=false" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
+      - name: Create and push build tag
+        if: steps.skip.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          chmod +x scripts/read-marketing-version.sh scripts/read-build-number.sh
+          VERSION="$(./scripts/read-marketing-version.sh)"
+          BUILD="$(./scripts/read-build-number.sh)"
+          TAG="v${VERSION}-build.${BUILD}"
+
+          if git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists — skipping"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" -m "Continuous build ${VERSION} (${BUILD})"
+          git push origin "$TAG"
+
+      - name: Summary
+        if: steps.skip.outputs.skip != 'true'
+        run: |
+          VERSION="$(./scripts/read-marketing-version.sh)"
+          BUILD="$(./scripts/read-build-number.sh)"
+          {
+            echo "### Continuous release tagged"
+            echo "- Commit: \`${{ github.event.workflow_run.head_sha }}\`"
+            echo "- Tag: \`v${VERSION}-build.${BUILD}\`"
+            echo "- Triggers: \`release.yml\` (GitHub DMG)"
+          } >> "$GITHUB_STEP_SUMMARY"

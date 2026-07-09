@@ -74,10 +74,18 @@ When GitHub announces macOS 27 runner GA:
 
 | Rhythm | Action |
 |--------|--------|
-| Every PR merge | CI runs lint, unit tests, UI smoke tests, Release build |
-| Every 1–2 weeks (or when `[Unreleased]` is meaningful) | GitHub release via tag |
-| During pre-store hardening | Weekly TestFlight internal builds |
+| Every PR merge to `main` | CI runs; on success, **Release on main** tags `vX.Y.Z-build.N` and publishes a **prerelease** DMG |
+| Every 1–2 weeks (or when `[Unreleased]` is meaningful) | **Release dispatch** for an official `vX.Y.Z` tag (non-prerelease) + TestFlight |
+| During pre-store hardening | Weekly TestFlight internal builds via **Release dispatch** |
 | After TestFlight soak (3–7 days) | Promote same version to App Store |
+
+### Continuous releases (every merge)
+
+After green CI on `main`, [release-on-main.yml](../.github/workflows/release-on-main.yml) creates a tag like `v0.2.9-build.24` from `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`, then [release.yml](../.github/workflows/release.yml) publishes a **prerelease** DMG to GitHub Releases. Release notes use the matching `## [X.Y.Z]` changelog section when present, otherwise `[Unreleased]`.
+
+Commits with message `chore(release): …` (from **Release dispatch**) are skipped so official releases are not duplicated.
+
+TestFlight ([release-store.yml](../.github/workflows/release-store.yml)) runs only for official `vX.Y.Z` tags, not continuous `-build.N` tags.
 
 ## Before you release
 

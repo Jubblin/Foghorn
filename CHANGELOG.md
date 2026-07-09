@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Release dispatch workflow (`release-dispatch.yml`) — validate gates, auto-finalize CHANGELOG, tag
+- Continuous release workflow (`release-on-main.yml`) — tags `vX.Y.Z-build.N` after green CI on `main` and publishes prerelease DMGs
+- `read-build-number.sh` and `extract-changelog-unreleased.sh` release helper scripts
 - Signed DMG pipeline (`build-signed-dmg.sh`) with optional notarization via App Store Connect API
 - TestFlight upload workflow (`release-store.yml`) and `upload-testflight.sh`
 - Release helper scripts: `read-marketing-version.sh`, `changelog-has-unreleased-content.sh`, `finalize-changelog.sh`, `ci-setup-keychain.sh`

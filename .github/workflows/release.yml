@@ -43,10 +43,33 @@ jobs:
       - name: Prepare release notes
         id: notes
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          chmod +x scripts/extract-changelog-section.sh
+          set -euo pipefail
+          REF_VERSION="${GITHUB_REF_NAME#v}"
+          CHANGELOG_VERSION="${REF_VERSION%%-build.*}"
+          BUILD_SUFFIX=""
+          if [[ "$REF_VERSION" == *-build.* ]]; then
+            BUILD_SUFFIX="${REF_VERSION#*-build.}"
+          fi
+
+          chmod +x scripts/extract-changelog-section.sh scripts/extract-changelog-unreleased.sh scripts/read-marketing-version.sh scripts/read-build-number.sh
+
           {
-            ./scripts/extract-changelog-section.sh "$VERSION"
+            if [[ -n "$BUILD_SUFFIX" ]]; then
+              MARKETING_VERSION="$(./scripts/read-marketing-version.sh)"
+              BUILD_NUMBER="$(./scripts/read-build-number.sh)"
+              echo "## Continuous build"
+              echo ""
+              echo "- **Version:** ${MARKETING_VERSION} (build ${BUILD_NUMBER})"
+              echo "- **Tag:** ${GITHUB_REF_NAME}"
+              echo ""
+            fi
+
+            if ./scripts/extract-changelog-section.sh "$CHANGELOG_VERSION" >/dev/null 2>&1; then
+              ./scripts/extract-changelog-section.sh "$CHANGELOG_VERSION"
+            else
+              ./scripts/extract-changelog-unreleased.sh
+            fi
+
             cat <<'FOOTER'
 
           ---
