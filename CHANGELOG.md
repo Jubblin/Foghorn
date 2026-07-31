@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+## [0.2.18] - 2026-07-31
+
+### Added
+
 - App icon (Abyss + Truth Green sentinel) and DMG volume icon under `packaging/`
 - Continuous release workflow (`release-on-main.yml`) — tags `vX.Y.Z-build.N` after green CI on `main` and publishes prerelease DMGs
 - `read-build-number.sh` and `extract-changelog-unreleased.sh` release helper scripts
@@ -46,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Menu bar Settings row in popover (`openSettings` instead of broken `SettingsLink`)
 - Renovate configuration invalid `:separateMajorMinor` preset
 - SwiftLint warnings in app sources and tests
+
 
 ## [0.2.1] - 2026-07-02
 
