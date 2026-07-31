@@ -24,12 +24,36 @@ jobs:
     name: Finalize changelog and tag
     runs-on: ubuntu-latest
     steps:
+      - name: Require VERSION_BUMP_TOKEN
+        env:
+          VERSION_BUMP_TOKEN: ${{ secrets.VERSION_BUMP_TOKEN }}
+        run: |
+          if [[ -z "$VERSION_BUMP_TOKEN" ]]; then
+            cat <<'MSG' >&2
+          ::error::VERSION_BUMP_TOKEN secret is required.
+
+          Release dispatch pushes the changelog finalize commit to
+          protected main. GITHUB_TOKEN cannot bypass required PRs.
+
+          Use the same human/app PAT as version-bump.yml (Contents:
+          Read and write). The token owner must be allowed to bypass
+          branch protection on main (repo admin with enforce_admins
+          disabled, or listed as a bypass actor).
+
+          See docs/RELEASE.md § "Avoid workflows awaiting approval".
+          MSG
+            exit 1
+          fi
+
       - name: Checkout main
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: main
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Human/app PAT — not GITHUB_TOKEN — so changelog finalize
+          # can push to protected main (admin bypass).
+          token: ${{ secrets.VERSION_BUMP_TOKEN }}
+          persist-credentials: true
 
       - name: Validate release gates
         env:
@@ -79,16 +103,9 @@ jobs:
           TAG="v${INPUT_VERSION}"
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           git tag "$TAG"
+          # PAT tag push triggers release.yml + release-store.yml
+          # (GITHUB_TOKEN tag pushes do not start other workflows).
           git push origin "$TAG"
-
-      - name: Dispatch release workflow
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ steps.tag.outputs.tag }}
-        run: |
-          set -euo pipefail
-          gh workflow run release.yml --ref main -f tag="$TAG"
-          gh workflow run release-store.yml --ref "$TAG"
 
       - name: Summary
         env:
@@ -98,6 +115,6 @@ jobs:
             echo "### Release dispatched"
             echo "- Version: \`${INPUT_VERSION}\`"
             echo "- Tag: \`v${INPUT_VERSION}\`"
-            echo "- GitHub DMG workflow: release.yml"
-            echo "- TestFlight workflow: release-store.yml"
+            echo "- GitHub DMG workflow: release.yml (via tag push)"
+            echo "- TestFlight workflow: release-store.yml (via tag push)"
           } >> "$GITHUB_STEP_SUMMARY"
