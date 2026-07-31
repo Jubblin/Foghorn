@@ -48,7 +48,7 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 1. Download the DMG for your Mac from [Releases](https://github.com/Jubblin/online/releases):
    - Apple Silicon: `Online-<version>-arm64.dmg`
    - Intel: `Online-<version>-amd64.dmg`
-2. Open the DMG and drag **Online** to Applications
+2. Open the DMG and drag **Online** onto **Applications**
 3. Launch Online and grant notification permission when prompted
 
 > Signed and notarized DMGs are published when repo signing secrets are configured. Otherwise releases are unsigned — right-click → Open on first launch (see [Signing](#signing)).

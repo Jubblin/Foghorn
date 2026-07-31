@@ -19,7 +19,6 @@ VERSION="${RELEASE_VERSION:-"$("$ROOT/scripts/read-marketing-version.sh")"}"
 BUILD_DIR="$ROOT/build/${ARCH_LABEL}"
 APP_PATH="$BUILD_DIR/Build/Products/$CONFIGURATION/Online.app"
 DMG_PATH="$ROOT/build/Online-${VERSION}-${ARCH_LABEL}.dmg"
-STAGING="$BUILD_DIR/dmg-staging"
 
 cd "$ROOT"
 mkdir -p "$ROOT/build"
@@ -40,16 +39,8 @@ fi
 
 xcodebuild "${XCODEBUILD_ARGS[@]}" build
 
-rm -rf "$STAGING" "$DMG_PATH"
-mkdir -p "$STAGING"
-cp -R "$APP_PATH" "$STAGING/"
-
-hdiutil create \
-  -volname "Online" \
-  -srcfolder "$STAGING" \
-  -ov \
-  -format UDZO \
-  "$DMG_PATH"
+rm -f "$DMG_PATH"
+"$ROOT/scripts/package-dmg.sh" "$APP_PATH" "$DMG_PATH"
 
 echo "Built app: $APP_PATH ($XCODE_ARCH)"
 echo "Built DMG: $DMG_PATH"

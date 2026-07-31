@@ -70,6 +70,18 @@ Match the major Xcode/macOS generation to what CI uses when possible so archive 
 
 `<version>` is the release tag without the leading `v` (e.g. `0.2.14` or `0.2.14-build.31`). Locally, omit `RELEASE_VERSION` to use `MARKETING_VERSION` from the Xcode project.
 
+Each DMG is packaged with:
+
+- An **Applications** symlink for drag-to-install
+- A **volume icon** (`packaging/VolumeIcon.icns`, matching the app icon)
+- Optional Finder icon layout when `ONLINE_DMG_LAYOUT=1` (skipped in CI)
+
+Regenerate icons after changing `packaging/Online-icon.svg`:
+
+```bash
+./scripts/generate-app-icon.sh
+```
+
 ### Migrating workflows to `macos-27`
 
 When GitHub announces macOS 27 runner GA:
@@ -164,6 +176,21 @@ Tags containing `-` (e.g. `v1.0.0-beta.1`) are marked as GitHub prereleases auto
 - Tag `vX.Y.Z` must match `MARKETING_VERSION` in `project.pbxproj` at the tagged commit.
 - Do **not** hand-edit version numbers in `project.pbxproj`; use PR labels (`version:patch`, `version:minor`, `version:major`).
 
+### Avoid “workflows awaiting approval” after version bumps
+
+GitHub holds `pull_request` workflow runs for approval when the PR update is attributed to `github-actions[bot]` ([changelog](https://github.blog/changelog/2026-06-11-bot-created-pull-requests-can-run-workflows-if-approved/)). There is **no repo setting to disable that gate**.
+
+[Version bump](../.github/workflows/version-bump.yml) therefore **requires** repo secret `VERSION_BUMP_TOKEN` (a human/app PAT). Bumps fail closed if it is missing, instead of falling back to `GITHUB_TOKEN` and reintroducing the approval prompt.
+
+**Setup (one-time):**
+
+1. Create a **fine-grained PAT** scoped to this repo only with **Contents** + **Pull requests** read/write  
+   (short-term: `gh auth token | gh secret set VERSION_BUMP_TOKEN` using your `gh` login).
+2. Store it: `gh secret set VERSION_BUMP_TOKEN` (run locally so the value never enters chat logs).
+3. Prefer a dedicated fine-grained PAT over a long-lived `gh` OAuth token; rotate if you re-auth `gh`.
+
+**Also:** public-repo PRs that change `.github/workflows/**` can be held once for approval as potentially malicious ([changelog](https://github.blog/changelog/2026-07-28-github-actions-holds-potentially-malicious-workflows-for-approval/)). Approve those runs in the Actions **web UI** (API cannot approve that hold).
+
 ## Dual distribution builds
 
 On tag `v*`, both workflows run from the same commit:
@@ -181,6 +208,7 @@ Configure these in **Settings → Secrets and variables → Actions** (repo **Se
 
 | Secret | Used by | Required when |
 |--------|---------|---------------|
+| `VERSION_BUMP_TOKEN` | `version-bump.yml` | **Required** — human/app PAT so bump commits do not hit the bot approval gate |
 | `DEVELOPMENT_TEAM` | All signed builds | Any signing or TestFlight upload |
 | `DEVELOPER_ID_CERTIFICATE_P12` | `release.yml` (GitHub DMG) | Signed + notarized DMG |
 | `APP_STORE_CERTIFICATE_P12` | `release-store.yml` (TestFlight) | App Store upload |

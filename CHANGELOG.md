@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- App icon (Abyss + Truth Green sentinel) and DMG volume icon under `packaging/`
 - Continuous release workflow (`release-on-main.yml`) — tags `vX.Y.Z-build.N` after green CI on `main` and publishes prerelease DMGs
 - `read-build-number.sh` and `extract-changelog-unreleased.sh` release helper scripts
 - Signed DMG pipeline (`build-signed-dmg.sh`) with optional notarization via App Store Connect API
@@ -26,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Version bump **requires** `VERSION_BUMP_TOKEN` (no `GITHUB_TOKEN` fallback) so bump commits cannot reintroduce the bot PR approval gate
+- GitHub Release DMGs include an Applications shortcut, volume icon, and Finder icon layout for drag-to-install
 - GitHub Releases publish separate versioned DMGs for Apple Silicon (`arm64`) and Intel (`amd64`) instead of a single `Online.dmg`
 - CI/release workflows use repo-owned Xcode setup action (org allowlist compliance)
 - Export compliance: `ITSAppUsesNonExemptEncryption` = NO in generated Info.plist

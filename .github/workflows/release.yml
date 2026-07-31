@@ -41,7 +41,7 @@ jobs:
           RELEASE_TAG: ${{ env.RELEASE_TAG }}
         run: |
           set -euo pipefail
-          chmod +x scripts/build-dmg.sh scripts/build-signed-dmg.sh scripts/ci-setup-keychain.sh scripts/resolve-release-arch.sh
+          chmod +x scripts/build-dmg.sh scripts/build-signed-dmg.sh scripts/package-dmg.sh scripts/ci-setup-keychain.sh scripts/resolve-release-arch.sh
           RELEASE_VERSION="${RELEASE_TAG#v}"
           export RELEASE_VERSION
           SIGNED=true
@@ -114,8 +114,8 @@ jobs:
           1. Download the DMG for your Mac below:
              - Apple Silicon: \`Online-${RELEASE_VERSION}-arm64.dmg\`
              - Intel: \`Online-${RELEASE_VERSION}-amd64.dmg\`
-          2. Open the DMG and drag **Online** to Applications
-          3. Grant notification permission on first launch
+2. Open the DMG and drag **Online** onto **Applications**
+3. Grant notification permission on first launch
 
           **Requirements:** macOS 14 Sonoma or later
           FOOTER

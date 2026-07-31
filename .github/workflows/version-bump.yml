@@ -16,12 +16,39 @@ jobs:
     # Cannot push to forks from the base repo workflow
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
+      - name: Require VERSION_BUMP_TOKEN
+        env:
+          VERSION_BUMP_TOKEN: ${{ secrets.VERSION_BUMP_TOKEN }}
+        run: |
+          if [[ -z "$VERSION_BUMP_TOKEN" ]]; then
+            cat <<'MSG' >&2
+          ::error::VERSION_BUMP_TOKEN secret is required.
+
+          Pushing version bumps with GITHUB_TOKEN attributes them to
+          github-actions[bot]. GitHub then holds follow-up PR workflow
+          runs for manual approval (changelog 2026-06-11).
+
+          One-time setup (run locally):
+            1. Create a fine-grained PAT for this repo with
+               Contents: Read and write, Pull requests: Read and write
+               (or use: gh auth token | gh secret set VERSION_BUMP_TOKEN)
+            2. gh secret set VERSION_BUMP_TOKEN
+            3. Re-run this workflow
+
+          See docs/RELEASE.md § "Avoid workflows awaiting approval".
+          MSG
+            exit 1
+          fi
+
       - name: Checkout PR branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Must be a human/app PAT — not GITHUB_TOKEN — so bump commits
+          # do not hit the bot-PR workflow approval gate.
+          token: ${{ secrets.VERSION_BUMP_TOKEN }}
+          persist-credentials: true
 
       - name: Skip if last commit is a version bump
         id: skip
@@ -83,8 +110,8 @@ jobs:
       - name: Commit and push
         if: steps.skip.outputs.skip != 'true' && steps.bump_type.outputs.skip != 'true'
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "online-version-bump"
+          git config user.email "online-version-bump@users.noreply.github.com"
           git add Online.xcodeproj/project.pbxproj
           git commit -m "chore(version): bump to ${{ steps.bump.outputs.marketing_version }} (build ${{ steps.bump.outputs.build_number }})"
           git push
@@ -93,6 +120,7 @@ jobs:
         if: steps.skip.outputs.skip != 'true' && steps.bump_type.outputs.skip != 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
+          github-token: ${{ secrets.VERSION_BUMP_TOKEN }}
           script: |
             const version = '${{ steps.bump.outputs.marketing_version }}';
             const build = '${{ steps.bump.outputs.build_number }}';

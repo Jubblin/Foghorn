@@ -28,7 +28,6 @@ EXPORT_DIR="$BUILD_DIR/export"
 EXPORT_PLIST="$BUILD_DIR/ExportOptions-developer-id.plist"
 APP_PATH="$EXPORT_DIR/Online.app"
 DMG_PATH="$ROOT/build/Online-${VERSION}-${ARCH_LABEL}.dmg"
-STAGING="$BUILD_DIR/dmg-staging"
 
 cd "$ROOT"
 mkdir -p "$BUILD_DIR"
@@ -76,16 +75,8 @@ xcodebuild -exportArchive \
   -exportOptionsPlist "$EXPORT_PLIST" \
   -allowProvisioningUpdates
 
-rm -rf "$STAGING" "$DMG_PATH"
-mkdir -p "$STAGING"
-cp -R "$APP_PATH" "$STAGING/"
-
-hdiutil create \
-  -volname "Online" \
-  -srcfolder "$STAGING" \
-  -ov \
-  -format UDZO \
-  "$DMG_PATH"
+rm -f "$DMG_PATH"
+"$ROOT/scripts/package-dmg.sh" "$APP_PATH" "$DMG_PATH"
 
 if [[ -n "${APP_STORE_CONNECT_API_KEY_ID:-}" && -n "${APP_STORE_CONNECT_ISSUER_ID:-}" && -n "${APP_STORE_CONNECT_API_KEY:-}" ]]; then
   KEY_PATH="$BUILD_DIR/AuthKey.p8"
