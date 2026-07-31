@@ -45,7 +45,9 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 
 ### From GitHub Releases (recommended)
 
-1. Download **Online.dmg** from [Releases](https://github.com/Jubblin/online/releases)
+1. Download the DMG for your Mac from [Releases](https://github.com/Jubblin/online/releases):
+   - Apple Silicon: `Online-<version>-arm64.dmg`
+   - Intel: `Online-<version>-amd64.dmg`
 2. Open the DMG and drag **Online** to Applications
 3. Launch Online and grant notification permission when prompted
 
@@ -68,8 +70,8 @@ xcodebuild -project Online.xcodeproj -scheme Online -configuration Release build
 # App: build/Build/Products/Release/Online.app
 
 chmod +x scripts/build-dmg.sh
-./scripts/build-dmg.sh Release
-# DMG: build/Online.dmg
+./scripts/build-dmg.sh Release arm64   # or amd64
+# DMG: build/Online-<version>-arm64.dmg
 ```
 
 ## Usage
@@ -145,7 +147,7 @@ Online/
   Models/     ProbeResult, ConnectivityState, AppSettings
   Views/      MenuBarView, SettingsView
 OnlineTests/  State machine, snapshot, HTTP mock tests
-scripts/      build-dmg.sh, bump-version.sh, health.sh
+scripts/      build-dmg.sh, build-signed-dmg.sh, resolve-release-arch.sh, bump-version.sh, health.sh
 ```
 
 ## CI / Release
@@ -169,9 +171,11 @@ scripts/      build-dmg.sh, bump-version.sh, health.sh
 CI can produce Developer ID signed and notarized DMGs when [signing secrets](docs/RELEASE.md#ci-signing-secrets) are configured. For local distribution:
 
 ```bash
-./scripts/build-signed-dmg.sh Release   # requires DEVELOPMENT_TEAM + cert in keychain
+./scripts/build-signed-dmg.sh Release arm64   # requires DEVELOPMENT_TEAM + cert in keychain
+./scripts/build-signed-dmg.sh Release amd64
 # or unsigned:
-./scripts/build-dmg.sh Release
+./scripts/build-dmg.sh Release arm64
+./scripts/build-dmg.sh Release amd64
 ```
 
 ## Roadmap

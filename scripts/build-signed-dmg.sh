@@ -1,21 +1,37 @@
 #!/usr/bin/env bash
-# Build a Developer ID signed and notarized Online.dmg for GitHub Releases.
+# Build a Developer ID signed and notarized Online DMG for one architecture.
+# Usage: ./scripts/build-signed-dmg.sh [Configuration] [arm64|amd64]
+# Env:
+#   DEVELOPMENT_TEAM              — required Apple Team ID
+#   RELEASE_VERSION               — version segment in the DMG name (default: MARKETING_VERSION)
+#   ARCH                          — architecture when argv[2] is omitted (arm64|amd64)
+#   DEVELOPER_ID_CERTIFICATE_P12  — optional base64 .p12 (or APPLE_CERTIFICATE_P12)
+#   P12_PASSWORD                  — .p12 password when importing in CI
+#   APP_STORE_CONNECT_API_KEY_*   — optional notarization credentials
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SCHEME="Online"
 CONFIGURATION="${1:-Release}"
-BUILD_DIR="$ROOT/build"
+ARCH_INPUT="${2:-${ARCH:-}}"
+
+: "${DEVELOPMENT_TEAM:?DEVELOPMENT_TEAM is required}"
+
+# shellcheck source=/dev/null
+source "$ROOT/scripts/resolve-release-arch.sh"
+resolve_release_arch "$ARCH_INPUT"
+
+VERSION="${RELEASE_VERSION:-"$("$ROOT/scripts/read-marketing-version.sh")"}"
+BUILD_DIR="$ROOT/build/${ARCH_LABEL}"
 ARCHIVE_PATH="$BUILD_DIR/Online.xcarchive"
 EXPORT_DIR="$BUILD_DIR/export"
 EXPORT_PLIST="$BUILD_DIR/ExportOptions-developer-id.plist"
 APP_PATH="$EXPORT_DIR/Online.app"
-DMG_PATH="$BUILD_DIR/Online.dmg"
+DMG_PATH="$ROOT/build/Online-${VERSION}-${ARCH_LABEL}.dmg"
 STAGING="$BUILD_DIR/dmg-staging"
 
-: "${DEVELOPMENT_TEAM:?DEVELOPMENT_TEAM is required}"
-
 cd "$ROOT"
+mkdir -p "$BUILD_DIR"
 
 CERTIFICATE_P12="${DEVELOPER_ID_CERTIFICATE_P12:-${APPLE_CERTIFICATE_P12:-}}"
 export CERTIFICATE_P12
@@ -47,6 +63,8 @@ xcodebuild archive \
   -configuration "$CONFIGURATION" \
   -archivePath "$ARCHIVE_PATH" \
   -derivedDataPath "$BUILD_DIR" \
+  ARCHS="$XCODE_ARCH" \
+  ONLY_ACTIVE_ARCH=NO \
   DEVELOPMENT_TEAM="$DEVELOPMENT_TEAM" \
   CODE_SIGN_STYLE=Automatic \
   OTHER_CODE_SIGN_FLAGS="--timestamp" \
@@ -85,4 +103,4 @@ else
   echo "warning: App Store Connect API key not set; skipping notarization"
 fi
 
-echo "Built signed DMG: $DMG_PATH"
+echo "Built signed DMG: $DMG_PATH ($XCODE_ARCH)"
