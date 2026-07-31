@@ -70,6 +70,18 @@ Match the major Xcode/macOS generation to what CI uses when possible so archive 
 
 `<version>` is the release tag without the leading `v` (e.g. `0.2.14` or `0.2.14-build.31`). Locally, omit `RELEASE_VERSION` to use `MARKETING_VERSION` from the Xcode project.
 
+Each DMG is packaged with:
+
+- An **Applications** symlink for drag-to-install
+- A **volume icon** (`packaging/VolumeIcon.icns`, matching the app icon)
+- Optional Finder icon layout when `ONLINE_DMG_LAYOUT=1` (skipped in CI)
+
+Regenerate icons after changing `packaging/Online-icon.svg`:
+
+```bash
+./scripts/generate-app-icon.sh
+```
+
 ### Migrating workflows to `macos-27`
 
 When GitHub announces macOS 27 runner GA:
