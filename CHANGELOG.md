@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Version bump can use `VERSION_BUMP_TOKEN` so bump commits are not attributed to `github-actions[bot]` (avoids PR CI approval gate)
+- Version bump **requires** `VERSION_BUMP_TOKEN` (no `GITHUB_TOKEN` fallback) so bump commits cannot reintroduce the bot PR approval gate
 - GitHub Release DMGs include an Applications shortcut, volume icon, and Finder icon layout for drag-to-install
 - GitHub Releases publish separate versioned DMGs for Apple Silicon (`arm64`) and Intel (`amd64`) instead of a single `Online.dmg`
 - CI/release workflows use repo-owned Xcode setup action (org allowlist compliance)
