@@ -176,6 +176,20 @@ Tags containing `-` (e.g. `v1.0.0-beta.1`) are marked as GitHub prereleases auto
 - Tag `vX.Y.Z` must match `MARKETING_VERSION` in `project.pbxproj` at the tagged commit.
 - Do **not** hand-edit version numbers in `project.pbxproj`; use PR labels (`version:patch`, `version:minor`, `version:major`).
 
+### Avoid “workflows awaiting approval” after version bumps
+
+GitHub holds `pull_request` workflow runs for approval when the PR update is attributed to `github-actions[bot]` ([changelog](https://github.blog/changelog/2026-06-11-bot-created-pull-requests-can-run-workflows-if-approved/)). The [Version bump](../.github/workflows/version-bump.yml) workflow pushes with `GITHUB_TOKEN` by default, which hits that gate on every bump.
+
+**Fix:** add repo secret `VERSION_BUMP_TOKEN`:
+
+1. Create a **fine-grained PAT** (or GitHub App installation token) with access to this repo only.
+2. Permissions: **Contents** read/write, **Pull requests** read/write.
+3. `gh secret set VERSION_BUMP_TOKEN` (run locally so the token never enters chat logs).
+
+With the secret set, bump commits use that identity and CI runs without a manual approval step. Without it, behavior is unchanged (bot attribution + occasional approval prompts).
+
+**Also:** public-repo PRs that change `.github/workflows/**` can be held once for approval as potentially malicious ([changelog](https://github.blog/changelog/2026-07-28-github-actions-holds-potentially-malicious-workflows-for-approval/)). Approve those runs in the Actions UI; there is no repo setting to disable that hold.
+
 ## Dual distribution builds
 
 On tag `v*`, both workflows run from the same commit:
@@ -193,6 +207,7 @@ Configure these in **Settings → Secrets and variables → Actions** (repo **Se
 
 | Secret | Used by | Required when |
 |--------|---------|---------------|
+| `VERSION_BUMP_TOKEN` | `version-bump.yml` | Avoid “workflows awaiting approval” after bot version bumps (recommended) |
 | `DEVELOPMENT_TEAM` | All signed builds | Any signing or TestFlight upload |
 | `DEVELOPER_ID_CERTIFICATE_P12` | `release.yml` (GitHub DMG) | Signed + notarized DMG |
 | `APP_STORE_CERTIFICATE_P12` | `release-store.yml` (TestFlight) | App Store upload |

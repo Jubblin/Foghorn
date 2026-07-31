@@ -21,7 +21,10 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Prefer a human/app PAT so the bump commit is not attributed to
+          # github-actions[bot]. Bot-attributed PR updates require manual
+          # approval before CI runs (GitHub changelog 2026-06-11).
+          token: ${{ secrets.VERSION_BUMP_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Skip if last commit is a version bump
         id: skip
@@ -82,9 +85,16 @@ jobs:
 
       - name: Commit and push
         if: steps.skip.outputs.skip != 'true' && steps.bump_type.outputs.skip != 'true'
+        env:
+          HAS_VERSION_BUMP_TOKEN: ${{ secrets.VERSION_BUMP_TOKEN != '' }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ "$HAS_VERSION_BUMP_TOKEN" == "true" ]]; then
+            git config user.name "online-version-bump"
+            git config user.email "online-version-bump@users.noreply.github.com"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          fi
           git add Online.xcodeproj/project.pbxproj
           git commit -m "chore(version): bump to ${{ steps.bump.outputs.marketing_version }} (build ${{ steps.bump.outputs.build_number }})"
           git push
