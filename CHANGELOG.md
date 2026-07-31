@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Release dispatch pushes changelog finalize with `VERSION_BUMP_TOKEN` so protected `main` accepts the release commit
 - UI tests open Settings via explicit test window (fixes headless CI; `showSettingsWindow:` was unreliable)
 - Menu bar Settings row in popover (`openSettings` instead of broken `SettingsLink`)
 - Renovate configuration invalid `:separateMajorMinor` preset

@@ -111,7 +111,7 @@ Commits with message `chore(release): …` (from **Release dispatch**) are skipp
 
 TestFlight ([release-store.yml](../.github/workflows/release-store.yml)) runs only for official `vX.Y.Z` tags, not continuous `-build.N` tags.
 
-**Note:** Tags pushed with `GITHUB_TOKEN` do not trigger other workflows. `release-on-main` and `release-dispatch` explicitly dispatch `release.yml` (and `release-store.yml` for official releases) via `workflow_dispatch`.
+**Note:** Tags pushed with `GITHUB_TOKEN` do not trigger other workflows. `release-on-main` therefore dispatches `release.yml` via `workflow_dispatch`. Official **Release dispatch** pushes the tag with `VERSION_BUMP_TOKEN`, so `release.yml` and `release-store.yml` start from the tag push itself.
 
 ## Before you release
 
@@ -137,10 +137,11 @@ Use **Actions → Release dispatch → Run workflow** on `main`.
 
 The workflow ([release-dispatch.yml](../.github/workflows/release-dispatch.yml)) will:
 
-1. Validate `[Unreleased]` has at least one bullet (or an existing `## [VERSION]` section when validating only).
-2. Validate `MARKETING_VERSION` matches the input version.
-3. Move `[Unreleased]` → `## [VERSION] - YYYY-MM-DD` and commit to `main`.
-4. Create and push tag `vX.Y.Z`.
+1. Require `VERSION_BUMP_TOKEN` (same PAT as version bumps — needed to push the changelog commit to protected `main`).
+2. Validate `[Unreleased]` has at least one bullet (or an existing `## [VERSION]` section when validating only).
+3. Validate `MARKETING_VERSION` matches the input version.
+4. Move `[Unreleased]` → `## [VERSION] - YYYY-MM-DD` and commit to `main`.
+5. Create and push tag `vX.Y.Z` with that PAT.
 
 Tag push triggers:
 
@@ -148,6 +149,8 @@ Tag push triggers:
 |----------|----------|
 | [release.yml](../.github/workflows/release.yml) | Developer ID signed + notarized arm64 + amd64 DMGs → GitHub Release |
 | [release-store.yml](../.github/workflows/release-store.yml) | Mac App Store archive → TestFlight |
+
+The PAT owner must be allowed to bypass required PRs on `main` (this repo has `enforce_admins` disabled for the owner account). Do **not** fall back to `GITHUB_TOKEN` for the changelog push — that fails with `GH006` under branch protection.
 
 ### Validate only (dry run)
 
@@ -208,7 +211,7 @@ Configure these in **Settings → Secrets and variables → Actions** (repo **Se
 
 | Secret | Used by | Required when |
 |--------|---------|---------------|
-| `VERSION_BUMP_TOKEN` | `version-bump.yml` | **Required** — human/app PAT so bump commits do not hit the bot approval gate |
+| `VERSION_BUMP_TOKEN` | `version-bump.yml`, `release-dispatch.yml` | **Required** — human/app PAT so bump commits avoid the bot approval gate and release dispatch can push the changelog finalize to protected `main` |
 | `DEVELOPMENT_TEAM` | All signed builds | Any signing or TestFlight upload |
 | `DEVELOPER_ID_CERTIFICATE_P12` | `release.yml` (GitHub DMG) | Signed + notarized DMG |
 | `APP_STORE_CERTIFICATE_P12` | `release-store.yml` (TestFlight) | App Store upload |
