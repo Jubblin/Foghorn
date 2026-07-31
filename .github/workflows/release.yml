@@ -114,8 +114,8 @@ jobs:
           1. Download the DMG for your Mac below:
              - Apple Silicon: \`Online-${RELEASE_VERSION}-arm64.dmg\`
              - Intel: \`Online-${RELEASE_VERSION}-amd64.dmg\`
-2. Open the DMG and drag **Online** onto **Applications**
-3. Grant notification permission on first launch
+          2. Open the DMG and drag **Online** onto **Applications**
+          3. Grant notification permission on first launch
 
           **Requirements:** macOS 14 Sonoma or later
           FOOTER
