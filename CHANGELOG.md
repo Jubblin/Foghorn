@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- GitHub Releases publish separate versioned DMGs for Apple Silicon (`arm64`) and Intel (`amd64`) instead of a single `Online.dmg`
 - CI/release workflows use repo-owned Xcode setup action (org allowlist compliance)
 - Export compliance: `ITSAppUsesNonExemptEncryption` = NO in generated Info.plist
 - Gateway probe now uses `SCDynamicStore` + `NWConnection` (sandbox-compatible) instead of `/sbin/route` and `/sbin/ping`

@@ -24,7 +24,7 @@ Tagged releases (`release.yml`, `release-store.yml`) and [CI](../.github/workflo
 | Workflow | Runner | What it produces |
 |----------|--------|------------------|
 | [ci.yml](../.github/workflows/ci.yml) | `macos-27` | Lint, unit tests, UI smoke, Release `.app` artifact |
-| [release.yml](../.github/workflows/release.yml) | `macos-27` | Signed/notarized `Online.dmg` → GitHub Release |
+| [release.yml](../.github/workflows/release.yml) | `macos-27` | Signed/notarized `Online-<version>-arm64.dmg` + `Online-<version>-amd64.dmg` → GitHub Release |
 | [release-store.yml](../.github/workflows/release-store.yml) | `macos-27` | App Store archive → TestFlight |
 
 **Runner labels (GitHub Actions):**
@@ -53,10 +53,22 @@ When testing a signed build before dispatch:
 ```bash
 xcodebuild -version          # Xcode 26+ (27 on macOS 27)
 sw_vers                      # macOS 26+ recommended
-./scripts/build-signed-dmg.sh Release
+./scripts/build-signed-dmg.sh Release arm64   # or amd64
+# DMG: build/Online-<MARKETING_VERSION>-arm64.dmg
 ```
 
 Match the major Xcode/macOS generation to what CI uses when possible so archive and export behaviour stays consistent.
+
+### Architecture-specific GitHub DMGs
+
+[release.yml](../.github/workflows/release.yml) builds **two** Developer ID DMGs from the Apple Silicon runner (cross-compiling Intel):
+
+| Artifact | Mac |
+|----------|-----|
+| `Online-<version>-arm64.dmg` | Apple Silicon |
+| `Online-<version>-amd64.dmg` | Intel (x86_64) |
+
+`<version>` is the release tag without the leading `v` (e.g. `0.2.14` or `0.2.14-build.31`). Locally, omit `RELEASE_VERSION` to use `MARKETING_VERSION` from the Xcode project.
 
 ### Migrating workflows to `macos-27`
 
@@ -122,7 +134,7 @@ Tag push triggers:
 
 | Workflow | Artifact |
 |----------|----------|
-| [release.yml](../.github/workflows/release.yml) | Developer ID signed + notarized DMG → GitHub Release |
+| [release.yml](../.github/workflows/release.yml) | Developer ID signed + notarized arm64 + amd64 DMGs → GitHub Release |
 | [release-store.yml](../.github/workflows/release-store.yml) | Mac App Store archive → TestFlight |
 
 ### Validate only (dry run)
@@ -156,7 +168,7 @@ Tags containing `-` (e.g. `v1.0.0-beta.1`) are marked as GitHub prereleases auto
 
 On tag `v*`, both workflows run from the same commit:
 
-- **GitHub** — `scripts/build-signed-dmg.sh` archives with Developer ID, notarizes the DMG, and publishes via `release.yml`. Falls back to an unsigned DMG when signing secrets are not configured.
+- **GitHub** — `scripts/build-signed-dmg.sh` archives each architecture (`arm64`, `amd64`) with Developer ID, notarizes each DMG, and publishes versioned artifacts via `release.yml`. Falls back to unsigned DMGs when signing secrets are not configured.
 - **App Store** — `scripts/upload-testflight.sh` archives with Apple Distribution and uploads to TestFlight via `release-store.yml`. Skips gracefully when App Store Connect API credentials are missing.
 
 You can also trigger **Release Store** manually from Actions (useful for re-uploading a build without re-tagging).
@@ -352,7 +364,8 @@ After exporting certs to your Mac keychain, you can dry-run before pushing secre
 
 ```bash
 export DEVELOPMENT_TEAM=YOUR_TEAM_ID
-./scripts/build-signed-dmg.sh Release    # needs Developer ID cert in keychain
+./scripts/build-signed-dmg.sh Release arm64    # needs Developer ID cert in keychain
+./scripts/build-signed-dmg.sh Release amd64
 ./scripts/upload-testflight.sh Release   # needs Distribution cert + API key env vars
 ```
 

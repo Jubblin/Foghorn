@@ -28,7 +28,7 @@ jobs:
       - name: Set up Xcode
         uses: ./.github/actions/setup-xcode
 
-      - name: Build DMG
+      - name: Build DMGs (arm64 + amd64)
         id: build
         env:
           DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
@@ -38,26 +38,45 @@ jobs:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          RELEASE_TAG: ${{ env.RELEASE_TAG }}
         run: |
           set -euo pipefail
-          chmod +x scripts/build-dmg.sh scripts/build-signed-dmg.sh scripts/ci-setup-keychain.sh
-          SIGNED=false
+          chmod +x scripts/build-dmg.sh scripts/build-signed-dmg.sh scripts/ci-setup-keychain.sh scripts/resolve-release-arch.sh
+          RELEASE_VERSION="${RELEASE_TAG#v}"
+          export RELEASE_VERSION
+          SIGNED=true
+          HAS_CERT=false
           if [[ -n "${DEVELOPER_ID_CERTIFICATE_P12:-}" || -n "${APPLE_CERTIFICATE_P12:-}" ]]; then
-            if ./scripts/build-signed-dmg.sh Release; then
-              SIGNED=true
-            else
-              echo "::warning::Signed build failed; falling back to unsigned DMG"
-              CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=NO ./scripts/build-dmg.sh Release
-            fi
+            HAS_CERT=true
           else
-            CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=NO ./scripts/build-dmg.sh Release
+            SIGNED=false
           fi
-          echo "signed=${SIGNED}" >> "$GITHUB_OUTPUT"
+
+          build_one() {
+            local arch="$1"
+            if [[ "$HAS_CERT" == "true" ]]; then
+              if ./scripts/build-signed-dmg.sh Release "$arch"; then
+                return 0
+              fi
+              echo "::warning::Signed $arch build failed; falling back to unsigned DMG"
+              SIGNED=false
+            fi
+            CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=NO ./scripts/build-dmg.sh Release "$arch"
+          }
+
+          build_one arm64
+          build_one amd64
+
+          {
+            echo "signed=${SIGNED}"
+            echo "version=${RELEASE_VERSION}"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Prepare release notes
         id: notes
         env:
           RELEASE_TAG: ${{ env.RELEASE_TAG }}
+          RELEASE_VERSION: ${{ steps.build.outputs.version }}
         run: |
           set -euo pipefail
           REF_VERSION="${RELEASE_TAG#v}"
@@ -86,13 +105,15 @@ jobs:
               ./scripts/extract-changelog-unreleased.sh
             fi
 
-            cat <<'FOOTER'
+            cat <<FOOTER
 
           ---
 
           ### Install
 
-          1. Download `Online.dmg` below
+          1. Download the DMG for your Mac below:
+             - Apple Silicon: \`Online-${RELEASE_VERSION}-arm64.dmg\`
+             - Intel: \`Online-${RELEASE_VERSION}-amd64.dmg\`
           2. Open the DMG and drag **Online** to Applications
           3. Grant notification permission on first launch
 
@@ -117,9 +138,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REF_NAME: ${{ env.RELEASE_TAG }}
+          RELEASE_VERSION: ${{ steps.build.outputs.version }}
         run: |
           set -euo pipefail
-          ARGS=(release create "$REF_NAME" --title "Online $REF_NAME" --notes-file release-notes.md build/Online.dmg)
+          ARM_DMG="build/Online-${RELEASE_VERSION}-arm64.dmg"
+          AMD_DMG="build/Online-${RELEASE_VERSION}-amd64.dmg"
+          ARGS=(release create "$REF_NAME" --title "Online $REF_NAME" --notes-file release-notes.md "$ARM_DMG" "$AMD_DMG")
           if [[ "$REF_NAME" == *-* ]]; then
             ARGS+=(--prerelease)
           fi

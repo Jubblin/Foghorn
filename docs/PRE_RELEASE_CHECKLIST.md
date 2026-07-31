@@ -40,7 +40,7 @@ Run on a **Release** build before tagging a GitHub release or uploading to TestF
 
 ## Distribution artifacts
 
-- [ ] **GitHub DMG** — opens without Gatekeeper block (`spctl -a -vv -t install Online.dmg`)
+- [ ] **GitHub DMGs** — arm64 and amd64 open without Gatekeeper block (`spctl -a -vv -t install Online-<version>-arm64.dmg`)
 - [ ] **TestFlight** — install succeeds; same version as GitHub tag
 - [ ] Release notes match CHANGELOG section for the version
 
