@@ -22,9 +22,18 @@ enum GatewayProbe {
         self.reachability = reachability ?? NWGatewayReachability()
     }
 
-    static func probe() async -> SingleProbeResult {
+    /// - Parameter pathGateways: Hosts from `NWPath.gateways`. When the resolved
+    ///   gateway appears here, skip LAN TCP (avoids false fails under Local Network privacy).
+    static func probe(pathGateways: [String] = []) async -> SingleProbeResult {
         guard let gateway = await resolver.gatewayAddress() else {
+            if let pathGateway = pathGateways.first {
+                return SingleProbeResult(kind: .gateway, success: true, detail: pathGateway)
+            }
             return SingleProbeResult(kind: .gateway, success: true, detail: "no gateway (skipped)")
+        }
+
+        if pathGateways.contains(where: { hostsMatch($0, gateway) }) {
+            return SingleProbeResult(kind: .gateway, success: true, detail: gateway)
         }
 
         let reachable = await reachability.isReachable(
@@ -36,6 +45,10 @@ enum GatewayProbe {
             success: reachable,
             detail: reachable ? gateway : "unreachable \(gateway)"
         )
+    }
+
+    private static func hostsMatch(_ lhs: String, _ rhs: String) -> Bool {
+        lhs.caseInsensitiveCompare(rhs) == .orderedSame
     }
 }
 

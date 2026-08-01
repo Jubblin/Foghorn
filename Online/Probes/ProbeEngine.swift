@@ -42,8 +42,9 @@ final class ProbeEngine: ObservableObject {
 
     private func runTick() async {
         let pathResult = pathProbe.evaluate()
+        let pathGateways = pathProbe.gatewayHostStrings()
 
-        async let gateway = GatewayProbe.probe()
+        async let gateway = GatewayProbe.probe(pathGateways: pathGateways)
         async let dns = DNSProbe.probe()
         async let httpPrimary = HTTPProbe.probePrimary()
         async let httpSecondary = HTTPProbe.probeSecondary()
