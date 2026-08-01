@@ -10,6 +10,7 @@ final class AppSettings: ObservableObject {
         static let pollInterval = "pollInterval"
         static let showInMenuBar = "showInMenuBar"
         static let appearancePreference = "appearancePreference"
+        static let automaticUpdatesEnabled = "automaticUpdatesEnabled"
     }
 
     @Published var customHosts: [String] {
@@ -33,6 +34,21 @@ final class AppSettings: ObservableObject {
         didSet { UserDefaults.standard.set(appearancePreference.rawValue, forKey: Keys.appearancePreference) }
     }
 
+    /// When true, Online checks GitHub Releases about once per day for a newer official version.
+    @Published var automaticUpdatesEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(automaticUpdatesEnabled, forKey: Keys.automaticUpdatesEnabled)
+            guard !isRestoringDefaults else { return }
+            if automaticUpdatesEnabled {
+                AppUpdateService.shared.startAutomaticChecksIfNeeded()
+            } else {
+                AppUpdateService.shared.stopAutomaticChecks()
+            }
+        }
+    }
+
+    private var isRestoringDefaults = true
+
     private init() {
         customHosts = UserDefaults.standard.stringArray(forKey: Keys.customHosts) ?? []
         launchAtLogin = UserDefaults.standard.bool(forKey: Keys.launchAtLogin)
@@ -50,6 +66,13 @@ final class AppSettings: ObservableObject {
         } else {
             appearancePreference = .system
         }
+
+        if UserDefaults.standard.object(forKey: Keys.automaticUpdatesEnabled) == nil {
+            automaticUpdatesEnabled = true
+        } else {
+            automaticUpdatesEnabled = UserDefaults.standard.bool(forKey: Keys.automaticUpdatesEnabled)
+        }
+        isRestoringDefaults = false
     }
 
     func addCustomHost(_ host: String) {
