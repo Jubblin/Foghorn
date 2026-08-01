@@ -221,7 +221,37 @@ Configure these in **Settings → Secrets and variables → Actions** (repo **Se
 | `APP_STORE_CONNECT_ISSUER_ID` | Notarization + TestFlight | Same as above |
 | `APP_STORE_CONNECT_API_KEY` | Notarization + TestFlight | Same as above |
 
-Without signing secrets, `release.yml` still publishes an **unsigned** DMG. `release-store.yml` exits successfully without uploading.
+Without signing secrets (or when `.p12` import fails), `release.yml` still publishes an **unsigned** DMG. `release-store.yml` exits successfully without uploading.
+
+### Unsigned DMGs and Gatekeeper
+
+Adhoc/unsigned `.app` bundles downloaded from the internet are blocked on Apple Silicon with:
+
+> “Online” is damaged and can’t be opened. You should move it to the Bin.
+
+This is **not** a corrupt disk image — Gatekeeper rejects the quarantine + adhoc signature combination. Right-click → Open does not help.
+
+**Workaround** (after dragging to Applications):
+
+```bash
+xattr -cr /Applications/Online.app
+```
+
+Use only for local testing. Tracked in [issue #38](https://github.com/Jubblin/online/issues/38). End-user installs need Developer ID + notarization ([issue #39](https://github.com/Jubblin/online/issues/39)).
+
+CI log signal that produced the unsigned fallback:
+
+```text
+security: SecKeychainItemImport: Unable to decode the provided data.
+##[warning]Signed arm64 build failed; falling back to unsigned DMG
+```
+
+Confirm a published binary is unsigned with:
+
+```bash
+codesign -dv /path/to/Online.app 2>&1 | grep -E 'Signature|TeamIdentifier'
+# Signature=adhoc  and  TeamIdentifier=not set  → unsigned fallback
+```
 
 ### Prerequisites (one-time)
 

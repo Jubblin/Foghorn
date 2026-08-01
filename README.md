@@ -51,7 +51,17 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 2. Open the DMG and drag **Online** onto **Applications**
 3. Launch Online and grant notification permission when prompted
 
-> Signed and notarized DMGs are published when repo signing secrets are configured. Otherwise releases are unsigned — right-click → Open on first launch (see [Signing](#signing)).
+**Signing status:** When Developer ID + notarization secrets are configured, DMGs open normally. If CI falls back to an **unsigned** build (adhoc), Apple Silicon Gatekeeper may show:
+
+> “Online” is damaged and can’t be opened. You should move it to the Bin.
+
+Right-click → Open does **not** fix that for unsigned downloads. Clear quarantine after install (local workaround only):
+
+```bash
+xattr -cr /Applications/Online.app
+```
+
+Then launch Online again. Proper fix: restore signing/notarization ([issue #39](https://github.com/Jubblin/online/issues/39)). Details: [docs/RELEASE.md](docs/RELEASE.md#unsigned-dmgs-and-gatekeeper).
 
 ### Build from source
 
@@ -177,6 +187,8 @@ CI can produce Developer ID signed and notarized DMGs when [signing secrets](doc
 ./scripts/build-dmg.sh Release arm64
 ./scripts/build-dmg.sh Release amd64
 ```
+
+Unsigned CI/local builds need the [`xattr -cr` workaround](#install) on Apple Silicon if Gatekeeper reports the app as damaged.
 
 ## Roadmap
 
