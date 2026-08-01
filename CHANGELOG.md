@@ -13,9 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+### Removed
+
+## [0.2.20] - 2026-08-01
+
+### Added
+
+### Changed
+
+### Fixed
+
 - Gateway probe prefers `NWPath.gateways` over LAN TCP so Local Network privacy no longer false-fails the router check
 
 ### Removed
+
 
 ## [0.2.18] - 2026-07-31
 
