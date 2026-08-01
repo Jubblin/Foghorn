@@ -69,6 +69,30 @@ final class GatewayProbeTests: XCTestCase {
         XCTAssertEqual(result.detail, "unreachable 192.168.1.1")
     }
 
+    func testPathGatewayMatchSkipsTCPReachability() async {
+        let reachability = StubGatewayReachability(result: false)
+        GatewayProbe.injectResolverForTesting(StubGatewayResolver(gateway: "192.168.1.1"))
+        GatewayProbe.injectReachabilityForTesting(reachability)
+
+        let result = await GatewayProbe.probe(pathGateways: ["192.168.1.1"])
+
+        XCTAssertTrue(result.success)
+        XCTAssertEqual(result.detail, "192.168.1.1")
+        XCTAssertNil(reachability.requestedHost)
+    }
+
+    func testPathGatewayUsedWhenResolverReturnsNil() async {
+        let reachability = StubGatewayReachability(result: false)
+        GatewayProbe.injectResolverForTesting(StubGatewayResolver(gateway: nil))
+        GatewayProbe.injectReachabilityForTesting(reachability)
+
+        let result = await GatewayProbe.probe(pathGateways: ["10.2.254.254"])
+
+        XCTAssertTrue(result.success)
+        XCTAssertEqual(result.detail, "10.2.254.254")
+        XCTAssertNil(reachability.requestedHost)
+    }
+
     func testReachabilityEvaluatorTreatsReadyAsReachable() {
         XCTAssertEqual(GatewayReachabilityEvaluator.evaluate(state: .ready), true)
     }
