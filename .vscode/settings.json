@@ -1,0 +1,6 @@
+{
+  "sonarlint.connectedMode.project": {
+    "connectionId": "jubblin",
+    "projectKey": "Jubblin_online"
+  }
+}
