@@ -39,6 +39,10 @@
 		B1000000000000000000001E /* SettingsSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000022 /* SettingsSmokeTests.swift */; };
 		B1000000000000000000001F /* UITestConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000023 /* UITestConfiguration.swift */; };
 		B10000000000000000000021 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000025 /* PrivacyInfo.xcprivacy */; };
+		B10000000000000000000022 /* AppUpdateModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000026 /* AppUpdateModels.swift */; };
+		B10000000000000000000023 /* GitHubReleaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000027 /* GitHubReleaseClient.swift */; };
+		B10000000000000000000024 /* AppUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000028 /* AppUpdateService.swift */; };
+		B10000000000000000000025 /* AppUpdateModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000029 /* AppUpdateModelsTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +82,10 @@
 		F10000000000000000000022 /* SettingsSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSmokeTests.swift; sourceTree = "<group>"; };
 		F10000000000000000000023 /* UITestConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestConfiguration.swift; sourceTree = "<group>"; };
 		F10000000000000000000025 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		F10000000000000000000026 /* AppUpdateModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdateModels.swift; sourceTree = "<group>"; };
+		F10000000000000000000027 /* GitHubReleaseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubReleaseClient.swift; sourceTree = "<group>"; };
+		F10000000000000000000028 /* AppUpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdateService.swift; sourceTree = "<group>"; };
+		F10000000000000000000029 /* AppUpdateModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdateModelsTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +203,7 @@
 				F1000000000000000000001A /* HTTPProbeTests.swift */,
 				F1000000000000000000001F /* GatewayProbeTests.swift */,
 				F1000000000000000000001D /* OutageRecordTests.swift */,
+				F10000000000000000000029 /* AppUpdateModelsTests.swift */,
 			);
 			path = OnlineTests;
 			sourceTree = "<group>";
@@ -230,6 +239,9 @@
 				F1000000000000000000000F /* OutageLog.swift */,
 				F10000000000000000000010 /* WakeObserver.swift */,
 				F10000000000000000000011 /* LaunchAtLoginService.swift */,
+				F10000000000000000000026 /* AppUpdateModels.swift */,
+				F10000000000000000000027 /* GitHubReleaseClient.swift */,
+				F10000000000000000000028 /* AppUpdateService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -413,6 +425,9 @@
 				B10000000000000000000015 /* GatewayResolver.swift in Sources */,
 				B1000000000000000000001D /* AppLinks.swift in Sources */,
 				B1000000000000000000001F /* UITestConfiguration.swift in Sources */,
+				B10000000000000000000022 /* AppUpdateModels.swift in Sources */,
+				B10000000000000000000023 /* GitHubReleaseClient.swift in Sources */,
+				B10000000000000000000024 /* AppUpdateService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,6 +440,7 @@
 				B10000000000000000000018 /* HTTPProbeTests.swift in Sources */,
 				B1000000000000000000001C /* GatewayProbeTests.swift in Sources */,
 				B1000000000000000000001A /* OutageRecordTests.swift in Sources */,
+				B10000000000000000000025 /* AppUpdateModelsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,7 +492,7 @@
 				CODE_SIGN_ENTITLEMENTS = Online/Online.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 39;
+				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
@@ -490,7 +506,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.21;
+				MARKETING_VERSION = 0.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -505,7 +521,7 @@
 				CODE_SIGN_ENTITLEMENTS = Online/Online.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 39;
+				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
@@ -519,7 +535,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.21;
+				MARKETING_VERSION = 0.2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

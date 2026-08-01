@@ -34,6 +34,8 @@ final class AppCoordinator: ObservableObject {
             updatePresentation()
         }
 
+        AppUpdateService.shared.startAutomaticChecksIfNeeded()
+
         stateMachine.onOutageStarted = { [weak self] record in
             Task { @MainActor in
                 await self?.alertService.requestAuthorizationIfNeeded()
@@ -67,6 +69,7 @@ final class AppCoordinator: ObservableObject {
     func stop() {
         probeEngine.stop()
         wakeObserver.stop()
+        AppUpdateService.shared.stopAutomaticChecks()
     }
 
     func refreshNow() {

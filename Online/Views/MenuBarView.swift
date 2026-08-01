@@ -97,6 +97,12 @@ struct MenuBarView: View {
             PopoverActionRow(title: "Check now", palette: palette) {
                 coordinator.refreshNow()
             }
+            PopoverActionRow(title: "Check for Updates…", palette: palette) {
+                Task { @MainActor in
+                    _ = await AppUpdateService.shared.checkForUpdates(userInitiated: true)
+                    AppUpdateService.shared.presentManualCheckResult()
+                }
+            }
             PopoverActionRow(title: "View outage log…", palette: palette) {
                 openWindow(id: "outage-log")
                 NSApp.activate(ignoringOtherApps: true)

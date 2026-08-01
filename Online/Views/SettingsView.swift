@@ -329,13 +329,16 @@ private struct SettingsRemembersSection: View {
 // MARK: - Help & privacy (+ about)
 
 private struct SettingsHelpPrivacySection: View {
+    @ObservedObject private var settings = AppSettings.shared
+    @ObservedObject private var updateService = AppUpdateService.shared
     let palette: DesignPalette
+    @State private var isCheckingForUpdates = false
 
     var body: some View {
         SettingsSectionCard(title: "Help & privacy", sectionIdentifier: "settings.section.help", palette: palette) {
             VStack(alignment: .leading, spacing: 8) {
                 SettingsHelperText(
-                    text: "Online monitors connectivity locally — no personal data collected or transmitted.",
+                    text: "Online monitors connectivity locally. Optional update checks use the public GitHub Releases API only.",
                     palette: palette
                 )
 
@@ -352,6 +355,36 @@ private struct SettingsHelpPrivacySection: View {
 
                 LabeledContent("Version", value: AppInfo.versionString)
                 LabeledContent("Built", value: AppInfo.buildDateString)
+
+                Toggle("Check for updates automatically", isOn: $settings.automaticUpdatesEnabled)
+                    .accessibilityIdentifier("settings.automaticUpdates")
+
+                SettingsHelperText(
+                    text: "Looks up the latest official release on GitHub about once a day. Continuous -build tags are ignored.",
+                    palette: palette
+                )
+
+                HStack {
+                    Button(isCheckingForUpdates ? "Checking…" : "Check for Updates…") {
+                        Task {
+                            isCheckingForUpdates = true
+                            _ = await updateService.checkForUpdates(userInitiated: true)
+                            isCheckingForUpdates = false
+                            updateService.presentManualCheckResult()
+                        }
+                    }
+                    .disabled(isCheckingForUpdates || updateService.status == .checking)
+                    .accessibilityIdentifier("settings.checkForUpdates")
+
+                    if case .available = updateService.status {
+                        Button("Download") {
+                            updateService.openAvailableUpdate()
+                        }
+                        .accessibilityIdentifier("settings.downloadUpdate")
+                    }
+                }
+
+                SettingsHelperText(text: updateService.statusSummary, palette: palette)
             }
         }
     }

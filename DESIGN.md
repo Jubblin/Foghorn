@@ -103,8 +103,8 @@ Use five promise-based sections in this order:
 | **When to interrupt me** | I control visibility and alerts | Menu bar toggle, appearance segmented control, notification permission status |
 | **What Online checks** | I control probe cadence and targets | Base interval picker, custom hosts list + add field |
 | **What Online remembers** | I control persistence and history | Launch at login, View outage log, log file path |
-| **Help & privacy** | I can get help and understand data use | Privacy Policy, Support, Report an issue (external links) |
-| **About** | I know what this app is | One-line description, version, build date |
+| **Help & privacy** | I can get help and understand data use | Privacy Policy, Support, Report an issue; version/build; optional GitHub Releases update check |
+| **About** | I know what this app is | (Merged into Help & privacy in v1) version, build date, update controls |
 
 Do not add sections for features that do not exist. Keep the sentinel posture: every row earns its place.
 
@@ -146,18 +146,20 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surf
 - **View outage log…** — opens outage log window; does not navigate away from Settings.
 - **Log path:** Monospace, muted, selectable. Treat as evidence location, not a secret.
 
-**Help & privacy** (required for Mac App Store metadata alignment)
+**Help & privacy** (required for Mac App Store metadata alignment; includes About in v1)
 
-- **Privacy Policy** — link opens default browser to hosted policy URL (GitHub Pages or project site). One line helper: "Online does not collect or transmit personal data. Probes run locally."
+- **Privacy Policy** — link opens default browser to hosted policy URL (GitHub Pages or project site). One line helper: "Online monitors connectivity locally — no personal data collected or transmitted."
 - **Support** — link to support URL (GitHub issues or dedicated support page).
 - **Report an issue** — link to GitHub issue chooser (can match Support URL if same destination).
 - Use `Link` or `Button` that opens `NSWorkspace.shared.open`. No in-app WebView for policy pages in v1.
+- **Version / Built:** `LabeledContent` with marketing version + build number and executable modification date (`AppInfo`).
+- **Check for updates automatically** — Toggle (default on). Helper: looks up the latest official GitHub Release about once a day; ignores continuous `-build.N` tags.
+- **Check for Updates…** — Manual check; opens arch-specific DMG (or Releases page) when an update is available. Menu bar popover exposes the same action.
+- Update checks are not Sparkle in-app replacement until Developer ID signing is reliable; they notify and open the download URL.
 
 **About**
 
-- One caption block (muted): "Online monitors real internet connectivity and alerts when the connection drops. The menu bar icon stays subtle when everything works."
-- **Version:** `LabeledContent` with marketing version + build number.
-- **Built:** `LabeledContent` with executable modification date (existing `AppInfo` behavior).
+- Content lives under Help & privacy in v1 (no separate section).
 
 ### App Store and review alignment
 
@@ -192,3 +194,4 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surf
 | 2026-07-03 | Keep category-safe native restraint | Users expect a Mac utility to be quiet, compact, and reliable. |
 | 2026-07-03 | Take risk on field-instrument identity | The product is more memorable when it feels like evidence capture, not another generic network dashboard. |
 | 2026-07-04 | Settings uses DesignPalette surfaces + five promise sections | Brings Settings in line with popover; adds Help & privacy and notification permission recovery for App Store readiness while keeping the quiet sentinel posture. |
+| 2026-08-01 | GitHub Releases update checks under Help & privacy | Notify + open arch DMG until Developer ID/Sparkle; continuous `-build` tags ignored. |
