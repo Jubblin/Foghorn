@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Reuse the CI signing keychain across arm64/amd64 builds so both DMGs get Developer ID + notarization ([#39](https://github.com/Jubblin/online/issues/39))
+
 ### Removed
 
 ## [0.2.23] - 2026-08-02
