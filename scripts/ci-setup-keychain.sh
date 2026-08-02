@@ -34,9 +34,8 @@ fi
 security list-keychain -d user -s "$KEYCHAIN_PATH"
 security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
 
+# Same-job reuse relies on exported KEYCHAIN_PASSWORD in this shell.
+# Only persist the path for later steps (do not write the password to GITHUB_ENV).
 if [[ -n "${GITHUB_ENV:-}" ]]; then
-  {
-    echo "KEYCHAIN_PATH=$KEYCHAIN_PATH"
-    echo "KEYCHAIN_PASSWORD=$KEYCHAIN_PASSWORD"
-  } >> "$GITHUB_ENV"
+  echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
 fi
