@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Settings window uses a tab per section (Interrupt, Checks, Remembers, Help) instead of a stacked scroll ([#46](https://github.com/Jubblin/online/issues/46))
+
 ### Fixed
 
 ### Removed

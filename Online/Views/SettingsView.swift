@@ -26,11 +26,35 @@ enum AppInfo {
     }
 }
 
+private enum SettingsTab: String, CaseIterable, Identifiable, Hashable {
+    case interrupt
+    case checks
+    case remembers
+    case help
+
+    var id: String { rawValue }
+
+    /// Short tab label (full promise names live in the design system / helper copy).
+    var title: String {
+        switch self {
+        case .interrupt: return "Interrupt"
+        case .checks: return "Checks"
+        case .remembers: return "Remembers"
+        case .help: return "Help"
+        }
+    }
+
+    var tabAccessibilityIdentifier: String {
+        "settings.tab.\(rawValue)"
+    }
+}
+
 struct SettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.scenePhase) private var scenePhase
     @ObservedObject private var settings = AppSettings.shared
     @ObservedObject private var alertService = AlertService.shared
+    @State private var selectedTab: SettingsTab = .interrupt
     @State private var newHost = ""
     @State private var launchError: String?
     @State private var customHostsExpanded = UITestConfiguration.isActive
@@ -40,26 +64,53 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 8) {
+        TabView(selection: $selectedTab) {
+            tabPane {
                 SettingsInterruptSection(settings: settings, alertService: alertService, palette: palette)
+            }
+            .tabItem {
+                Text(SettingsTab.interrupt.title)
+            }
+            .tag(SettingsTab.interrupt)
+            .accessibilityIdentifier(SettingsTab.interrupt.tabAccessibilityIdentifier)
+
+            tabPane {
                 SettingsChecksSection(
                     settings: settings,
                     newHost: $newHost,
                     customHostsExpanded: $customHostsExpanded,
                     palette: palette
                 )
+            }
+            .tabItem {
+                Text(SettingsTab.checks.title)
+            }
+            .tag(SettingsTab.checks)
+            .accessibilityIdentifier(SettingsTab.checks.tabAccessibilityIdentifier)
+
+            tabPane {
                 SettingsRemembersSection(
                     settings: settings,
                     launchError: $launchError,
                     palette: palette
                 )
+            }
+            .tabItem {
+                Text(SettingsTab.remembers.title)
+            }
+            .tag(SettingsTab.remembers)
+            .accessibilityIdentifier(SettingsTab.remembers.tabAccessibilityIdentifier)
+
+            tabPane {
                 SettingsHelpPrivacySection(palette: palette)
             }
-            .padding(12)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .tabItem {
+                Text(SettingsTab.help.title)
+            }
+            .tag(SettingsTab.help)
+            .accessibilityIdentifier(SettingsTab.help.tabAccessibilityIdentifier)
         }
-        .frame(width: 480)
+        .frame(width: 480, height: 420)
         .background(palette.graphite)
         .foregroundStyle(palette.fogText)
         .onAppear {
@@ -76,6 +127,15 @@ struct SettingsView: View {
                 customHostsExpanded = true
             }
         }
+    }
+
+    private func tabPane<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        ScrollView {
+            content()
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .background(palette.graphite)
     }
 }
 

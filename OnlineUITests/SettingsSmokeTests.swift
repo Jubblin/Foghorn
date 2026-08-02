@@ -15,19 +15,23 @@ final class SettingsSmokeTests: XCTestCase {
 
     // MARK: - T1
 
-    func testSettingsShowsFourSections() throws {
+    func testSettingsShowsFourTabs() throws {
         launchSettings()
 
         XCTAssertTrue(waitFor(identifier: "settings.section.interrupt"))
-        XCTAssertTrue(element(identifier: "settings.section.checks").exists)
-        XCTAssertTrue(element(identifier: "settings.section.remembers").exists)
-        XCTAssertTrue(element(identifier: "settings.section.help").exists)
+        selectTab("Checks")
+        XCTAssertTrue(waitFor(identifier: "settings.section.checks"))
+        selectTab("Remembers")
+        XCTAssertTrue(waitFor(identifier: "settings.section.remembers"))
+        selectTab("Help")
+        XCTAssertTrue(waitFor(identifier: "settings.section.help"))
     }
 
     // MARK: - T2
 
     func testLaunchAtLoginToggle() throws {
         launchSettings()
+        selectTab("Remembers")
 
         let toggle = element(identifier: "settings.launchAtLogin")
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
@@ -89,6 +93,7 @@ final class SettingsSmokeTests: XCTestCase {
 
     func testCustomHostAddRemove() throws {
         launchSettings()
+        selectTab("Checks")
 
         XCTAssertTrue(waitFor(identifier: "settings.customHosts", timeout: 8))
         let field = customHostField()
@@ -104,6 +109,7 @@ final class SettingsSmokeTests: XCTestCase {
 
     func testHelpLinksExist() throws {
         launchSettings()
+        selectTab("Help")
 
         XCTAssertTrue(app.buttons["settings.link.privacy"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["settings.link.support"].exists)
@@ -121,6 +127,20 @@ final class SettingsSmokeTests: XCTestCase {
     private func launchOutageLog() {
         app.launchArguments = ["-ui_testing", "-ui_testing_open_outage_log"]
         app.launch()
+    }
+
+    private func selectTab(_ title: String) {
+        let candidates: [XCUIElement] = [
+            app.tabs[title],
+            app.radioButtons[title],
+            app.buttons[title],
+            element(identifier: "settings.tab.\(title.lowercased())")
+        ]
+        for candidate in candidates where candidate.waitForExistence(timeout: 2) {
+            candidate.click()
+            return
+        }
+        XCTFail("Could not find Settings tab titled \(title)")
     }
 
     private func customHostField() -> XCUIElement {
