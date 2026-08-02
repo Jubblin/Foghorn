@@ -41,6 +41,10 @@ if [[ -n "$CERTIFICATE_P12" ]]; then
   source "$ROOT/scripts/ci-setup-keychain.sh"
 fi
 
+# CI keychain only has Developer ID Application (not Mac Development).
+# Force that identity — Automatic style otherwise fails looking for Development.
+IDENTITY="${CODE_SIGN_IDENTITY:-Developer ID Application}"
+
 cat >"$EXPORT_PLIST" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -51,10 +55,17 @@ cat >"$EXPORT_PLIST" <<PLIST
   <key>teamID</key>
   <string>${DEVELOPMENT_TEAM}</string>
   <key>signingStyle</key>
-  <string>automatic</string>
+  <string>manual</string>
+  <key>signingCertificate</key>
+  <string>${IDENTITY}</string>
 </dict>
 </plist>
 PLIST
+
+if [[ -n "${CERTIFICATE_P12:-}" ]]; then
+  echo "Available codesigning identities:"
+  security find-identity -v -p codesigning || true
+fi
 
 xcodebuild archive \
   -project Online.xcodeproj \
@@ -65,7 +76,9 @@ xcodebuild archive \
   ARCHS="$XCODE_ARCH" \
   ONLY_ACTIVE_ARCH=NO \
   DEVELOPMENT_TEAM="$DEVELOPMENT_TEAM" \
-  CODE_SIGN_STYLE=Automatic \
+  CODE_SIGN_STYLE=Manual \
+  CODE_SIGN_IDENTITY="$IDENTITY" \
+  CODE_SIGNING_ALLOWED=YES \
   OTHER_CODE_SIGN_FLAGS="--timestamp" \
   archive
 
