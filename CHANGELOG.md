@@ -13,9 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+### Removed
+
+## [0.2.23] - 2026-08-02
+
+### Added
+
+### Changed
+
+### Fixed
+
 - CI Developer ID archive uses explicit `Developer ID Application` identity so signed DMGs no longer fall back to adhoc ([#39](https://github.com/Jubblin/online/issues/39))
 
 ### Removed
+
 
 ## [0.2.22] - 2026-08-02
 
