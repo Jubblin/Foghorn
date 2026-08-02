@@ -143,8 +143,18 @@ jobs:
           set -euo pipefail
           ARM_DMG="build/Online-${RELEASE_VERSION}-arm64.dmg"
           AMD_DMG="build/Online-${RELEASE_VERSION}-amd64.dmg"
-          ARGS=(release create "$REF_NAME" --title "Online $REF_NAME" --notes-file release-notes.md "$ARM_DMG" "$AMD_DMG")
-          if [[ "$REF_NAME" == *-* ]]; then
-            ARGS+=(--prerelease)
+          if gh release view "$REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$REF_NAME" "$ARM_DMG" "$AMD_DMG" --clobber
+            gh release edit "$REF_NAME" --title "Online $REF_NAME" --notes-file release-notes.md
+            if [[ "$REF_NAME" == *-* ]]; then
+              gh release edit "$REF_NAME" --prerelease
+            else
+              gh release edit "$REF_NAME" --latest
+            fi
+          else
+            ARGS=(release create "$REF_NAME" --title "Online $REF_NAME" --notes-file release-notes.md "$ARM_DMG" "$AMD_DMG")
+            if [[ "$REF_NAME" == *-* ]]; then
+              ARGS+=(--prerelease)
+            fi
+            gh "${ARGS[@]}"
           fi
-          gh "${ARGS[@]}"
