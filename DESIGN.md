@@ -89,31 +89,32 @@ The Settings window is a **configuration panel for a field instrument**, not a p
 
 ### Window chrome
 
-- **Size:** 480×560pt fixed (within the 460–560pt width range).
+- **Size:** 480×420pt (within the 460–560pt width range).
 - **Background:** `graphite` from `DesignPalette` (not system default window gray).
-- **Scroll:** Vertical scroll when content exceeds height; no horizontal scroll.
+- **Navigation:** One native `TabView` — each promise section is a tab (not a stacked scroll of all sections).
+- **Scroll:** Vertical scroll inside the active tab when content exceeds height; no horizontal scroll.
 - **Title:** "Settings" (system window title). No marketing hero inside the window.
 
 ### Section structure
 
-Use five promise-based sections in this order:
+Use four promise-based **tabs** in this order (short tab labels; full titles remain as the panel headline):
 
-| Section | User promise | Controls |
-|---------|--------------|----------|
-| **When to interrupt me** | I control visibility and alerts | Menu bar toggle, appearance segmented control, notification permission status |
-| **What Online checks** | I control probe cadence and targets | Base interval picker, custom hosts list + add field |
-| **What Online remembers** | I control persistence and history | Launch at login, View outage log, log file path |
-| **Help & privacy** | I can get help and understand data use | Privacy Policy, Support, Report an issue; version/build; optional GitHub Releases update check |
-| **About** | I know what this app is | (Merged into Help & privacy in v1) version, build date, update controls |
+| Tab label | Panel title | User promise | Controls |
+|-----------|-------------|--------------|----------|
+| **Interrupt** | When to interrupt me | I control visibility and alerts | Menu bar toggle, appearance segmented control, notification permission status |
+| **Checks** | What Online checks | I control probe cadence and targets | Base interval picker, custom hosts list + add field |
+| **Remembers** | What Online remembers | I control persistence and history | Launch at login, Reveal outage log |
+| **Help** | Help & privacy | I can get help and understand data use | Privacy / Support / Report; version/build; update checks |
 
-Do not add sections for features that do not exist. Keep the sentinel posture: every row earns its place.
+About content stays under **Help** (no fifth tab). Do not add tabs for features that do not exist. Keep the sentinel posture: every row earns its place.
 
 ### Visual treatment
 
 Apply the same palette as the menu bar popover (`DesignPalette.palette(colorScheme:)`), not vanilla `Form` system chrome alone.
 
-- **Section container:** `signalGlass` background, 12px corner radius (`lg`), 16px (`md`) inner padding, 12px (`sm`) vertical gap between sections.
-- **Section title:** 18px (`lg`) semibold, `fogText`. Use `Section` headers or explicit `Text` with `.font(.headline)` until Instrument Sans is bundled.
+- **Tab bar:** System `TabView` chrome; labels only (no decorative icons in v1).
+- **Section container:** `signalGlass` background, 12px corner radius (`lg`), 12px (`sm`) inner padding inside the active tab.
+- **Section title:** 18px (`lg`) semibold, `fogText` headline inside the active tab panel. Use `.font(.headline)` until Instrument Sans is bundled.
 - **Control labels:** 15px (`md`) regular, `fogText`.
 - **Helper / caption text:** 12px (`xs`), `mutedLichen`. Max two lines where possible; link to Support for longer explanations.
 - **Dividers:** `palette.divider` (12% white/black opacity), not system `Divider` default.
@@ -171,7 +172,7 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surf
 ### Motion
 
 - Window appear: system default (no custom animation).
-- Section expand/collapse: none in v1 (flat list of sections).
+- Tab switches: system `TabView` transition only — no custom cross-fade.
 - Status changes (e.g. notification permission after returning from System Settings): refresh on `onAppear` / `scenePhase` active; no celebratory animation.
 
 ### Accessibility
@@ -195,4 +196,5 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surf
 | 2026-07-03 | Take risk on field-instrument identity | The product is more memorable when it feels like evidence capture, not another generic network dashboard. |
 | 2026-07-04 | Settings uses DesignPalette surfaces + five promise sections | Brings Settings in line with popover; adds Help & privacy and notification permission recovery for App Store readiness while keeping the quiet sentinel posture. |
 | 2026-08-01 | GitHub Releases update checks under Help & privacy | Notify + open arch DMG until Developer ID/Sparkle; continuous `-build` tags ignored. |
+| 2026-08-02 | Settings sections become tabs | One job per tab; shorter window; same four promise panels without stacking. |
 | 2026-08-03 | PATH/GATEWAY rows show interface and router evidence | Users need to confirm which NIC the default path uses; OSLog records path flips. |

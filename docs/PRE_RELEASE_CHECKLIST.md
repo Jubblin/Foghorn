@@ -10,7 +10,7 @@ Run on a **Release** build before tagging a GitHub release or uploading to TestF
 
 ## Settings & windows
 
-- [ ] Settings opens with four sections (interrupt, checks, remembers, help)
+- [ ] Settings opens with four tabs (Interrupt, Checks, Remembers, Help)
 - [ ] Launch at login toggle works (or shows a clear error)
 - [ ] Enable alerts / notification status behaves correctly
 - [ ] Outage log window opens; empty state when no records
