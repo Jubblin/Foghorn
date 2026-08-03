@@ -75,7 +75,11 @@ final class AppUpdateService: ObservableObject {
             let current = currentVersionProvider()
             lastCheckedAt = Date()
 
-            if let update = AppUpdateSelection.latestOfficialUpdate(in: releases, currentVersion: current) {
+            if let update = AppUpdateSelection.latestAvailableUpdate(
+                in: releases,
+                currentVersion: current,
+                includePrereleases: AppSettings.shared.includePrereleaseUpdates
+            ) {
                 status = .available(update)
                 if !userInitiated {
                     await postUpdateNotification(for: update)
@@ -139,7 +143,7 @@ final class AppUpdateService: ObservableObject {
         case .upToDate(let current):
             return "Online \(current) is the latest release."
         case .available(let release):
-            return "Online \(release.versionString) is available (you have \(currentVersionProvider()))."
+            return "Online \(Self.labeledVersion(release)) is available (you have \(currentVersionProvider()))."
         case .failed(let message):
             return message
         }
@@ -155,7 +159,7 @@ final class AppUpdateService: ObservableObject {
 
         let content = UNMutableNotificationContent()
         content.title = "Update available"
-        content.body = "Online \(release.versionString) is ready to download."
+        content.body = "Online \(Self.labeledVersion(release)) is ready to download."
         content.sound = .default
 
         let request = UNNotificationRequest(
@@ -164,5 +168,12 @@ final class AppUpdateService: ObservableObject {
             trigger: nil
         )
         try? await notificationCenter.add(request)
+    }
+
+    private static func labeledVersion(_ release: AppRelease) -> String {
+        if release.isPrerelease || release.isContinuousBuild {
+            return "\(release.versionString) pre-release"
+        }
+        return release.versionString
     }
 }

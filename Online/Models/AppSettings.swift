@@ -11,6 +11,7 @@ final class AppSettings: ObservableObject {
         static let showInMenuBar = "showInMenuBar"
         static let appearancePreference = "appearancePreference"
         static let automaticUpdatesEnabled = "automaticUpdatesEnabled"
+        static let includePrereleaseUpdates = "includePrereleaseUpdates"
     }
 
     @Published var customHosts: [String] {
@@ -34,7 +35,7 @@ final class AppSettings: ObservableObject {
         didSet { UserDefaults.standard.set(appearancePreference.rawValue, forKey: Keys.appearancePreference) }
     }
 
-    /// When true, Online checks GitHub Releases about once per day for a newer official version.
+    /// When true, Online checks GitHub Releases about once per day for a newer version.
     @Published var automaticUpdatesEnabled: Bool {
         didSet {
             UserDefaults.standard.set(automaticUpdatesEnabled, forKey: Keys.automaticUpdatesEnabled)
@@ -44,6 +45,13 @@ final class AppSettings: ObservableObject {
             } else {
                 AppUpdateService.shared.stopAutomaticChecks()
             }
+        }
+    }
+
+    /// When true, update checks also consider GitHub prereleases and continuous `-build.N` tags.
+    @Published var includePrereleaseUpdates: Bool {
+        didSet {
+            UserDefaults.standard.set(includePrereleaseUpdates, forKey: Keys.includePrereleaseUpdates)
         }
     }
 
@@ -72,6 +80,8 @@ final class AppSettings: ObservableObject {
         } else {
             automaticUpdatesEnabled = UserDefaults.standard.bool(forKey: Keys.automaticUpdatesEnabled)
         }
+
+        includePrereleaseUpdates = UserDefaults.standard.bool(forKey: Keys.includePrereleaseUpdates)
         isRestoringDefaults = false
     }
 

@@ -45,7 +45,47 @@ final class AppUpdateModelsTests: XCTestCase {
     }
 
     func testLatestOfficialUpdateSkipsPrereleaseAndBuildTags() {
-        let releases = [
+        let releases = sampleReleases()
+
+        let update = AppUpdateSelection.latestAvailableUpdate(
+            in: releases,
+            currentVersion: "0.2.20",
+            includePrereleases: false
+        )
+        XCTAssertEqual(update?.tagName, "v0.2.21")
+        XCTAssertNil(
+            AppUpdateSelection.latestAvailableUpdate(
+                in: releases,
+                currentVersion: "0.2.21",
+                includePrereleases: false
+            )
+        )
+    }
+
+    func testLatestAvailableUpdateIncludesPrereleasesWhenEnabled() {
+        let update = AppUpdateSelection.latestAvailableUpdate(
+            in: sampleReleases(),
+            currentVersion: "0.2.21",
+            includePrereleases: true
+        )
+        XCTAssertEqual(update?.tagName, "v0.2.21-build.40")
+    }
+
+    func testContinuousBuildFlag() {
+        let continuous = AppRelease(
+            tagName: "v0.2.20-build.38",
+            name: nil,
+            htmlURL: URL(string: "https://example.com/c")!,
+            isPrerelease: true,
+            publishedAt: nil,
+            assets: []
+        )
+        XCTAssertTrue(continuous.isContinuousBuild)
+        XCTAssertEqual(continuous.versionString, "0.2.20-build.38")
+    }
+
+    private func sampleReleases() -> [AppRelease] {
+        [
             AppRelease(
                 tagName: "v0.2.21-build.40",
                 name: nil,
@@ -71,22 +111,5 @@ final class AppUpdateModelsTests: XCTestCase {
                 assets: []
             )
         ]
-
-        let update = AppUpdateSelection.latestOfficialUpdate(in: releases, currentVersion: "0.2.20")
-        XCTAssertEqual(update?.tagName, "v0.2.21")
-        XCTAssertNil(AppUpdateSelection.latestOfficialUpdate(in: releases, currentVersion: "0.2.21"))
-    }
-
-    func testContinuousBuildFlag() {
-        let continuous = AppRelease(
-            tagName: "v0.2.20-build.38",
-            name: nil,
-            htmlURL: URL(string: "https://example.com/c")!,
-            isPrerelease: true,
-            publishedAt: nil,
-            assets: []
-        )
-        XCTAssertTrue(continuous.isContinuousBuild)
-        XCTAssertEqual(continuous.versionString, "0.2.20-build.38")
     }
 }

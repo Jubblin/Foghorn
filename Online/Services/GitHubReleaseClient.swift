@@ -83,14 +83,15 @@ private struct GitHubAssetPayload: Decodable {
 }
 
 enum AppUpdateSelection {
-    /// Newest release that is not a continuous `-build.N` tag and not marked prerelease,
-    /// whose marketing version is newer than `currentVersion`.
-    static func latestOfficialUpdate(
+    /// Newest release newer than `currentVersion`.
+    /// When `includePrereleases` is false, skips GitHub prereleases and continuous `-build.N` tags.
+    static func latestAvailableUpdate(
         in releases: [AppRelease],
-        currentVersion: String
+        currentVersion: String,
+        includePrereleases: Bool = false
     ) -> AppRelease? {
         releases
-            .filter { !$0.isPrerelease && !$0.isContinuousBuild }
+            .filter { includePrereleases || (!$0.isPrerelease && !$0.isContinuousBuild) }
             .filter { AppVersionOrdering.isNewer($0.versionString, than: currentVersion) }
             .sorted { AppVersionOrdering.compare($0.versionString, $1.versionString) == .orderedDescending }
             .first

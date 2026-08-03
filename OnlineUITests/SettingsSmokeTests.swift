@@ -36,6 +36,9 @@ final class SettingsSmokeTests: XCTestCase {
         let toggle = element(identifier: "settings.launchAtLogin")
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         toggle.click()
+
+        XCTAssertTrue(app.buttons["settings.viewOutageLog"].waitForExistence(timeout: 5))
+        XCTAssertTrue(element(identifier: "settings.outageLogPath").exists)
     }
 
     // MARK: - T3

@@ -353,6 +353,7 @@ private struct SettingsChecksSection: View {
 // MARK: - What Online remembers
 
 private struct SettingsRemembersSection: View {
+    @Environment(\.openWindow) private var openWindow
     @ObservedObject var settings: AppSettings
     @Binding var launchError: String?
     let palette: DesignPalette
@@ -378,9 +379,24 @@ private struct SettingsRemembersSection: View {
                         .foregroundStyle(DesignTokens.outageRed)
                 }
 
+                Button("View outage log…") {
+                    openWindow(id: "outage-log")
+                    #if canImport(AppKit)
+                    NSApp.activate(ignoringOtherApps: true)
+                    #endif
+                }
+                .accessibilityIdentifier("settings.viewOutageLog")
+
                 Button("Reveal outage log in Finder") {
                     OutageLog.shared.revealInFinder()
                 }
+                .accessibilityIdentifier("settings.revealOutageLog")
+
+                Text(OutageLog.shared.filePath)
+                    .font(DesignTokens.dataFont)
+                    .foregroundStyle(palette.mutedLichen)
+                    .textSelection(.enabled)
+                    .accessibilityIdentifier("settings.outageLogPath")
             }
         }
     }
@@ -419,8 +435,13 @@ private struct SettingsHelpPrivacySection: View {
                 Toggle("Check for updates automatically", isOn: $settings.automaticUpdatesEnabled)
                     .accessibilityIdentifier("settings.automaticUpdates")
 
+                Toggle("Include pre-release updates", isOn: $settings.includePrereleaseUpdates)
+                    .accessibilityIdentifier("settings.includePrereleaseUpdates")
+
                 SettingsHelperText(
-                    text: "Looks up the latest official release on GitHub about once a day. Continuous -build tags are ignored.",
+                    text: settings.includePrereleaseUpdates
+                        ? "Looks up GitHub Releases about once a day, including prereleases and continuous -build tags."
+                        : "Looks up the latest official release on GitHub about once a day. Continuous -build tags are ignored.",
                     palette: palette
                 )
 
