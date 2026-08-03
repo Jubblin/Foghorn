@@ -11,11 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - PATH probe row shows active interfaces (e.g. `via en4/wired`); GATEWAY shows router address; path flips logged via OSLog ([#48](https://github.com/Jubblin/online/issues/48))
 - Settings option to include pre-release / continuous `-build` updates from GitHub Releases ([#50](https://github.com/Jubblin/online/issues/50))
+- Remembers tab: **View outage log…** opens the log window and shows the selectable outages.json path
 
 ### Changed
 
 - Settings window uses a tab per section (Interrupt, Checks, Remembers, Help) instead of a stacked scroll ([#46](https://github.com/Jubblin/online/issues/46))
-
+- DESIGN.md Settings notes: battery helper is max **8s** (not 8×); not-determined alerts use **Enable alerts**
 ### Fixed
 
 ### Removed

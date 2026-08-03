@@ -103,7 +103,7 @@ Use four promise-based **tabs** in this order (short tab labels; full titles rem
 |-----------|-------------|--------------|----------|
 | **Interrupt** | When to interrupt me | I control visibility and alerts | Menu bar toggle, appearance segmented control, notification permission status |
 | **Checks** | What Online checks | I control probe cadence and targets | Base interval picker, custom hosts list + add field |
-| **Remembers** | What Online remembers | I control persistence and history | Launch at login, Reveal outage log |
+| **Remembers** | What Online remembers | I control persistence and history | Launch at login, View outage log, Reveal in Finder, log path |
 | **Help** | Help & privacy | I can get help and understand data use | Privacy / Support / Report; version/build; update checks |
 
 About content stays under **Help** (no fifth tab). Do not add tabs for features that do not exist. Keep the sentinel posture: every row earns its place.
@@ -131,21 +131,22 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surf
 - **Appearance:** Segmented control — Follow System / Light / Dark. Applies to popover and Settings immediately.
 - **Notifications:** Show permission status as `LabeledContent`:
   - Granted → "Alerts enabled"
-  - Not determined → "Not set up" + subtle prompt to grant on next outage (no nag modal in Settings)
+  - Not determined → "Not set up" + **Enable alerts** button (requests permission from Settings; no first-run nag modal)
   - Denied → "Denied" + button **Open Notification Settings** (deep link to System Settings → Notifications → Online)
 - Do not use red for denied unless the user is in an active outage context.
 
 **What Online checks**
 
-- **Base interval:** Picker with 2s / 5s / 10s / 30s. Helper: "Interval doubles on battery power (max 8×)."
+- **Base interval:** Picker with 2s / 5s / 10s / 30s. Helper: "Interval doubles on battery power (max 8s)."
 - **Custom hosts:** Empty state: "No custom hosts configured." (muted). List with swipe/delete. Add row: placeholder `vpn.company.com`, **Add** disabled when empty.
 - Host rows: monospace hostname, no decorative icons.
 
 **What Online remembers**
 
 - **Launch at login:** Toggle with error caption on failure (red, one line).
-- **View outage log…** — opens outage log window; does not navigate away from Settings.
-- **Log path:** Monospace, muted, selectable. Treat as evidence location, not a secret.
+- **View outage log…** — opens the outage log window (`openWindow(id: "outage-log")`); does not dismiss Settings.
+- **Reveal outage log in Finder** — selects `outages.json` in Finder for backup or inspection.
+- **Log path:** Monospace (`DesignTokens.dataFont`), muted, selectable. Treat as evidence location, not a secret.
 
 **Help & privacy** (required for Mac App Store metadata alignment; includes About in v1)
 
@@ -198,5 +199,8 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surf
 | 2026-07-04 | Settings uses DesignPalette surfaces + five promise sections | Brings Settings in line with popover; adds Help & privacy and notification permission recovery for App Store readiness while keeping the quiet sentinel posture. |
 | 2026-08-01 | GitHub Releases update checks under Help & privacy | Notify + open arch DMG until Developer ID/Sparkle; continuous `-build` tags ignored by default. |
 | 2026-08-03 | Optional pre-release update channel | Settings toggle includes GitHub prereleases / continuous builds when enabled. |
+| 2026-08-03 | Settings Remembers opens log window + shows path | Design review: Remembers promised history control but only revealed Finder; align UI with evidence posture. |
+| 2026-08-03 | Battery helper is max 8s (not 8×) | ProbeEngine caps interval at 8 seconds; DESIGN.md was wrong. |
+| 2026-08-03 | Not-determined notifications use Enable alerts | Explicit recovery in Settings beats “wait for next outage” when users open Interrupt to fix alerts. |
 | 2026-08-02 | Settings sections become tabs | One job per tab; shorter window; same four promise panels without stacking. |
 | 2026-08-03 | PATH/GATEWAY rows show interface and router evidence | Users need to confirm which NIC the default path uses; OSLog records path flips. |
