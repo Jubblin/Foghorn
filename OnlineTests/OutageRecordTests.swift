@@ -16,6 +16,19 @@ final class OutageRecordTests: XCTestCase {
         XCTAssertTrue(summary.contains("dns:ok"))
     }
 
+    func testProbeSummaryIncludesPathInterfaceDetail() {
+        let snapshot = ProbeSnapshot(timestamp: Date(), results: [
+            .init(kind: .path, success: true, detail: "via en4/wired"),
+            .init(kind: .gateway, success: true, detail: "10.2.254.254")
+        ])
+
+        let summary = OutageRecord.probeSummary(from: snapshot)
+
+        XCTAssertTrue(summary.contains("path:ok(via en4/wired)"))
+        XCTAssertTrue(summary.contains("gateway:ok"))
+        XCTAssertFalse(summary.contains("gateway:ok(10.2.254.254)"))
+    }
+
     func testDecodesLegacyRecordWithoutProbeSummary() throws {
         let json = """
         [{

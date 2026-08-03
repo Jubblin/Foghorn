@@ -105,8 +105,22 @@ extension ConnectivityStatus {
         guard let snapshot = lastSnapshot else { return [] }
 
         var rows = [
-            ProbeRow(label: "PATH", detail: snapshot.pathSatisfied ? "ok" : "fail", success: snapshot.pathSatisfied),
-            ProbeRow(label: "GATEWAY", detail: snapshot.gatewayOK ? "ok" : "fail", success: snapshot.gatewayOK),
+            ProbeRow(
+                label: "PATH",
+                detail: Self.probeDetail(
+                    success: snapshot.pathSatisfied,
+                    detail: snapshot.result(for: .path)?.detail
+                ),
+                success: snapshot.pathSatisfied
+            ),
+            ProbeRow(
+                label: "GATEWAY",
+                detail: Self.probeDetail(
+                    success: snapshot.gatewayOK,
+                    detail: snapshot.result(for: .gateway)?.detail
+                ),
+                success: snapshot.gatewayOK
+            ),
             ProbeRow(label: "DNS", detail: snapshot.dnsOK ? "ok" : "fail", success: snapshot.dnsOK),
             ProbeRow(label: "HTTP", detail: snapshot.allHTTPOK ? "ok" : "fail", success: snapshot.allHTTPOK)
         ]
@@ -118,5 +132,14 @@ extension ConnectivityStatus {
         }
 
         return rows
+    }
+
+    /// Prefer probe-specific detail (e.g. `via en4/wired`, gateway IP) over bare ok/fail.
+    private static func probeDetail(success: Bool, detail: String?) -> String {
+        let trimmed = detail?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if !trimmed.isEmpty {
+            return trimmed
+        }
+        return success ? "ok" : "fail"
     }
 }

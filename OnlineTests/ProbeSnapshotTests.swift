@@ -63,4 +63,20 @@ final class ProbeSnapshotTests: XCTestCase {
 
         XCTAssertEqual(snapshot.failureReason(), .customHostDown)
     }
+
+    func testProbeRowsPreferPathAndGatewayDetail() {
+        let snapshot = ProbeSnapshot(timestamp: Date(), results: [
+            .init(kind: .path, success: true, detail: "via en4/wired"),
+            .init(kind: .gateway, success: true, detail: "10.2.254.254"),
+            .init(kind: .dns, success: true),
+            .init(kind: .httpPrimary, success: true)
+        ])
+        var status = ConnectivityStatus.initial
+        status.lastSnapshot = snapshot
+
+        let rows = Dictionary(uniqueKeysWithValues: status.probeRows.map { ($0.label, $0.detail) })
+        XCTAssertEqual(rows["PATH"], "via en4/wired")
+        XCTAssertEqual(rows["GATEWAY"], "10.2.254.254")
+        XCTAssertEqual(rows["DNS"], "ok")
+    }
 }
