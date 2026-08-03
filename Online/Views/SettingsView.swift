@@ -419,8 +419,13 @@ private struct SettingsHelpPrivacySection: View {
                 Toggle("Check for updates automatically", isOn: $settings.automaticUpdatesEnabled)
                     .accessibilityIdentifier("settings.automaticUpdates")
 
+                Toggle("Include pre-release updates", isOn: $settings.includePrereleaseUpdates)
+                    .accessibilityIdentifier("settings.includePrereleaseUpdates")
+
                 SettingsHelperText(
-                    text: "Looks up the latest official release on GitHub about once a day. Continuous -build tags are ignored.",
+                    text: settings.includePrereleaseUpdates
+                        ? "Looks up GitHub Releases about once a day, including prereleases and continuous -build tags."
+                        : "Looks up the latest official release on GitHub about once a day. Continuous -build tags are ignored.",
                     palette: palette
                 )
 

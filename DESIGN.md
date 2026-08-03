@@ -154,7 +154,8 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surf
 - **Report an issue** — link to GitHub issue chooser (can match Support URL if same destination).
 - Use `Link` or `Button` that opens `NSWorkspace.shared.open`. No in-app WebView for policy pages in v1.
 - **Version / Built:** `LabeledContent` with marketing version + build number and executable modification date (`AppInfo`).
-- **Check for updates automatically** — Toggle (default on). Helper: looks up the latest official GitHub Release about once a day; ignores continuous `-build.N` tags.
+- **Check for updates automatically** — Toggle (default on). Helper adapts to the pre-release toggle.
+- **Include pre-release updates** — Toggle (default off). When on, also offers GitHub prereleases and continuous `-build.N` tags; when off, official releases only.
 - **Check for Updates…** — Manual check; opens arch-specific DMG (or Releases page) when an update is available. Menu bar popover exposes the same action.
 - Update checks are not Sparkle in-app replacement until Developer ID signing is reliable; they notify and open the download URL.
 
@@ -195,6 +196,7 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surf
 | 2026-07-03 | Keep category-safe native restraint | Users expect a Mac utility to be quiet, compact, and reliable. |
 | 2026-07-03 | Take risk on field-instrument identity | The product is more memorable when it feels like evidence capture, not another generic network dashboard. |
 | 2026-07-04 | Settings uses DesignPalette surfaces + five promise sections | Brings Settings in line with popover; adds Help & privacy and notification permission recovery for App Store readiness while keeping the quiet sentinel posture. |
-| 2026-08-01 | GitHub Releases update checks under Help & privacy | Notify + open arch DMG until Developer ID/Sparkle; continuous `-build` tags ignored. |
+| 2026-08-01 | GitHub Releases update checks under Help & privacy | Notify + open arch DMG until Developer ID/Sparkle; continuous `-build` tags ignored by default. |
+| 2026-08-03 | Optional pre-release update channel | Settings toggle includes GitHub prereleases / continuous builds when enabled. |
 | 2026-08-02 | Settings sections become tabs | One job per tab; shorter window; same four promise panels without stacking. |
 | 2026-08-03 | PATH/GATEWAY rows show interface and router evidence | Users need to confirm which NIC the default path uses; OSLog records path flips. |

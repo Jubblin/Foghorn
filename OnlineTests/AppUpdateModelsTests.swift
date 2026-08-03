@@ -77,6 +77,49 @@ final class AppUpdateModelsTests: XCTestCase {
         XCTAssertNil(AppUpdateSelection.latestOfficialUpdate(in: releases, currentVersion: "0.2.21"))
     }
 
+    func testLatestAvailableUpdateIncludesPrereleasesWhenEnabled() {
+        let releases = [
+            AppRelease(
+                tagName: "v0.2.21-build.40",
+                name: nil,
+                htmlURL: URL(string: "https://example.com/build")!,
+                isPrerelease: true,
+                publishedAt: nil,
+                assets: []
+            ),
+            AppRelease(
+                tagName: "v0.2.21",
+                name: nil,
+                htmlURL: URL(string: "https://example.com/official")!,
+                isPrerelease: false,
+                publishedAt: nil,
+                assets: []
+            ),
+            AppRelease(
+                tagName: "v0.2.20",
+                name: nil,
+                htmlURL: URL(string: "https://example.com/old")!,
+                isPrerelease: false,
+                publishedAt: nil,
+                assets: []
+            )
+        ]
+
+        let withPrereleases = AppUpdateSelection.latestAvailableUpdate(
+            in: releases,
+            currentVersion: "0.2.21",
+            includePrereleases: true
+        )
+        XCTAssertEqual(withPrereleases?.tagName, "v0.2.21-build.40")
+
+        let officialOnly = AppUpdateSelection.latestAvailableUpdate(
+            in: releases,
+            currentVersion: "0.2.20",
+            includePrereleases: false
+        )
+        XCTAssertEqual(officialOnly?.tagName, "v0.2.21")
+    }
+
     func testContinuousBuildFlag() {
         let continuous = AppRelease(
             tagName: "v0.2.20-build.38",

@@ -75,7 +75,11 @@ final class AppUpdateService: ObservableObject {
             let current = currentVersionProvider()
             lastCheckedAt = Date()
 
-            if let update = AppUpdateSelection.latestOfficialUpdate(in: releases, currentVersion: current) {
+            if let update = AppUpdateSelection.latestAvailableUpdate(
+                in: releases,
+                currentVersion: current,
+                includePrereleases: AppSettings.shared.includePrereleaseUpdates
+            ) {
                 status = .available(update)
                 if !userInitiated {
                     await postUpdateNotification(for: update)
@@ -139,7 +143,8 @@ final class AppUpdateService: ObservableObject {
         case .upToDate(let current):
             return "Online \(current) is the latest release."
         case .available(let release):
-            return "Online \(release.versionString) is available (you have \(currentVersionProvider()))."
+            let channel = release.isPrerelease || release.isContinuousBuild ? " pre-release" : ""
+            return "Online \(release.versionString)\(channel) is available (you have \(currentVersionProvider()))."
         case .failed(let message):
             return message
         }
@@ -155,7 +160,8 @@ final class AppUpdateService: ObservableObject {
 
         let content = UNMutableNotificationContent()
         content.title = "Update available"
-        content.body = "Online \(release.versionString) is ready to download."
+        let channel = release.isPrerelease || release.isContinuousBuild ? " pre-release" : ""
+        content.body = "Online \(release.versionString)\(channel) is ready to download."
         content.sound = .default
 
         let request = UNNotificationRequest(
