@@ -26,6 +26,7 @@
 		B10000000000000000000011 /* LaunchAtLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000011 /* LaunchAtLoginService.swift */; };
 		B10000000000000000000012 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000012 /* MenuBarView.swift */; };
 		B10000000000000000000013 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000013 /* SettingsView.swift */; };
+		B1000000000000000000002A /* SettingsChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000002A /* SettingsChrome.swift */; };
 		B10000000000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000014 /* Assets.xcassets */; };
 		B10000000000000000000015 /* GatewayResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000017 /* GatewayResolver.swift */; };
 		B10000000000000000000016 /* ProbeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000018 /* ProbeSnapshotTests.swift */; };
@@ -65,6 +66,7 @@
 		F10000000000000000000011 /* LaunchAtLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginService.swift; sourceTree = "<group>"; };
 		F10000000000000000000012 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		F10000000000000000000013 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F1000000000000000000002A /* SettingsChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsChrome.swift; sourceTree = "<group>"; };
 		F10000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F10000000000000000000015 /* Online.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Online.entitlements; sourceTree = "<group>"; };
 		F10000000000000000000016 /* Online.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Online.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -251,6 +253,7 @@
 			children = (
 				F10000000000000000000012 /* MenuBarView.swift */,
 				F10000000000000000000013 /* SettingsView.swift */,
+				F1000000000000000000002A /* SettingsChrome.swift */,
 				F1000000000000000000001C /* OutageLogView.swift */,
 			);
 			path = Views;
@@ -420,6 +423,7 @@
 				B10000000000000000000011 /* LaunchAtLoginService.swift in Sources */,
 				B10000000000000000000012 /* MenuBarView.swift in Sources */,
 				B10000000000000000000013 /* SettingsView.swift in Sources */,
+				B1000000000000000000002A /* SettingsChrome.swift in Sources */,
 				B10000000000000000000019 /* OutageLogView.swift in Sources */,
 				B1000000000000000000001B /* DesignTokens.swift in Sources */,
 				B10000000000000000000015 /* GatewayResolver.swift in Sources */,
