@@ -81,11 +81,7 @@ final class AppSettings: ObservableObject {
             automaticUpdatesEnabled = UserDefaults.standard.bool(forKey: Keys.automaticUpdatesEnabled)
         }
 
-        if UserDefaults.standard.object(forKey: Keys.includePrereleaseUpdates) == nil {
-            includePrereleaseUpdates = false
-        } else {
-            includePrereleaseUpdates = UserDefaults.standard.bool(forKey: Keys.includePrereleaseUpdates)
-        }
+        includePrereleaseUpdates = UserDefaults.standard.bool(forKey: Keys.includePrereleaseUpdates)
         isRestoringDefaults = false
     }
 

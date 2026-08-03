@@ -91,22 +91,9 @@ enum AppUpdateSelection {
         includePrereleases: Bool = false
     ) -> AppRelease? {
         releases
-            .filter { release in
-                if includePrereleases {
-                    return true
-                }
-                return !release.isPrerelease && !release.isContinuousBuild
-            }
+            .filter { includePrereleases || (!$0.isPrerelease && !$0.isContinuousBuild) }
             .filter { AppVersionOrdering.isNewer($0.versionString, than: currentVersion) }
             .sorted { AppVersionOrdering.compare($0.versionString, $1.versionString) == .orderedDescending }
             .first
-    }
-
-    /// Official-only selection (same as `latestAvailableUpdate(..., includePrereleases: false)`).
-    static func latestOfficialUpdate(
-        in releases: [AppRelease],
-        currentVersion: String
-    ) -> AppRelease? {
-        latestAvailableUpdate(in: releases, currentVersion: currentVersion, includePrereleases: false)
     }
 }
