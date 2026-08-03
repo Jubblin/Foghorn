@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+## [0.2.26] - 2026-08-03
+
+### Added
+
 - PATH probe row shows active interfaces (e.g. `via en4/wired`); GATEWAY shows router address; path flips logged via OSLog ([#48](https://github.com/Jubblin/online/issues/48))
 - Settings option to include pre-release / continuous `-build` updates from GitHub Releases ([#50](https://github.com/Jubblin/online/issues/50))
 - Remembers tab: **View outage log…** opens the log window and shows the selectable outages.json path
@@ -20,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Removed
+
 
 ## [0.2.24] - 2026-08-02
 
