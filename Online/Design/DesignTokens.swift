@@ -7,7 +7,19 @@ enum AppearancePreference: String, CaseIterable, Identifiable, Codable {
 
     var id: String { rawValue }
 
+    /// Short segment labels for Settings (fits 480pt segmented control).
     var displayName: String {
+        switch self {
+        case .system:
+            return "System"
+        case .light:
+            return "Light"
+        case .dark:
+            return "Dark"
+        }
+    }
+
+    var accessibilityName: String {
         switch self {
         case .system:
             return "Follow System"

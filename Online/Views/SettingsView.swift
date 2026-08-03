@@ -4,51 +4,6 @@ import SwiftUI
 import AppKit
 #endif
 
-enum AppInfo {
-    static var versionString: String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
-        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
-        return "\(version) (build \(build))"
-    }
-
-    /// Build time inferred from the app executable's modification date.
-    static var buildDate: Date? {
-        guard let executableURL = Bundle.main.executableURL,
-              let attributes = try? FileManager.default.attributesOfItem(atPath: executableURL.path) else {
-            return nil
-        }
-        return attributes[.modificationDate] as? Date
-    }
-
-    static var buildDateString: String {
-        guard let buildDate else { return "unknown" }
-        return buildDate.formatted(date: .abbreviated, time: .shortened)
-    }
-}
-
-private enum SettingsTab: String, CaseIterable, Identifiable, Hashable {
-    case interrupt
-    case checks
-    case remembers
-    case help
-
-    var id: String { rawValue }
-
-    /// Short tab label (full promise names live in the design system / helper copy).
-    var title: String {
-        switch self {
-        case .interrupt: return "Interrupt"
-        case .checks: return "Checks"
-        case .remembers: return "Remembers"
-        case .help: return "Help"
-        }
-    }
-
-    var tabAccessibilityIdentifier: String {
-        "settings.tab.\(rawValue)"
-    }
-}
-
 struct SettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.scenePhase) private var scenePhase
@@ -139,42 +94,7 @@ struct SettingsView: View {
     }
 }
 
-// MARK: - Section chrome
-
-private struct SettingsSectionCard<Content: View>: View {
-    let title: String
-    let sectionIdentifier: String
-    let palette: DesignPalette
-    @ViewBuilder let content: Content
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.headline)
-                .foregroundStyle(palette.fogText)
-                .accessibilityIdentifier(sectionIdentifier)
-            content
-        }
-        .padding(12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(palette.signalGlass)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-    }
-}
-
-private struct SettingsHelperText: View {
-    let text: String
-    let palette: DesignPalette
-
-    var body: some View {
-        Text(text)
-            .font(.caption)
-            .foregroundStyle(palette.mutedLichen)
-            .fixedSize(horizontal: false, vertical: true)
-    }
-}
-
-// MARK: - When to interrupt me
+// MARK: - Interrupt
 
 private struct SettingsInterruptSection: View {
     @ObservedObject var settings: AppSettings
@@ -182,36 +102,44 @@ private struct SettingsInterruptSection: View {
     let palette: DesignPalette
 
     var body: some View {
-        SettingsSectionCard(title: "When to interrupt me", sectionIdentifier: "settings.section.interrupt", palette: palette) {
-            VStack(alignment: .leading, spacing: 8) {
-                Toggle("Show in menu bar", isOn: $settings.showInMenuBar)
-                    .accessibilityIdentifier("settings.showInMenuBar")
+        SettingsSectionCard(tab: .interrupt, palette: palette) {
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Toggle("Show in menu bar", isOn: $settings.showInMenuBar)
+                        .accessibilityIdentifier("settings.showInMenuBar")
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Appearance")
-                        .font(.subheadline)
-                    Picker("Appearance", selection: $settings.appearancePreference) {
-                        ForEach(AppearancePreference.allCases) { preference in
-                            Text(preference.displayName)
-                                .tag(preference)
-                                .accessibilityIdentifier("settings.appearance.\(preference.rawValue)")
+                    SettingsHelperText(
+                        text: "When hidden, monitoring continues. Restore the icon via the app menu → Settings.",
+                        palette: palette
+                    )
+
+                    SettingsOptionRow(label: "Appearance", palette: palette) {
+                        Picker("Appearance", selection: $settings.appearancePreference) {
+                            ForEach(AppearancePreference.allCases) { preference in
+                                Text(preference.displayName)
+                                    .tag(preference)
+                                    .accessibilityLabel(preference.accessibilityName)
+                                    .accessibilityIdentifier("settings.appearance.\(preference.rawValue)")
+                            }
                         }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
+                        .frame(maxWidth: 220)
+                        .accessibilityIdentifier("settings.appearancePicker")
                     }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
-                    .accessibilityIdentifier("settings.appearancePicker")
                 }
 
-                SettingsHelperText(
-                    text: "When hidden, monitoring continues. Restore the icon via the app menu → Settings.",
-                    palette: palette
-                )
+                SettingsBandDivider(palette: palette)
 
-                Divider().overlay(palette.divider)
-
-                HStack {
-                    LabeledContent("Notifications", value: alertService.authorizationDisplay.statusText)
-                        .accessibilityHint(notificationAccessibilityHint)
+                HStack(alignment: .center, spacing: 12) {
+                    Text("Notifications")
+                        .font(.body)
+                        .foregroundStyle(palette.fogText)
+                    SettingsStatusChip(
+                        text: alertService.authorizationDisplay.statusText,
+                        palette: palette
+                    )
+                    .accessibilityHint(notificationAccessibilityHint)
                     Spacer(minLength: 8)
                     notificationAction
                 }
@@ -249,7 +177,7 @@ private struct SettingsInterruptSection: View {
     }
 }
 
-// MARK: - What Online checks
+// MARK: - Checks
 
 private struct SettingsChecksSection: View {
     @ObservedObject var settings: AppSettings
@@ -258,30 +186,44 @@ private struct SettingsChecksSection: View {
     let palette: DesignPalette
 
     var body: some View {
-        SettingsSectionCard(title: "What Online checks", sectionIdentifier: "settings.section.checks", palette: palette) {
-            VStack(alignment: .leading, spacing: 8) {
-                Picker("Base interval", selection: $settings.basePollInterval) {
-                    Text("2 seconds").tag(2.0)
-                    Text("5 seconds").tag(5.0)
-                    Text("10 seconds").tag(10.0)
-                    Text("30 seconds").tag(30.0)
+        SettingsSectionCard(tab: .checks, palette: palette) {
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 8) {
+                    SettingsOptionRow(
+                        label: "Base interval",
+                        palette: palette,
+                        helper: "Doubles on battery (max 8s)."
+                    ) {
+                        Picker("Base interval", selection: $settings.basePollInterval) {
+                            Text("2s").tag(2.0)
+                            Text("5s").tag(5.0)
+                            Text("10s").tag(10.0)
+                            Text("30s").tag(30.0)
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
+                        .frame(maxWidth: 220)
+                        .accessibilityIdentifier("settings.baseIntervalPicker")
+                    }
                 }
 
-                SettingsHelperText(
-                    text: "Interval doubles on battery power (max 8s).",
-                    palette: palette
-                )
+                SettingsBandDivider(palette: palette)
 
                 Group {
                     if UITestConfiguration.isActive {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Custom hosts")
-                                .font(.subheadline)
+                                .font(.body)
+                                .foregroundStyle(palette.fogText)
                             customHostsContent
                         }
                     } else {
-                        DisclosureGroup("Custom hosts", isExpanded: $customHostsExpanded) {
+                        DisclosureGroup(isExpanded: $customHostsExpanded) {
                             customHostsContent
+                        } label: {
+                            Text("Custom hosts")
+                                .font(.body)
+                                .foregroundStyle(palette.fogText)
                         }
                     }
                 }
@@ -297,30 +239,33 @@ private struct SettingsChecksSection: View {
             if settings.customHosts.isEmpty {
                 SettingsHelperText(text: "No custom hosts configured.", palette: palette)
             } else {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 4) {
-                        ForEach(settings.customHosts, id: \.self) { host in
-                            HStack {
-                                Text(host)
-                                    .font(DesignTokens.dataFont)
-                                    .accessibilityIdentifier("settings.customHost.\(host)")
-                                Spacer()
-                                Button(role: .destructive) {
-                                    removeHost(host)
-                                } label: {
-                                    Image(systemName: "minus.circle.fill")
-                                }
-                                .buttonStyle(.plain)
-                                .foregroundStyle(palette.mutedLichen)
-                                .accessibilityLabel("Remove \(host)")
-                            }
+                VStack(spacing: 0) {
+                    ForEach(Array(settings.customHosts.enumerated()), id: \.element) { index, host in
+                        if index > 0 {
+                            Divider().overlay(palette.divider)
                         }
+                        HStack(spacing: 8) {
+                            Text(host)
+                                .font(DesignTokens.dataFont)
+                                .foregroundStyle(palette.fogText)
+                                .accessibilityIdentifier("settings.customHost.\(host)")
+                            Spacer(minLength: 8)
+                            Button(role: .destructive) {
+                                removeHost(host)
+                            } label: {
+                                Image(systemName: "minus.circle.fill")
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(palette.mutedLichen)
+                            .accessibilityLabel("Remove \(host)")
+                        }
+                        .padding(.vertical, 6)
                     }
                 }
                 .frame(maxHeight: 120)
             }
 
-            HStack {
+            HStack(spacing: 8) {
                 Group {
                     if UITestConfiguration.isActive {
                         TextField("vpn.company.com", text: $newHost)
@@ -350,7 +295,7 @@ private struct SettingsChecksSection: View {
     }
 }
 
-// MARK: - What Online remembers
+// MARK: - Remembers
 
 private struct SettingsRemembersSection: View {
     @Environment(\.openWindow) private var openWindow
@@ -359,44 +304,51 @@ private struct SettingsRemembersSection: View {
     let palette: DesignPalette
 
     var body: some View {
-        SettingsSectionCard(title: "What Online remembers", sectionIdentifier: "settings.section.remembers", palette: palette) {
-            VStack(alignment: .leading, spacing: 8) {
-                Toggle("Launch at login", isOn: $settings.launchAtLogin)
-                    .accessibilityIdentifier("settings.launchAtLogin")
-                    .onChange(of: settings.launchAtLogin) { _, enabled in
-                        do {
-                            try LaunchAtLoginService.setEnabled(enabled)
-                            launchError = nil
-                        } catch {
-                            launchError = error.localizedDescription
-                            settings.launchAtLogin = LaunchAtLoginService.isEnabled
+        SettingsSectionCard(tab: .remembers, palette: palette) {
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Toggle("Launch at login", isOn: $settings.launchAtLogin)
+                        .accessibilityIdentifier("settings.launchAtLogin")
+                        .onChange(of: settings.launchAtLogin) { _, enabled in
+                            do {
+                                try LaunchAtLoginService.setEnabled(enabled)
+                                launchError = nil
+                            } catch {
+                                launchError = error.localizedDescription
+                                settings.launchAtLogin = LaunchAtLoginService.isEnabled
+                            }
                         }
+
+                    if let launchError {
+                        Text(launchError)
+                            .font(.caption)
+                            .foregroundStyle(DesignTokens.outageRed)
                     }
-
-                if let launchError {
-                    Text(launchError)
-                        .font(.caption)
-                        .foregroundStyle(DesignTokens.outageRed)
                 }
 
-                Button("View outage log…") {
-                    openWindow(id: "outage-log")
-                    #if canImport(AppKit)
-                    NSApp.activate(ignoringOtherApps: true)
-                    #endif
-                }
-                .accessibilityIdentifier("settings.viewOutageLog")
+                SettingsBandDivider(palette: palette)
 
-                Button("Reveal outage log in Finder") {
-                    OutageLog.shared.revealInFinder()
-                }
-                .accessibilityIdentifier("settings.revealOutageLog")
+                VStack(alignment: .leading, spacing: 6) {
+                    Button("View outage log…") {
+                        openWindow(id: "outage-log")
+                        #if canImport(AppKit)
+                        NSApp.activate(ignoringOtherApps: true)
+                        #endif
+                    }
+                    .accessibilityIdentifier("settings.viewOutageLog")
 
-                Text(OutageLog.shared.filePath)
-                    .font(DesignTokens.dataFont)
-                    .foregroundStyle(palette.mutedLichen)
-                    .textSelection(.enabled)
-                    .accessibilityIdentifier("settings.outageLogPath")
+                    Button("Show in Finder") {
+                        OutageLog.shared.revealInFinder()
+                    }
+                    .buttonStyle(SettingsSecondaryButtonStyle(palette: palette))
+                    .accessibilityIdentifier("settings.revealOutageLog")
+
+                    Text(OutageLog.shared.filePath)
+                        .font(DesignTokens.dataFont)
+                        .foregroundStyle(palette.mutedLichen)
+                        .textSelection(.enabled)
+                        .accessibilityIdentifier("settings.outageLogPath")
+                }
             }
         }
     }
@@ -411,61 +363,69 @@ private struct SettingsHelpPrivacySection: View {
     @State private var isCheckingForUpdates = false
 
     var body: some View {
-        SettingsSectionCard(title: "Help & privacy", sectionIdentifier: "settings.section.help", palette: palette) {
-            VStack(alignment: .leading, spacing: 8) {
-                SettingsHelperText(
-                    text: "Online monitors connectivity locally. Optional update checks use the public GitHub Releases API only.",
-                    palette: palette
-                )
+        SettingsSectionCard(tab: .help, palette: palette) {
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 8) {
+                    SettingsHelperText(
+                        text: "Online monitors connectivity locally — no personal data collected or transmitted.",
+                        palette: palette
+                    )
 
-                HStack(spacing: 6) {
-                    linkButton("Privacy", url: AppLinks.privacyPolicy, identifier: "settings.link.privacy")
-                    linkSeparator
-                    linkButton("Support", url: AppLinks.support, identifier: "settings.link.support")
-                    linkSeparator
-                    linkButton("Report", url: AppLinks.reportIssue, identifier: "settings.link.report")
-                    Spacer(minLength: 0)
+                    HStack(spacing: 6) {
+                        linkButton("Privacy", url: AppLinks.privacyPolicy, identifier: "settings.link.privacy")
+                        linkSeparator
+                        linkButton("Support", url: AppLinks.support, identifier: "settings.link.support")
+                        linkSeparator
+                        linkButton("Report", url: AppLinks.reportIssue, identifier: "settings.link.report")
+                        Spacer(minLength: 0)
+                    }
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        LabeledContent("Version", value: AppInfo.versionString)
+                        LabeledContent("Built", value: AppInfo.buildDateString)
+                    }
+                    .font(.caption)
+                    .foregroundStyle(palette.mutedLichen)
                 }
 
-                Divider().overlay(palette.divider)
+                SettingsBandDivider(palette: palette)
 
-                LabeledContent("Version", value: AppInfo.versionString)
-                LabeledContent("Built", value: AppInfo.buildDateString)
+                VStack(alignment: .leading, spacing: 8) {
+                    Toggle("Check for updates automatically", isOn: $settings.automaticUpdatesEnabled)
+                        .accessibilityIdentifier("settings.automaticUpdates")
 
-                Toggle("Check for updates automatically", isOn: $settings.automaticUpdatesEnabled)
-                    .accessibilityIdentifier("settings.automaticUpdates")
+                    Toggle("Include pre-release updates", isOn: $settings.includePrereleaseUpdates)
+                        .accessibilityIdentifier("settings.includePrereleaseUpdates")
 
-                Toggle("Include pre-release updates", isOn: $settings.includePrereleaseUpdates)
-                    .accessibilityIdentifier("settings.includePrereleaseUpdates")
+                    SettingsHelperText(
+                        text: settings.includePrereleaseUpdates
+                            ? "Daily check includes GitHub prereleases and -build tags."
+                            : "Daily check for the latest official GitHub release.",
+                        palette: palette
+                    )
 
-                SettingsHelperText(
-                    text: settings.includePrereleaseUpdates
-                        ? "Looks up GitHub Releases about once a day, including prereleases and continuous -build tags."
-                        : "Looks up the latest official release on GitHub about once a day. Continuous -build tags are ignored.",
-                    palette: palette
-                )
+                    HStack(spacing: 8) {
+                        Button(isCheckingForUpdates ? "Checking…" : "Check for Updates…") {
+                            Task {
+                                isCheckingForUpdates = true
+                                _ = await updateService.checkForUpdates(userInitiated: true)
+                                isCheckingForUpdates = false
+                                updateService.presentManualCheckResult()
+                            }
+                        }
+                        .disabled(isCheckingForUpdates || updateService.status == .checking)
+                        .accessibilityIdentifier("settings.checkForUpdates")
 
-                HStack {
-                    Button(isCheckingForUpdates ? "Checking…" : "Check for Updates…") {
-                        Task {
-                            isCheckingForUpdates = true
-                            _ = await updateService.checkForUpdates(userInitiated: true)
-                            isCheckingForUpdates = false
-                            updateService.presentManualCheckResult()
+                        if case .available = updateService.status {
+                            Button("Download") {
+                                updateService.openAvailableUpdate()
+                            }
+                            .accessibilityIdentifier("settings.downloadUpdate")
                         }
                     }
-                    .disabled(isCheckingForUpdates || updateService.status == .checking)
-                    .accessibilityIdentifier("settings.checkForUpdates")
 
-                    if case .available = updateService.status {
-                        Button("Download") {
-                            updateService.openAvailableUpdate()
-                        }
-                        .accessibilityIdentifier("settings.downloadUpdate")
-                    }
+                    SettingsHelperText(text: updateService.statusSummary, palette: palette)
                 }
-
-                SettingsHelperText(text: updateService.statusSummary, palette: palette)
             }
         }
     }

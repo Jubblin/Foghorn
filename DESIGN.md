@@ -112,23 +112,25 @@ About content stays under **Help** (no fifth tab). Do not add tabs for features 
 
 Apply the same palette as the menu bar popover (`DesignPalette.palette(colorScheme:)`), not vanilla `Form` system chrome alone.
 
-- **Tab bar:** System `TabView` chrome; labels only (no decorative icons in v1).
+- **Tab bar:** System `TabView` chrome; labels only (no decorative icons in v1). Tabs carry navigation weight.
+- **Promise caption:** Quiet `caption` / `mutedLichen` under the tab content (not a competing `.headline`). Accessibility ids stay on `settings.section.*`.
 - **Section container:** `signalGlass` background, 12px corner radius (`lg`), 12px (`sm`) inner padding inside the active tab.
-- **Section title:** 18px (`lg`) semibold, `fogText` headline inside the active tab panel. Use `.font(.headline)` until Instrument Sans is bundled.
-- **Control labels:** 15px (`md`) regular, `fogText`.
-- **Helper / caption text:** 12px (`xs`), `mutedLichen`. Max two lines where possible; link to Support for longer explanations.
-- **Dividers:** `palette.divider` (12% white/black opacity), not system `Divider` default.
+- **Option row grammar:** Label (leading, `.body`) | control (trailing). Helpers sit under the control, `caption` / `mutedLichen`, max two lines.
+- **Bands:** Use `palette.divider` between control groups (e.g. visibility vs notifications; trust vs updates). Do not flatten every row into one equal stack.
+- **Choice controls:** Prefer segmented pickers for small closed sets (Appearance: System / Light / Dark; Base interval: 2s / 5s / 10s / 30s). Keep frames ~220pt so segments stay readable at 480pt window width.
+- **Status chips:** Notification state uses a quiet capsule (`actionHover` fill) plus text — never color alone.
+- **Primary vs secondary actions:** Primary stays a system button (e.g. View outage log…). Secondary is link-styled caption (e.g. Show in Finder). Paths and version/build are evidence captions, not actions.
 - **Destructive / error text:** `outageRed` only for real errors (e.g. launch-at-login failure), never decoration.
-- **Data paths and hostnames:** `JetBrains Mono` / `DesignTokens.dataFont`, `mutedLichen`, `.textSelection(.enabled)`.
+- **Data paths and hostnames:** `JetBrains Mono` / `DesignTokens.dataFont`, `mutedLichen`, `.textSelection(.enabled)`. Host lists use quiet row dividers.
 
-Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surfaces and typography follow the design system. This matches user expectations for a Mac utility while avoiding the "stock Settings clone" look.
+Native macOS controls (Toggle, Picker, TextField, Button) stay native; layout and hierarchy follow the design system.
 
 ### Section copy and behavior
 
 **When to interrupt me**
 
 - **Show in menu bar:** Existing toggle. Helper: "When hidden, Online keeps monitoring and sends notifications. Open Settings from the app menu to restore the icon."
-- **Appearance:** Segmented control — Follow System / Light / Dark. Applies to popover and Settings immediately.
+- **Appearance:** Segmented control — System / Light / Dark (accessibility: Follow System / Light / Dark). Applies to popover and Settings immediately.
 - **Notifications:** Show permission status as `LabeledContent`:
   - Granted → "Alerts enabled"
   - Not determined → "Not set up" + **Enable alerts** button (requests permission from Settings; no first-run nag modal)
@@ -137,28 +139,31 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surf
 
 **What Online checks**
 
-- **Base interval:** Picker with 2s / 5s / 10s / 30s. Helper: "Interval doubles on battery power (max 8s)."
-- **Custom hosts:** Empty state: "No custom hosts configured." (muted). List with swipe/delete. Add row: placeholder `vpn.company.com`, **Add** disabled when empty.
+- **Base interval:** Segmented picker with 2s / 5s / 10s / 30s. Helper: "Doubles on battery (max 8s)."
+- **Custom hosts:** Empty state: "No custom hosts configured." (muted). List with quiet row dividers + remove control. Add row: placeholder `vpn.company.com`, **Add** disabled when empty.
 - Host rows: monospace hostname, no decorative icons.
 
 **What Online remembers**
 
 - **Launch at login:** Toggle with error caption on failure (red, one line).
-- **View outage log…** — opens the outage log window (`openWindow(id: "outage-log")`); does not dismiss Settings.
-- **Reveal outage log in Finder** — selects `outages.json` in Finder for backup or inspection.
-- **Log path:** Monospace (`DesignTokens.dataFont`), muted, selectable. Treat as evidence location, not a secret.
+- **View outage log…** — primary action; opens the outage log window (`openWindow(id: "outage-log")`); does not dismiss Settings.
+- **Show in Finder** — secondary link-styled caption; selects `outages.json` in Finder for backup or inspection.
+- **Log path:** Monospace (`DesignTokens.dataFont`), muted, selectable evidence caption under the actions.
 
 **Help & privacy** (required for Mac App Store metadata alignment; includes About in v1)
 
-- **Privacy Policy** — link opens default browser to hosted policy URL (GitHub Pages or project site). One line helper: "Online monitors connectivity locally — no personal data collected or transmitted."
-- **Support** — link to support URL (GitHub issues or dedicated support page).
-- **Report an issue** — link to GitHub issue chooser (can match Support URL if same destination).
-- Use `Link` or `Button` that opens `NSWorkspace.shared.open`. No in-app WebView for policy pages in v1.
-- **Version / Built:** `LabeledContent` with marketing version + build number and executable modification date (`AppInfo`).
-- **Check for updates automatically** — Toggle (default on). Helper adapts to the pre-release toggle.
-- **Include pre-release updates** — Toggle (default off). When on, also offers GitHub prereleases and continuous `-build.N` tags; when off, official releases only.
-- **Check for Updates…** — Manual check; opens arch-specific DMG (or Releases page) when an update is available. Menu bar popover exposes the same action.
-- Update checks are not Sparkle in-app replacement until Developer ID signing is reliable; they notify and open the download URL.
+Split into two bands with a divider:
+
+**Trust**
+- One-line privacy helper + Privacy · Support · Report links.
+- Version / Built as muted captions (`AppInfo`).
+
+**Updates**
+- **Check for updates automatically** — Toggle (default on).
+- **Include pre-release updates** — Toggle (default off).
+- Short helper (official vs prerelease/-build).
+- **Check for Updates…** — Manual check; **Download** when available.
+- Update status summary as caption.
 
 **About**
 
@@ -198,6 +203,7 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surf
 | 2026-07-03 | Take risk on field-instrument identity | The product is more memorable when it feels like evidence capture, not another generic network dashboard. |
 | 2026-07-04 | Settings uses DesignPalette surfaces + five promise sections | Brings Settings in line with popover; adds Help & privacy and notification permission recovery for App Store readiness while keeping the quiet sentinel posture. |
 | 2026-08-01 | GitHub Releases update checks under Help & privacy | Notify + open arch DMG until Developer ID/Sparkle; continuous `-build` tags ignored by default. |
+| 2026-08-03 | Settings visual pass: row grammar + bands | Demote promise to caption; unify segmented choices; Remembers primary/secondary; Help trust/updates split. |
 | 2026-08-03 | Optional pre-release update channel | Settings toggle includes GitHub prereleases / continuous builds when enabled. |
 | 2026-08-03 | Settings Remembers opens log window + shows path | Design review: Remembers promised history control but only revealed Finder; align UI with evidence posture. |
 | 2026-08-03 | Battery helper is max 8s (not 8×) | ProbeEngine caps interval at 8 seconds; DESIGN.md was wrong. |

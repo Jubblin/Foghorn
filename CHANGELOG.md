@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Settings visual pass: quieter promise captions, shared option-row grammar, segmented interval picker, Remembers primary/secondary actions, Help trust/updates bands
+
 ### Fixed
 
 ### Removed
