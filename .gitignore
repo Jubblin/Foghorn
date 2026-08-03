@@ -1,8 +1,16 @@
 .DS_Store
 build/
+build-*/
 DerivedData/
 *.xcuserstate
 xcuserdata/
 *.dmg
 packaging/Online-icon-1024.png
 packaging/*.iconset/
+
+# Local signing material — never commit
+protected/
+*.p12
+*.p8
+*.cer
+*.certSigningRequest
