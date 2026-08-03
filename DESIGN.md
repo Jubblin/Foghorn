@@ -79,7 +79,7 @@
 
 - **Menu bar icon:** Dim when healthy, high contrast when degraded or outage. Prefer a sentinel-dot feel over a branded badge.
 - **Status sentence:** The first visible text should answer the user's question plainly, for example "Internet is telling the truth" or "DNS is failing."
-- **Probe rows:** Use monospace labels and concise details: `path:ok gateway:ok dns:fail http:ok`.
+- **Probe rows:** Use monospace labels and concise details: `PATH via en4/wired`, `GATEWAY 10.2.254.254`, `DNS ok`. Prefer interface/router evidence over bare `ok` when the probe provides it.
 - **Outage records:** Show ended time and duration as first-class fields. An ongoing record should be visually distinct but not alarming unless the outage is active.
 - **Color usage:** Green, amber, red, and blue are semantic. Do not use them as decoration.
 
@@ -195,3 +195,4 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; only surf
 | 2026-07-03 | Take risk on field-instrument identity | The product is more memorable when it feels like evidence capture, not another generic network dashboard. |
 | 2026-07-04 | Settings uses DesignPalette surfaces + five promise sections | Brings Settings in line with popover; adds Help & privacy and notification permission recovery for App Store readiness while keeping the quiet sentinel posture. |
 | 2026-08-01 | GitHub Releases update checks under Help & privacy | Notify + open arch DMG until Developer ID/Sparkle; continuous `-build` tags ignored. |
+| 2026-08-03 | PATH/GATEWAY rows show interface and router evidence | Users need to confirm which NIC the default path uses; OSLog records path flips. |

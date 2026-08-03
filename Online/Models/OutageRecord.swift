@@ -47,7 +47,13 @@ struct OutageRecord: Codable, Identifiable, Equatable {
         snapshot.results
             .map { result in
                 let label = result.kind.rawValue
-                return "\(label):\(result.success ? "ok" : "fail")"
+                let status = result.success ? "ok" : "fail"
+                if result.kind == .path,
+                   let detail = result.detail?.trimmingCharacters(in: .whitespacesAndNewlines),
+                   !detail.isEmpty {
+                    return "\(label):\(status)(\(detail))"
+                }
+                return "\(label):\(status)"
             }
             .joined(separator: " ")
     }

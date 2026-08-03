@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- PATH probe row shows active interfaces (e.g. `via en4/wired`); GATEWAY shows router address; path flips logged via OSLog ([#48](https://github.com/Jubblin/online/issues/48))
+
 ### Changed
 
 ### Fixed
