@@ -57,16 +57,32 @@ struct OnlineApp: App {
 
     var body: some Scene {
         Settings {
-            SettingsView()
-                .environmentObject(appDelegate.coordinator)
-                .preferredColorScheme(settings.appearancePreference.colorScheme)
-                .background(OutageLogWindowBridge())
+            if UITestConfiguration.isActive {
+                // UI tests host Settings in an explicit NSWindow (UITestConfiguration).
+                // Avoid a second SettingsView in the SwiftUI Settings scene or XCTest
+                // sees duplicate accessibility identifiers.
+                Color.clear
+                    .frame(width: 1, height: 1)
+                    .accessibilityHidden(true)
+            } else {
+                SettingsView()
+                    .environmentObject(appDelegate.coordinator)
+                    .preferredColorScheme(settings.appearancePreference.colorScheme)
+                    .background(OutageLogWindowBridge())
+            }
         }
         .defaultSize(width: 480, height: 420)
 
         Window("Outage Log", id: "outage-log") {
-            OutageLogView()
-                .preferredColorScheme(settings.appearancePreference.colorScheme)
+            if UITestConfiguration.isActive {
+                // Same rationale as Settings — outage log is opened via UITestConfiguration.
+                Color.clear
+                    .frame(width: 1, height: 1)
+                    .accessibilityHidden(true)
+            } else {
+                OutageLogView()
+                    .preferredColorScheme(settings.appearancePreference.colorScheme)
+            }
         }
         .defaultSize(width: 800, height: 440)
     }
