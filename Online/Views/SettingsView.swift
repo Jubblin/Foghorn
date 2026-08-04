@@ -24,7 +24,7 @@ struct SettingsView: View {
                 SettingsInterruptSection(settings: settings, alertService: alertService, palette: palette)
             }
             .tabItem {
-                Text(SettingsTab.interrupt.title)
+                Label(SettingsTab.interrupt.title, systemImage: SettingsTab.interrupt.symbolName)
             }
             .tag(SettingsTab.interrupt)
             .accessibilityIdentifier(SettingsTab.interrupt.tabAccessibilityIdentifier)
@@ -38,7 +38,7 @@ struct SettingsView: View {
                 )
             }
             .tabItem {
-                Text(SettingsTab.checks.title)
+                Label(SettingsTab.checks.title, systemImage: SettingsTab.checks.symbolName)
             }
             .tag(SettingsTab.checks)
             .accessibilityIdentifier(SettingsTab.checks.tabAccessibilityIdentifier)
@@ -51,7 +51,7 @@ struct SettingsView: View {
                 )
             }
             .tabItem {
-                Text(SettingsTab.remembers.title)
+                Label(SettingsTab.remembers.title, systemImage: SettingsTab.remembers.symbolName)
             }
             .tag(SettingsTab.remembers)
             .accessibilityIdentifier(SettingsTab.remembers.tabAccessibilityIdentifier)
@@ -60,7 +60,7 @@ struct SettingsView: View {
                 SettingsHelpPrivacySection(palette: palette)
             }
             .tabItem {
-                Text(SettingsTab.help.title)
+                Label(SettingsTab.help.title, systemImage: SettingsTab.help.symbolName)
             }
             .tag(SettingsTab.help)
             .accessibilityIdentifier(SettingsTab.help.tabAccessibilityIdentifier)

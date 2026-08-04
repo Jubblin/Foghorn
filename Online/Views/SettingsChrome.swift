@@ -40,6 +40,16 @@ enum SettingsTab: String, CaseIterable, Identifiable, Hashable {
         }
     }
 
+    /// SF Symbol shown above the tab label.
+    var symbolName: String {
+        switch self {
+        case .interrupt: return "bell.badge"
+        case .checks: return "antenna.radiowaves.left.and.right"
+        case .remembers: return "clock.arrow.circlepath"
+        case .help: return "questionmark.circle"
+        }
+    }
+
     var promiseCaption: String {
         switch self {
         case .interrupt: return "When to interrupt me"

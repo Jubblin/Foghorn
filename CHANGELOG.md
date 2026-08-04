@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings recovery via `-open-settings` when the item is system-hidden
 - Sparkle feed uses one universal update zip (generate_appcast rejects dual thin archives with the same bundle version)
 - Settings window chrome follows DESIGN.md: title stays "Settings", graphite fills the pane (no system white gap), content top-aligned at 480×420
+- Settings tabs show an SF Symbol above each label
 
 ### Removed
 
