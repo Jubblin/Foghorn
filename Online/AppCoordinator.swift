@@ -66,6 +66,8 @@ final class AppCoordinator: ObservableObject {
                 self?.stateMachine.process(snapshot: snapshot)
             }
         }
+
+        updatePresentation()
     }
 
     func stop() {

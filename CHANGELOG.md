@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings window chrome follows DESIGN.md: title stays "Settings", graphite fills the pane (no system white gap), content top-aligned at 480×420
 - Settings tabs show an SF Symbol above each label
 - Appearance → System correctly leaves Dark/Light and follows the macOS appearance again
+- Menu bar status dot uses state colors again (was stuck as a black template image)
 
 ### Removed
 

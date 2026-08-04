@@ -114,8 +114,8 @@ final class StatusItemController: NSObject, ObservableObject {
         cancellables.removeAll()
         Publishers.CombineLatest3(
             coordinator.$menuBarOpacity,
-            coordinator.$iconColor,
-            coordinator.stateMachine.$status
+            coordinator.$iconColor.map { NSColor($0).cgColor },
+            coordinator.stateMachine.$status.map(\.state)
         )
         .receive(on: RunLoop.main)
         .sink { [weak self] _, _, _ in
@@ -141,20 +141,25 @@ final class StatusItemController: NSObject, ObservableObject {
         let tint = NSColor(coordinator.iconColor).withAlphaComponent(coordinator.menuBarOpacity)
 
         let baseConfig = NSImage.SymbolConfiguration(pointSize: 14, weight: .semibold)
+        let colorConfig = baseConfig.applying(.init(paletteColors: [tint]))
         guard let base = NSImage(systemSymbolName: symbol, accessibilityDescription: coordinator.status.state.displayName),
-              let configured = base.withSymbolConfiguration(baseConfig) else {
+              let configured = base.withSymbolConfiguration(colorConfig) else {
             button.title = "●"
             button.image = nil
             button.contentTintColor = tint
             return
         }
 
-        // Template + contentTintColor is the most reliable menu-bar rendering path.
-        let icon = configured.copy() as? NSImage ?? configured
-        icon.isTemplate = true
+        // Must NOT be a template image — templates ignore state colors and render as
+        // black/white menu-bar chrome. Bake the traffic-light tint into the bitmap.
+        let icon = NSImage(size: configured.size, flipped: false) { rect in
+            configured.draw(in: rect)
+            return true
+        }
+        icon.isTemplate = false
         button.image = icon
         button.title = ""
-        button.contentTintColor = tint
+        button.contentTintColor = nil
         button.appearsDisabled = false
         button.toolTip = "Online — \(coordinator.status.state.displayName)"
         button.setAccessibilityLabel("Online — \(coordinator.status.state.displayName)")
