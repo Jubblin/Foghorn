@@ -26,14 +26,13 @@
 		B10000000000000000000011 /* LaunchAtLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000011 /* LaunchAtLoginService.swift */; };
 		B10000000000000000000012 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000012 /* MenuBarView.swift */; };
 		B10000000000000000000013 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000013 /* SettingsView.swift */; };
-		B1000000000000000000002A /* SettingsChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000002A /* SettingsChrome.swift */; };
 		B10000000000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000014 /* Assets.xcassets */; };
 		B10000000000000000000015 /* GatewayResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000017 /* GatewayResolver.swift */; };
 		B10000000000000000000016 /* ProbeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000018 /* ProbeSnapshotTests.swift */; };
 		B10000000000000000000017 /* ConnectivityStateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000019 /* ConnectivityStateMachineTests.swift */; };
 		B10000000000000000000018 /* HTTPProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001A /* HTTPProbeTests.swift */; };
-		B1000000000000000000001A /* OutageRecordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001D /* OutageRecordTests.swift */; };
 		B10000000000000000000019 /* OutageLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001C /* OutageLogView.swift */; };
+		B1000000000000000000001A /* OutageRecordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001D /* OutageRecordTests.swift */; };
 		B1000000000000000000001B /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001E /* DesignTokens.swift */; };
 		B1000000000000000000001C /* GatewayProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001F /* GatewayProbeTests.swift */; };
 		B1000000000000000000001D /* AppLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000020 /* AppLinks.swift */; };
@@ -44,7 +43,26 @@
 		B10000000000000000000023 /* GitHubReleaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000027 /* GitHubReleaseClient.swift */; };
 		B10000000000000000000024 /* AppUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000028 /* AppUpdateService.swift */; };
 		B10000000000000000000025 /* AppUpdateModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000029 /* AppUpdateModelsTests.swift */; };
+		B1000000000000000000002A /* SettingsChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000002A /* SettingsChrome.swift */; };
+		B1000000000000000000002B /* StatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000002B /* StatusItemController.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CP100000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PR1000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = T10000000000000000000001;
+			remoteInfo = Online;
+		};
+		CP100000000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PR1000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = T10000000000000000000001;
+			remoteInfo = Online;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		F10000000000000000000001 /* OnlineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineApp.swift; sourceTree = "<group>"; };
@@ -66,7 +84,6 @@
 		F10000000000000000000011 /* LaunchAtLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginService.swift; sourceTree = "<group>"; };
 		F10000000000000000000012 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		F10000000000000000000013 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		F1000000000000000000002A /* SettingsChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsChrome.swift; sourceTree = "<group>"; };
 		F10000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F10000000000000000000015 /* Online.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Online.entitlements; sourceTree = "<group>"; };
 		F10000000000000000000016 /* Online.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Online.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,12 +91,12 @@
 		F10000000000000000000018 /* ProbeSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeSnapshotTests.swift; sourceTree = "<group>"; };
 		F10000000000000000000019 /* ConnectivityStateMachineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityStateMachineTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001A /* HTTPProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPProbeTests.swift; sourceTree = "<group>"; };
-		F1000000000000000000001D /* OutageRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageRecordTests.swift; sourceTree = "<group>"; };
+		F1000000000000000000001B /* OnlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1000000000000000000001C /* OutageLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageLogView.swift; sourceTree = "<group>"; };
+		F1000000000000000000001D /* OutageRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageRecordTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001E /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
 		F1000000000000000000001F /* GatewayProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayProbeTests.swift; sourceTree = "<group>"; };
 		F10000000000000000000020 /* AppLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLinks.swift; sourceTree = "<group>"; };
-		F1000000000000000000001B /* OnlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10000000000000000000021 /* OnlineUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10000000000000000000022 /* SettingsSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSmokeTests.swift; sourceTree = "<group>"; };
 		F10000000000000000000023 /* UITestConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestConfiguration.swift; sourceTree = "<group>"; };
@@ -88,6 +105,8 @@
 		F10000000000000000000027 /* GitHubReleaseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubReleaseClient.swift; sourceTree = "<group>"; };
 		F10000000000000000000028 /* AppUpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdateService.swift; sourceTree = "<group>"; };
 		F10000000000000000000029 /* AppUpdateModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdateModelsTests.swift; sourceTree = "<group>"; };
+		F1000000000000000000002A /* SettingsChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsChrome.swift; sourceTree = "<group>"; };
+		F1000000000000000000002B /* StatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,23 +132,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
-
-/* Begin PBXContainerItemProxy section */
-		CP100000000000000000001 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = PR1000000000000000000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = T10000000000000000000001;
-			remoteInfo = Online;
-		};
-		CP100000000000000000002 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = PR1000000000000000000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = T10000000000000000000001;
-			remoteInfo = Online;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXGroup section */
 		G10000000000000000000001 = {
@@ -197,35 +199,6 @@
 			path = Probes;
 			sourceTree = "<group>";
 		};
-		G10000000000000000000009 /* OnlineTests */ = {
-			isa = PBXGroup;
-			children = (
-				F10000000000000000000018 /* ProbeSnapshotTests.swift */,
-				F10000000000000000000019 /* ConnectivityStateMachineTests.swift */,
-				F1000000000000000000001A /* HTTPProbeTests.swift */,
-				F1000000000000000000001F /* GatewayProbeTests.swift */,
-				F1000000000000000000001D /* OutageRecordTests.swift */,
-				F10000000000000000000029 /* AppUpdateModelsTests.swift */,
-			);
-			path = OnlineTests;
-			sourceTree = "<group>";
-		};
-		G1000000000000000000000B /* OnlineUITests */ = {
-			isa = PBXGroup;
-			children = (
-				F10000000000000000000022 /* SettingsSmokeTests.swift */,
-			);
-			path = OnlineUITests;
-			sourceTree = "<group>";
-		};
-		G1000000000000000000000C /* UITest */ = {
-			isa = PBXGroup;
-			children = (
-				F10000000000000000000023 /* UITestConfiguration.swift */,
-			);
-			path = UITest;
-			sourceTree = "<group>";
-		};
 		G10000000000000000000006 /* State */ = {
 			isa = PBXGroup;
 			children = (
@@ -244,6 +217,7 @@
 				F10000000000000000000026 /* AppUpdateModels.swift */,
 				F10000000000000000000027 /* GitHubReleaseClient.swift */,
 				F10000000000000000000028 /* AppUpdateService.swift */,
+				F1000000000000000000002B /* StatusItemController.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -259,12 +233,41 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		G10000000000000000000009 /* OnlineTests */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000018 /* ProbeSnapshotTests.swift */,
+				F10000000000000000000019 /* ConnectivityStateMachineTests.swift */,
+				F1000000000000000000001A /* HTTPProbeTests.swift */,
+				F1000000000000000000001F /* GatewayProbeTests.swift */,
+				F1000000000000000000001D /* OutageRecordTests.swift */,
+				F10000000000000000000029 /* AppUpdateModelsTests.swift */,
+			);
+			path = OnlineTests;
+			sourceTree = "<group>";
+		};
 		G1000000000000000000000A /* Design */ = {
 			isa = PBXGroup;
 			children = (
 				F1000000000000000000001E /* DesignTokens.swift */,
 			);
 			path = Design;
+			sourceTree = "<group>";
+		};
+		G1000000000000000000000B /* OnlineUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000022 /* SettingsSmokeTests.swift */,
+			);
+			path = OnlineUITests;
+			sourceTree = "<group>";
+		};
+		G1000000000000000000000C /* UITest */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000023 /* UITestConfiguration.swift */,
+			);
+			path = UITest;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -284,6 +287,9 @@
 			dependencies = (
 			);
 			name = Online;
+			packageProductDependencies = (
+				B94F0973F765A8A72B11628F /* Sparkle */,
+			);
 			productName = Online;
 			productReference = F10000000000000000000016 /* Online.app */;
 			productType = "com.apple.product-type.application";
@@ -324,19 +330,6 @@
 		};
 /* End PBXNativeTarget section */
 
-/* Begin PBXTargetDependency section */
-		D10000000000000000000001 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = T10000000000000000000001 /* Online */;
-			targetProxy = CP100000000000000000001 /* PBXContainerItemProxy */;
-		};
-		D10000000000000000000002 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = T10000000000000000000001 /* Online */;
-			targetProxy = CP100000000000000000002 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXProject section */
 		PR1000000000000000000001 /* Project object */ = {
 			isa = PBXProject;
@@ -354,6 +347,9 @@
 				Base,
 			);
 			mainGroup = G10000000000000000000001;
+			packageReferences = (
+				CAA9797188638E71891AAE80 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			productRefGroup = G10000000000000000000003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -424,6 +420,7 @@
 				B10000000000000000000012 /* MenuBarView.swift in Sources */,
 				B10000000000000000000013 /* SettingsView.swift in Sources */,
 				B1000000000000000000002A /* SettingsChrome.swift in Sources */,
+				B1000000000000000000002B /* StatusItemController.swift in Sources */,
 				B10000000000000000000019 /* OutageLogView.swift in Sources */,
 				B1000000000000000000001B /* DesignTokens.swift in Sources */,
 				B10000000000000000000015 /* GatewayResolver.swift in Sources */,
@@ -457,6 +454,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D10000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = T10000000000000000000001 /* Online */;
+			targetProxy = CP100000000000000000001 /* PBXContainerItemProxy */;
+		};
+		D10000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = T10000000000000000000001 /* Online */;
+			targetProxy = CP100000000000000000002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		X10000000000000000000001 /* Debug */ = {
@@ -496,21 +506,20 @@
 				CODE_SIGN_ENTITLEMENTS = Online/Online.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 55;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Online/Info.plist;
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				INFOPLIST_KEY_CFBundleDisplayName = Online;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.27;
+				MARKETING_VERSION = 0.2.28;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -525,21 +534,20 @@
 				CODE_SIGN_ENTITLEMENTS = Online/Online.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 55;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Online/Info.plist;
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				INFOPLIST_KEY_CFBundleDisplayName = Online;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.27;
+				MARKETING_VERSION = 0.2.28;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -661,6 +669,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CAA9797188638E71891AAE80 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B94F0973F765A8A72B11628F /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CAA9797188638E71891AAE80 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = PR1000000000000000000001 /* Project object */;
 }

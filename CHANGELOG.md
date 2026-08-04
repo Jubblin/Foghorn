@@ -9,11 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- In-app updates via Sparkle (signed appcast): Settings → Help installs updates without opening a browser
+- Release pipeline publishes Sparkle zip archives + rolling `sparkle-appcast` feed (`SPARKLE_PRIVATE_KEY`)
+
 ### Changed
 
 - Settings visual pass: quieter promise captions, shared option-row grammar, segmented interval picker, Remembers primary/secondary actions, Help trust/updates bands
+- Update checks for GitHub Builds use Sparkle; Mac App Store / TestFlight builds compile Sparkle API out (`APP_STORE`) and keep notify-only GitHub fallback
 
 ### Fixed
+
+- Menu bar icon missing on macOS 26/27: replace SwiftUI `MenuBarExtra` with AppKit `NSStatusItem` + popover, drop `LSUIElement`, force-visible autosave identity
+- Settings recovery via `-open-settings` when the item is system-hidden
 
 ### Removed
 

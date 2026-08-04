@@ -117,6 +117,8 @@ jobs:
           2. Open the DMG and drag **Online** onto **Applications**
           3. Grant notification permission on first launch
 
+          Installed copies can update in-app via **Settings → Help → Check for Updates…** (Sparkle).
+
           **Requirements:** macOS 14 Sonoma or later
           FOOTER
             if [[ "${{ steps.build.outputs.signed }}" == "true" ]]; then
@@ -134,17 +136,48 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
+      - name: Prepare Sparkle update feed
+        id: sparkle
+        if: steps.build.outputs.signed == 'true'
+        env:
+          RELEASE_TAG: ${{ env.RELEASE_TAG }}
+          RELEASE_VERSION: ${{ steps.build.outputs.version }}
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          chmod +x scripts/prepare-sparkle-feed.sh
+          if [[ -z "${SPARKLE_PRIVATE_KEY:-}" ]]; then
+            echo "::warning::SPARKLE_PRIVATE_KEY not configured; skipping Sparkle feed"
+            echo "prepared=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          CHANNEL=""
+          if [[ "$RELEASE_TAG" == *-* ]]; then
+            CHANNEL="prerelease"
+          fi
+          RELEASE_TAG="$RELEASE_TAG" SPARKLE_CHANNEL="$CHANNEL" ./scripts/prepare-sparkle-feed.sh
+          echo "prepared=true" >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REF_NAME: ${{ env.RELEASE_TAG }}
           RELEASE_VERSION: ${{ steps.build.outputs.version }}
+          SPARKLE_PREPARED: ${{ steps.sparkle.outputs.prepared }}
         run: |
           set -euo pipefail
           ARM_DMG="build/Online-${RELEASE_VERSION}-arm64.dmg"
           AMD_DMG="build/Online-${RELEASE_VERSION}-amd64.dmg"
+          ASSETS=("$ARM_DMG" "$AMD_DMG")
+          if [[ "${SPARKLE_PREPARED:-}" == "true" ]]; then
+            ASSETS+=(
+              "build/sparkle-feed/Online-${RELEASE_VERSION}-arm64.zip"
+              "build/sparkle-feed/Online-${RELEASE_VERSION}-amd64.zip"
+              "docs/appcast.xml"
+            )
+          fi
           if gh release view "$REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$REF_NAME" "$ARM_DMG" "$AMD_DMG" --clobber
+            gh release upload "$REF_NAME" "${ASSETS[@]}" --clobber
             gh release edit "$REF_NAME" --title "Online $REF_NAME" --notes-file release-notes.md
             if [[ "$REF_NAME" == *-* ]]; then
               gh release edit "$REF_NAME" --prerelease
@@ -152,9 +185,20 @@ jobs:
               gh release edit "$REF_NAME" --latest
             fi
           else
-            ARGS=(release create "$REF_NAME" --title "Online $REF_NAME" --notes-file release-notes.md "$ARM_DMG" "$AMD_DMG")
+            ARGS=(release create "$REF_NAME" --title "Online $REF_NAME" --notes-file release-notes.md "${ASSETS[@]}")
             if [[ "$REF_NAME" == *-* ]]; then
               ARGS+=(--prerelease)
             fi
             gh "${ARGS[@]}"
+          fi
+
+          if [[ "${SPARKLE_PREPARED:-}" == "true" ]]; then
+            if gh release view sparkle-appcast >/dev/null 2>&1; then
+              gh release upload sparkle-appcast docs/appcast.xml --clobber
+            else
+              gh release create sparkle-appcast docs/appcast.xml \
+                --title "Sparkle appcast" \
+                --notes "Rolling Sparkle appcast feed for in-app updates. Not an Online app release." \
+                --prerelease
+            fi
           fi

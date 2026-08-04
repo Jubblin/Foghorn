@@ -109,7 +109,10 @@ private struct SettingsInterruptSection: View {
                         .accessibilityIdentifier("settings.showInMenuBar")
 
                     SettingsHelperText(
-                        text: "When hidden, monitoring continues. Restore the icon via the app menu → Settings.",
+                        text: """
+                        When Off, monitoring continues. On macOS 26+, enable Online under \
+                        System Settings → Menu Bar. Recovery: open -a Online --args -open-settings
+                        """,
                         palette: palette
                     )
 
@@ -298,7 +301,6 @@ private struct SettingsChecksSection: View {
 // MARK: - Remembers
 
 private struct SettingsRemembersSection: View {
-    @Environment(\.openWindow) private var openWindow
     @ObservedObject var settings: AppSettings
     @Binding var launchError: String?
     let palette: DesignPalette
@@ -330,10 +332,7 @@ private struct SettingsRemembersSection: View {
 
                 VStack(alignment: .leading, spacing: 6) {
                     Button("View outage log…") {
-                        openWindow(id: "outage-log")
-                        #if canImport(AppKit)
-                        NSApp.activate(ignoringOtherApps: true)
-                        #endif
+                        AppNavigation.openOutageLog()
                     }
                     .accessibilityIdentifier("settings.viewOutageLog")
 
@@ -367,7 +366,7 @@ private struct SettingsHelpPrivacySection: View {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
                     SettingsHelperText(
-                        text: "Online monitors connectivity locally — no personal data collected or transmitted.",
+                        text: "Online monitors connectivity locally — no personal data collected. Updates use a signed appcast over HTTPS.",
                         palette: palette
                     )
 
@@ -399,8 +398,8 @@ private struct SettingsHelpPrivacySection: View {
 
                     SettingsHelperText(
                         text: settings.includePrereleaseUpdates
-                            ? "Daily check includes GitHub prereleases and -build tags."
-                            : "Daily check for the latest official GitHub release.",
+                            ? "Installs updates in-app, including the prerelease channel."
+                            : "Installs official updates in-app when a newer release is available.",
                         palette: palette
                     )
 
@@ -417,7 +416,7 @@ private struct SettingsHelpPrivacySection: View {
                         .accessibilityIdentifier("settings.checkForUpdates")
 
                         if case .available = updateService.status {
-                            Button("Download") {
+                            Button("Install Update…") {
                                 updateService.openAvailableUpdate()
                             }
                             .accessibilityIdentifier("settings.downloadUpdate")

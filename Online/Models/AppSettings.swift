@@ -35,7 +35,7 @@ final class AppSettings: ObservableObject {
         didSet { UserDefaults.standard.set(appearancePreference.rawValue, forKey: Keys.appearancePreference) }
     }
 
-    /// When true, Online checks GitHub Releases about once per day for a newer version.
+    /// When true, Online checks for updates about once per day (Sparkle on Developer ID builds).
     @Published var automaticUpdatesEnabled: Bool {
         didSet {
             UserDefaults.standard.set(automaticUpdatesEnabled, forKey: Keys.automaticUpdatesEnabled)
@@ -48,10 +48,12 @@ final class AppSettings: ObservableObject {
         }
     }
 
-    /// When true, update checks also consider GitHub prereleases and continuous `-build.N` tags.
+    /// When true, update checks also consider the Sparkle `prerelease` channel (and GitHub fallback).
     @Published var includePrereleaseUpdates: Bool {
         didSet {
             UserDefaults.standard.set(includePrereleaseUpdates, forKey: Keys.includePrereleaseUpdates)
+            guard !isRestoringDefaults else { return }
+            AppUpdateService.shared.applyChannelPreferences()
         }
     }
 

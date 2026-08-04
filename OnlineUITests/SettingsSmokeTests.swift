@@ -161,7 +161,23 @@ final class SettingsSmokeTests: XCTestCase {
     }
 
     private func element(identifier: String) -> XCUIElement {
-        app.descendants(matching: .any)[identifier]
+        // Prefer the explicit UI-test Settings/Outage windows to avoid duplicate
+        // SwiftUI scene hierarchies matching the same accessibility id.
+        let settingsWindow = app.windows["Settings"]
+        if settingsWindow.exists {
+            let inSettings = settingsWindow.descendants(matching: .any)[identifier]
+            if inSettings.exists || settingsWindow.waitForExistence(timeout: 0.1) {
+                return inSettings
+            }
+        }
+        let outageWindow = app.windows["Outage Log"]
+        if outageWindow.exists {
+            let inOutage = outageWindow.descendants(matching: .any)[identifier]
+            if inOutage.exists {
+                return inOutage
+            }
+        }
+        return app.descendants(matching: .any)[identifier].firstMatch
     }
 
     @discardableResult

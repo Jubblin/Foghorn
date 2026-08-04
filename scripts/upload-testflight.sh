@@ -45,6 +45,8 @@ cat >"$EXPORT_PLIST" <<PLIST
 </plist>
 PLIST
 
+# Intentional literal $(inherited) for xcodebuild — do not expand in bash.
+# shellcheck disable=SC2016
 xcodebuild archive \
   -project Online.xcodeproj \
   -scheme "$SCHEME" \
@@ -53,6 +55,7 @@ xcodebuild archive \
   -derivedDataPath "$BUILD_DIR" \
   DEVELOPMENT_TEAM="$DEVELOPMENT_TEAM" \
   CODE_SIGN_STYLE=Automatic \
+  SWIFT_ACTIVE_COMPILATION_CONDITIONS='$(inherited) APP_STORE' \
   archive
 
 xcodebuild -exportArchive \
