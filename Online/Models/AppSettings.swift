@@ -93,19 +93,31 @@ final class AppSettings: ObservableObject {
 
         includePrereleaseUpdates = UserDefaults.standard.bool(forKey: Keys.includePrereleaseUpdates)
         isRestoringDefaults = false
-        Self.applyAppKitAppearance(appearancePreference)
+        // Do not touch NSApp.appearance here — XCTest host bootstrap crashes if we
+        // mutate appearance before the application finishes launching.
     }
 
     /// SwiftUI `preferredColorScheme(nil)` often stays stuck after Light/Dark; drive AppKit too.
     static func applyAppKitAppearance(_ preference: AppearancePreference) {
         #if canImport(AppKit)
-        switch preference {
-        case .system:
-            NSApp.appearance = nil
-        case .light:
-            NSApp.appearance = NSAppearance(named: .aqua)
-        case .dark:
-            NSApp.appearance = NSAppearance(named: .darkAqua)
+        // Skip under xcodebuild test host bootstrap (mutating NSApp too early crashes).
+        guard !UITestConfiguration.isXCTestProcess else { return }
+
+        let apply = {
+            switch preference {
+            case .system:
+                NSApp.appearance = nil
+            case .light:
+                NSApp.appearance = NSAppearance(named: .aqua)
+            case .dark:
+                NSApp.appearance = NSAppearance(named: .darkAqua)
+            }
+        }
+
+        if Thread.isMainThread {
+            apply()
+        } else {
+            DispatchQueue.main.async(execute: apply)
         }
         #endif
     }

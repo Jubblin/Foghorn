@@ -30,6 +30,8 @@ final class AppLifecycleDelegate: NSObject, NSApplicationDelegate {
             NSApp.setActivationPolicy(.accessory)
         }
 
+        AppSettings.applyAppKitAppearance(AppSettings.shared.appearancePreference)
+
         if UITestConfiguration.isActive {
             UITestConfiguration.presentInitialWindowsIfNeeded()
             return
