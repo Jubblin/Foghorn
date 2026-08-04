@@ -13,10 +13,10 @@ Installed **Developer ID** copies update in-app via Sparkle (`Settings → Help 
 
 [release.yml](../.github/workflows/release.yml) (signed builds only) runs [`scripts/prepare-sparkle-feed.sh`](../scripts/prepare-sparkle-feed.sh) when `SPARKLE_PRIVATE_KEY` is set:
 
-1. Zips the exported `Online.app` for arm64 and amd64.
+1. Builds a **universal** `Online.app` (lipo of arm64 + amd64 exports), re-signs it, and zips it (Sparkle rejects two thin archives that share one `CFBundleVersion`).
 2. Runs Sparkle’s `generate_appcast` with Ed25519 signing and a download URL prefix pointing at the versioned GitHub Release.
 3. Tags with a hyphen (e.g. `v0.2.27-build.40`) get `sparkle:channel` = `prerelease`.
-4. Uploads the zips (+ refreshed `docs/appcast.xml`) to the versioned release, and uploads `appcast.xml` to the rolling **`sparkle-appcast`** release used by `SUFeedURL`.
+4. Uploads the zip (+ refreshed `docs/appcast.xml`) to the versioned release, and uploads `appcast.xml` to the rolling **`sparkle-appcast`** release used by `SUFeedURL`.
 
 **Secret:** `SPARKLE_PRIVATE_KEY` — Ed25519 private key from `generate_keys` (public key is `SUPublicEDKey` in `Online/Info.plist`). Never commit the private key.
 
