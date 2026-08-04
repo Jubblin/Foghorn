@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Menu bar icon missing on macOS 26/27: replace SwiftUI `MenuBarExtra` with AppKit `NSStatusItem` + popover, drop `LSUIElement`, force-visible autosave identity
 - Settings recovery via `-open-settings` when the item is system-hidden
+- Sparkle feed uses one universal update zip (generate_appcast rejects dual thin archives with the same bundle version)
 
 ### Removed
 

@@ -171,8 +171,7 @@ jobs:
           ASSETS=("$ARM_DMG" "$AMD_DMG")
           if [[ "${SPARKLE_PREPARED:-}" == "true" ]]; then
             ASSETS+=(
-              "build/sparkle-feed/Online-${RELEASE_VERSION}-arm64.zip"
-              "build/sparkle-feed/Online-${RELEASE_VERSION}-amd64.zip"
+              "build/sparkle-feed/Online-${RELEASE_VERSION}.zip"
               "docs/appcast.xml"
             )
           fi
