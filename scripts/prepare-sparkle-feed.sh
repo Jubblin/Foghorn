@@ -67,14 +67,30 @@ create_universal_app() {
   mkdir -p "$UNIVERSAL_ROOT/export"
   /usr/bin/ditto "$arm_app" "$UNIVERSAL_APP"
 
-  local rel arm_file intel_file
+  local rel arm_file intel_file arm_archs intel_archs
   while IFS= read -r -d '' rel; do
     arm_file="$arm_app/$rel"
     intel_file="$intel_app/$rel"
     [[ -f "$intel_file" ]] || continue
-    if /usr/bin/file -b "$arm_file" | grep -q 'Mach-O'; then
-      /usr/bin/lipo -create "$arm_file" "$intel_file" -output "$UNIVERSAL_APP/$rel.universal"
+    if ! /usr/bin/file -b "$arm_file" | grep -q 'Mach-O'; then
+      continue
+    fi
+    # Sparkle helpers (and some dylibs) are often already identical across
+    # thin app exports — lipo -create errors when both inputs share the same
+    # architecture set. Keep the arm64 copy from ditto in that case.
+    if cmp -s "$arm_file" "$intel_file"; then
+      continue
+    fi
+    arm_archs="$(/usr/bin/lipo -archs "$arm_file" 2>/dev/null || true)"
+    intel_archs="$(/usr/bin/lipo -archs "$intel_file" 2>/dev/null || true)"
+    if [[ -n "$arm_archs" && "$arm_archs" == "$intel_archs" ]]; then
+      continue
+    fi
+    if /usr/bin/lipo -create "$arm_file" "$intel_file" -output "$UNIVERSAL_APP/$rel.universal" 2>/tmp/online-lipo.err; then
       mv "$UNIVERSAL_APP/$rel.universal" "$UNIVERSAL_APP/$rel"
+    else
+      echo "warning: lipo skipped for $rel ($(tr '\n' ' ' </tmp/online-lipo.err))" >&2
+      rm -f "$UNIVERSAL_APP/$rel.universal"
     fi
   done < <(cd "$arm_app" && find . -type f -print0)
 
