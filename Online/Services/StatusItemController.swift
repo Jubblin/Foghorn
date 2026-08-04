@@ -165,6 +165,7 @@ final class StatusItemController: NSObject, ObservableObject {
         let root = MenuBarView()
             .environmentObject(coordinator)
             .preferredColorScheme(AppSettings.shared.appearancePreference.colorScheme)
+            .id(AppSettings.shared.appearancePreference)
         let hosting = NSHostingController(rootView: root)
         hosting.sizingOptions = [.intrinsicContentSize]
         return hosting

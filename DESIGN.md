@@ -112,7 +112,7 @@ About content stays under **Help** (no fifth tab). Do not add tabs for features 
 
 Apply the same palette as the menu bar popover (`DesignPalette.palette(colorScheme:)`), not vanilla `Form` system chrome alone.
 
-- **Tab bar:** System `TabView` chrome; labels only (no decorative icons in v1). Tabs carry navigation weight.
+- **Tab bar:** System `TabView` chrome; SF Symbol above each short label (Interrupt / Checks / Remembers / Help). Tabs carry navigation weight.
 - **Promise caption:** Quiet `caption` / `mutedLichen` under the tab content (not a competing `.headline`). Accessibility ids stay on `settings.section.*`.
 - **Section container:** `signalGlass` background, 12px corner radius (`lg`), 12px (`sm`) inner padding inside the active tab.
 - **Option row grammar:** Label (leading, `.body`) | control (trailing). Helpers sit under the control, `caption` / `mutedLichen`, max two lines.
@@ -208,6 +208,8 @@ Split into two bands with a divider:
 | 2026-08-04 | Sparkle in-app updates (Developer ID) | Appcast + Ed25519; prerelease channel for tags with `-`; MAS builds stub Sparkle via `APP_STORE`. |
 | 2026-08-04 | Healthy menu bar opacity 0.55 | 0.25 read as “missing” on Tahoe transparent menu bars; still dim vs alerts. |
 | 2026-08-04 | AppKit NSStatusItem replaces MenuBarExtra | macOS 26/27 Control Center / MenuBarExtra breakage; alerts worked while icon vanished. |
+| 2026-08-04 | Settings chrome: fixed title + graphite fill | TabView was renaming the window and leaving system white below the card. |
+| 2026-08-04 | Settings tabs use SF Symbol + label | Icon above text for Interrupt / Checks / Remembers / Help. |
 | 2026-08-03 | Settings Remembers opens log window + shows path | Design review: Remembers promised history control but only revealed Finder; align UI with evidence posture. |
 | 2026-08-03 | Battery helper is max 8s (not 8×) | ProbeEngine caps interval at 8 seconds; DESIGN.md was wrong. |
 | 2026-08-03 | Not-determined notifications use Enable alerts | Explicit recovery in Settings beats “wait for next outage” when users open Interrupt to fix alerts. |

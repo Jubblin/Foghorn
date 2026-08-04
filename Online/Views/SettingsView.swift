@@ -24,7 +24,7 @@ struct SettingsView: View {
                 SettingsInterruptSection(settings: settings, alertService: alertService, palette: palette)
             }
             .tabItem {
-                Text(SettingsTab.interrupt.title)
+                Label(SettingsTab.interrupt.title, systemImage: SettingsTab.interrupt.symbolName)
             }
             .tag(SettingsTab.interrupt)
             .accessibilityIdentifier(SettingsTab.interrupt.tabAccessibilityIdentifier)
@@ -38,7 +38,7 @@ struct SettingsView: View {
                 )
             }
             .tabItem {
-                Text(SettingsTab.checks.title)
+                Label(SettingsTab.checks.title, systemImage: SettingsTab.checks.symbolName)
             }
             .tag(SettingsTab.checks)
             .accessibilityIdentifier(SettingsTab.checks.tabAccessibilityIdentifier)
@@ -51,7 +51,7 @@ struct SettingsView: View {
                 )
             }
             .tabItem {
-                Text(SettingsTab.remembers.title)
+                Label(SettingsTab.remembers.title, systemImage: SettingsTab.remembers.symbolName)
             }
             .tag(SettingsTab.remembers)
             .accessibilityIdentifier(SettingsTab.remembers.tabAccessibilityIdentifier)
@@ -60,7 +60,7 @@ struct SettingsView: View {
                 SettingsHelpPrivacySection(palette: palette)
             }
             .tabItem {
-                Text(SettingsTab.help.title)
+                Label(SettingsTab.help.title, systemImage: SettingsTab.help.symbolName)
             }
             .tag(SettingsTab.help)
             .accessibilityIdentifier(SettingsTab.help.tabAccessibilityIdentifier)
@@ -68,13 +68,19 @@ struct SettingsView: View {
         .frame(width: 480, height: 420)
         .background(palette.graphite)
         .foregroundStyle(palette.fogText)
+        .modifier(SettingsWindowBackgroundModifier(color: palette.graphite))
         .onAppear {
             settings.launchAtLogin = LaunchAtLoginService.isEnabled
             customHostsExpanded = !settings.customHosts.isEmpty || UITestConfiguration.isActive
+            applySettingsWindowChrome()
             Task { await alertService.refreshAuthorizationStatus() }
+        }
+        .onChange(of: selectedTab) { _, _ in
+            applySettingsWindowChrome()
         }
         .onChange(of: scenePhase) { _, phase in
             guard phase == .active else { return }
+            applySettingsWindowChrome()
             Task { await alertService.refreshAuthorizationStatus() }
         }
         .onChange(of: settings.customHosts) { _, hosts in
@@ -82,15 +88,52 @@ struct SettingsView: View {
                 customHostsExpanded = true
             }
         }
+        .onChange(of: colorScheme) { _, _ in
+            applySettingsWindowChrome()
+        }
+    }
+
+    /// DESIGN.md: title is always "Settings"; fill window with graphite (no system white gap).
+    private func applySettingsWindowChrome() {
+        #if canImport(AppKit)
+        let background = NSColor(palette.graphite)
+        DispatchQueue.main.async {
+            let tabTitles: Set<String> = ["Interrupt", "Checks", "Remembers", "Help", "Settings"]
+            for window in NSApp.windows where window.isVisible {
+                guard window.styleMask.contains(.titled) else { continue }
+                if tabTitles.contains(window.title) {
+                    window.title = "Settings"
+                    window.backgroundColor = background
+                    window.contentView?.wantsLayer = true
+                    window.contentView?.layer?.backgroundColor = background.cgColor
+                }
+            }
+        }
+        #endif
     }
 
     private func tabPane<Content: View>(@ViewBuilder content: () -> Content) -> some View {
         ScrollView {
             content()
                 .padding(12)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
         }
+        .scrollBounceBehavior(.basedOnSize)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(palette.graphite)
+    }
+}
+
+/// `containerBackground(for: .window)` needs macOS 15; fall back to plain background on 14.
+private struct SettingsWindowBackgroundModifier: ViewModifier {
+    let color: Color
+
+    func body(content: Content) -> some View {
+        if #available(macOS 15.0, *) {
+            content.containerBackground(color, for: .window)
+        } else {
+            content
+        }
     }
 }
 
@@ -380,11 +423,9 @@ private struct SettingsHelpPrivacySection: View {
                     }
 
                     VStack(alignment: .leading, spacing: 2) {
-                        LabeledContent("Version", value: AppInfo.versionString)
-                        LabeledContent("Built", value: AppInfo.buildDateString)
+                        evidenceRow(label: "Version", value: AppInfo.versionString)
+                        evidenceRow(label: "Built", value: AppInfo.buildDateString)
                     }
-                    .font(.caption)
-                    .foregroundStyle(palette.mutedLichen)
                 }
 
                 SettingsBandDivider(palette: palette)
@@ -433,6 +474,19 @@ private struct SettingsHelpPrivacySection: View {
         Text("·")
             .font(.caption)
             .foregroundStyle(palette.mutedLichen)
+    }
+
+    private func evidenceRow(label: String, value: String) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(palette.mutedLichen)
+            Spacer(minLength: 0)
+            Text(value)
+                .font(DesignTokens.dataFont)
+                .foregroundStyle(palette.mutedLichen)
+                .textSelection(.enabled)
+        }
     }
 
     private func linkButton(_ title: String, url: URL, identifier: String) -> some View {
