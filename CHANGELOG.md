@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+## [0.3.0] - 2026-08-04
+
+### Added
+
 - In-app updates via Sparkle (signed appcast): Settings → Help installs updates without opening a browser
 - Release pipeline publishes Sparkle zip archives + rolling `sparkle-appcast` feed (`SPARKLE_PRIVATE_KEY`)
 
@@ -26,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings tabs show an SF Symbol above each label
 - Appearance → System correctly leaves Dark/Light and follows the macOS appearance again
 - Menu bar status dot uses state colors again (was stuck as a black template image)
+
 
 ## [0.2.26] - 2026-08-03
 
