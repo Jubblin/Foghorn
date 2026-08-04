@@ -28,7 +28,7 @@ download_sparkle_tools() {
   local version="${SPARKLE_TOOLS_VERSION:-2.9.5}"
   local archive="$TOOLS_DIR/Sparkle-${version}.tar.xz"
   if [[ ! -x "$TOOLS_DIR/bin/generate_appcast" ]]; then
-    curl -fsSL -o "$archive" \
+    curl -fsSL --proto '=https' --proto-redir '=https' -o "$archive" \
       "https://github.com/sparkle-project/Sparkle/releases/download/${version}/Sparkle-${version}.tar.xz"
     tar -xJf "$archive" -C "$TOOLS_DIR"
   fi
