@@ -260,7 +260,8 @@ final class AppUpdateService: NSObject, ObservableObject {
 
 #if canImport(Sparkle) && !APP_STORE
 extension AppUpdateService: SPUUpdaterDelegate {
-    nonisolated func allowedChannels(for _updater: SPUUpdater) -> Set<String> {
+    nonisolated func allowedChannels(for updater: SPUUpdater) -> Set<String> {
+        _ = updater
         // Default channel is always included by Sparkle; only add extras here.
         // Read UserDefaults directly so this stays safe off the main actor.
         if UserDefaults.standard.bool(forKey: "includePrereleaseUpdates") {
@@ -269,7 +270,8 @@ extension AppUpdateService: SPUUpdaterDelegate {
         return []
     }
 
-    nonisolated func updater(_ _updater: SPUUpdater, didFindValidUpdate item: SUAppcastItem) {
+    nonisolated func updater(_ updater: SPUUpdater, didFindValidUpdate item: SUAppcastItem) {
+        _ = updater
         Task { @MainActor in
             lastCheckedAt = Date()
             let version = item.displayVersionString
@@ -292,7 +294,8 @@ extension AppUpdateService: SPUUpdaterDelegate {
         }
     }
 
-    nonisolated func updaterDidNotFindUpdate(_ _updater: SPUUpdater, error: any Error) {
+    nonisolated func updaterDidNotFindUpdate(_ updater: SPUUpdater, error: any Error) {
+        _ = updater
         Task { @MainActor in
             lastCheckedAt = Date()
             let nsError = error as NSError
@@ -307,7 +310,8 @@ extension AppUpdateService: SPUUpdaterDelegate {
         }
     }
 
-    nonisolated func updater(_ _updater: SPUUpdater, didAbortWithError error: any Error) {
+    nonisolated func updater(_ updater: SPUUpdater, didAbortWithError error: any Error) {
+        _ = updater
         Task { @MainActor in
             let nsError = error as NSError
             if nsError.domain == SUSparkleErrorDomain,
