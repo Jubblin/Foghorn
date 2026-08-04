@@ -129,7 +129,7 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; layout an
 
 **When to interrupt me**
 
-- **Show in menu bar:** Existing toggle. Helper: "When hidden, Online keeps monitoring and sends notifications. Open Settings from the app menu to restore the icon."
+- **Show in menu bar:** Existing toggle. Helper notes Tahoe **System Settings → Menu Bar → Allow in the menu bar**, plus `open -a Online --args -open-settings` recovery when the icon is gone.
 - **Appearance:** Segmented control — System / Light / Dark (accessibility: Follow System / Light / Dark). Applies to popover and Settings immediately.
 - **Notifications:** Show permission status as `LabeledContent`:
   - Granted → "Alerts enabled"
@@ -206,6 +206,8 @@ Split into two bands with a divider:
 | 2026-08-03 | Settings visual pass: row grammar + bands | Demote promise to caption; unify segmented choices; Remembers primary/secondary; Help trust/updates split. |
 | 2026-08-03 | Optional pre-release update channel | Settings toggle includes GitHub prereleases / continuous builds when enabled. |
 | 2026-08-04 | Sparkle in-app updates (Developer ID) | Appcast + Ed25519; prerelease channel for tags with `-`; MAS builds stub Sparkle via `APP_STORE`. |
+| 2026-08-04 | Healthy menu bar opacity 0.55 | 0.25 read as “missing” on Tahoe transparent menu bars; still dim vs alerts. |
+| 2026-08-04 | AppKit NSStatusItem replaces MenuBarExtra | macOS 26/27 Control Center / MenuBarExtra breakage; alerts worked while icon vanished. |
 | 2026-08-03 | Settings Remembers opens log window + shows path | Design review: Remembers promised history control but only revealed Finder; align UI with evidence posture. |
 | 2026-08-03 | Battery helper is max 8s (not 8×) | ProbeEngine caps interval at 8 seconds; DESIGN.md was wrong. |
 | 2026-08-03 | Not-determined notifications use Enable alerts | Explicit recovery in Settings beats “wait for next outage” when users open Interrupt to fix alerts. |

@@ -2,8 +2,6 @@ import SwiftUI
 
 struct MenuBarView: View {
     @EnvironmentObject private var coordinator: AppCoordinator
-    @Environment(\.openWindow) private var openWindow
-    @Environment(\.openSettings) private var openSettings
     @Environment(\.colorScheme) private var colorScheme
     @ObservedObject private var outageLog = OutageLog.shared
 
@@ -104,15 +102,13 @@ struct MenuBarView: View {
                 }
             }
             PopoverActionRow(title: "View outage log…", palette: palette) {
-                openWindow(id: "outage-log")
-                NSApp.activate(ignoringOtherApps: true)
+                AppNavigation.openOutageLog()
             }
             PopoverActionRow(title: "Reveal log file in Finder", palette: palette) {
                 outageLog.revealInFinder()
             }
             PopoverActionRow(title: "Settings…", palette: palette) {
-                openSettings()
-                NSApp.activate(ignoringOtherApps: true)
+                AppNavigation.openSettings()
             }
             paletteDivider
             PopoverActionRow(title: "Quit Online", palette: palette) {

@@ -3,7 +3,9 @@ import SwiftUI
 
 @MainActor
 final class AppCoordinator: ObservableObject {
-    @Published private(set) var menuBarOpacity: Double = 0.25
+    /// Healthy stays quieter than alerts, but must remain findable on Tahoe’s
+    /// transparent menu bar (0.25 read as “missing” on many displays).
+    @Published private(set) var menuBarOpacity: Double = 0.55
     @Published private(set) var iconColor: Color = .secondary
 
     let probeEngine = ProbeEngine()
@@ -85,7 +87,7 @@ final class AppCoordinator: ObservableObject {
     private func updatePresentation() {
         switch stateMachine.status.state {
         case .healthy:
-            menuBarOpacity = 0.25
+            menuBarOpacity = 0.55
             iconColor = DesignTokens.truthGreen
         case .degraded:
             menuBarOpacity = 0.95

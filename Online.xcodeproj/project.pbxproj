@@ -44,6 +44,7 @@
 		B10000000000000000000024 /* AppUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000028 /* AppUpdateService.swift */; };
 		B10000000000000000000025 /* AppUpdateModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000029 /* AppUpdateModelsTests.swift */; };
 		B1000000000000000000002A /* SettingsChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000002A /* SettingsChrome.swift */; };
+		B1000000000000000000002B /* StatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000002B /* StatusItemController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +106,7 @@
 		F10000000000000000000028 /* AppUpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdateService.swift; sourceTree = "<group>"; };
 		F10000000000000000000029 /* AppUpdateModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdateModelsTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000002A /* SettingsChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsChrome.swift; sourceTree = "<group>"; };
+		F1000000000000000000002B /* StatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +217,7 @@
 				F10000000000000000000026 /* AppUpdateModels.swift */,
 				F10000000000000000000027 /* GitHubReleaseClient.swift */,
 				F10000000000000000000028 /* AppUpdateService.swift */,
+				F1000000000000000000002B /* StatusItemController.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -417,6 +420,7 @@
 				B10000000000000000000012 /* MenuBarView.swift in Sources */,
 				B10000000000000000000013 /* SettingsView.swift in Sources */,
 				B1000000000000000000002A /* SettingsChrome.swift in Sources */,
+				B1000000000000000000002B /* StatusItemController.swift in Sources */,
 				B10000000000000000000019 /* OutageLogView.swift in Sources */,
 				B1000000000000000000001B /* DesignTokens.swift in Sources */,
 				B10000000000000000000015 /* GatewayResolver.swift in Sources */,
@@ -510,7 +514,6 @@
 				INFOPLIST_FILE = Online/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Online;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -539,7 +542,6 @@
 				INFOPLIST_FILE = Online/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Online;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

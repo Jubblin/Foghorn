@@ -1,19 +1,51 @@
 import SwiftUI
 
+@MainActor
 final class AppLifecycleDelegate: NSObject, NSApplicationDelegate {
-    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+    let coordinator = AppCoordinator()
+
+    nonisolated func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         false
     }
 
-    func applicationWillFinishLaunching(_ notification: Notification) {
-        guard UITestConfiguration.shouldUseRegularActivationPolicy else { return }
-        NSApp.setActivationPolicy(.regular)
+    nonisolated func applicationWillFinishLaunching(_ notification: Notification) {
+        Task { @MainActor in
+            if UITestConfiguration.shouldUseRegularActivationPolicy {
+                NSApp.setActivationPolicy(.regular)
+            }
+        }
     }
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
-        guard UITestConfiguration.isActive else { return }
-        Task { @MainActor in
+    nonisolated func applicationDidFinishLaunching(_ notification: Notification) {
+        // AppKit invokes this on the main thread.
+        MainActor.assumeIsolated {
+            self.handleDidFinishLaunching()
+        }
+    }
+
+    private func handleDidFinishLaunching() {
+        // Explicit accessory policy. Relying on Info.plist LSUIElement alone has
+        // caused Control Center to suppress status items on macOS 26/27 betas.
+        if !UITestConfiguration.shouldUseRegularActivationPolicy {
+            NSApp.setActivationPolicy(.accessory)
+        }
+
+        if UITestConfiguration.isActive {
             UITestConfiguration.presentInitialWindowsIfNeeded()
+            return
+        }
+
+        if !UITestConfiguration.isXCTestProcess {
+            coordinator.start()
+            StatusItemController.shared.install(coordinator: coordinator)
+        }
+
+        if ProcessInfo.processInfo.arguments.contains("-open-settings") {
+            Task { @MainActor in
+                AppSettings.shared.showInMenuBar = true
+                try? await Task.sleep(nanoseconds: 400_000_000)
+                AppNavigation.openSettings()
+            }
         }
     }
 }
@@ -22,49 +54,34 @@ final class AppLifecycleDelegate: NSObject, NSApplicationDelegate {
 struct OnlineApp: App {
     @NSApplicationDelegateAdaptor(AppLifecycleDelegate.self) private var appDelegate
     @ObservedObject private var settings = AppSettings.shared
-    @StateObject private var coordinator: AppCoordinator = {
-        let coordinator = AppCoordinator()
-        if !UITestConfiguration.isActive, !UITestConfiguration.isXCTestProcess {
-            coordinator.start()
-        }
-        return coordinator
-    }()
-
-    private var menuBarInserted: Binding<Bool> {
-        Binding(
-            get: { settings.showInMenuBar },
-            set: { newValue in
-                if settings.showInMenuBar != newValue {
-                    settings.showInMenuBar = newValue
-                }
-            }
-        )
-    }
 
     var body: some Scene {
-        MenuBarExtra(isInserted: menuBarInserted) {
-            MenuBarView()
-                .environmentObject(coordinator)
+        Settings {
+            SettingsView()
+                .environmentObject(appDelegate.coordinator)
                 .preferredColorScheme(settings.appearancePreference.colorScheme)
-        } label: {
-            Image(systemName: coordinator.status.state.menuBarSymbol)
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(coordinator.iconColor)
-                .opacity(coordinator.menuBarOpacity)
-                .accessibilityLabel(coordinator.status.state.displayName)
+                .background(OutageLogWindowBridge())
         }
-        .menuBarExtraStyle(.window)
+        .defaultSize(width: 480, height: 420)
 
         Window("Outage Log", id: "outage-log") {
             OutageLogView()
                 .preferredColorScheme(settings.appearancePreference.colorScheme)
         }
         .defaultSize(width: 800, height: 440)
+    }
+}
 
-        Settings {
-            SettingsView()
-                .preferredColorScheme(settings.appearancePreference.colorScheme)
-        }
-        .defaultSize(width: 480, height: 420)
+/// Forwards `AppNavigation.openOutageLog` into the SwiftUI `openWindow` environment.
+private struct OutageLogWindowBridge: View {
+    @Environment(\.openWindow) private var openWindow
+
+    var body: some View {
+        Color.clear
+            .frame(width: 0, height: 0)
+            .accessibilityHidden(true)
+            .onReceive(NotificationCenter.default.publisher(for: AppNavigation.openOutageLogNotification)) { _ in
+                openWindow(id: "outage-log")
+            }
     }
 }
