@@ -4,8 +4,23 @@ Online ships on two channels with the **same version number**:
 
 | Channel | Artifact | Signing |
 |---------|----------|---------|
-| GitHub Releases | `.dmg` | Developer ID + notarization |
+| GitHub Releases | `.dmg` (+ Sparkle `.zip` / appcast) | Developer ID + notarization |
 | Mac App Store | TestFlight → public | Apple Distribution |
+
+Installed **Developer ID** copies update in-app via Sparkle (`Settings → Help → Check for Updates…`). Mac App Store builds must not use Sparkle for installation — store updates go through App Store Connect / TestFlight.
+
+## Sparkle appcast (GitHub channel)
+
+[release.yml](../.github/workflows/release.yml) (signed builds only) runs [`scripts/prepare-sparkle-feed.sh`](../scripts/prepare-sparkle-feed.sh) when `SPARKLE_PRIVATE_KEY` is set:
+
+1. Zips the exported `Online.app` for arm64 and amd64.
+2. Runs Sparkle’s `generate_appcast` with Ed25519 signing and a download URL prefix pointing at the versioned GitHub Release.
+3. Tags with a hyphen (e.g. `v0.2.27-build.40`) get `sparkle:channel` = `prerelease`.
+4. Uploads the zips (+ refreshed `docs/appcast.xml`) to the versioned release, and uploads `appcast.xml` to the rolling **`sparkle-appcast`** release used by `SUFeedURL`.
+
+**Secret:** `SPARKLE_PRIVATE_KEY` — Ed25519 private key from `generate_keys` (public key is `SUPublicEDKey` in `Online/Info.plist`). Never commit the private key.
+
+**Local note:** regenerating keys requires shipping a new public key in the app; treat key rotation like a breaking update for existing installs.
 
 ## macOS versions
 
@@ -220,6 +235,7 @@ Configure these in **Settings → Secrets and variables → Actions** (repo **Se
 | `APP_STORE_CONNECT_API_KEY_ID` | Notarization + TestFlight | Notarized DMG or TestFlight upload |
 | `APP_STORE_CONNECT_ISSUER_ID` | Notarization + TestFlight | Same as above |
 | `APP_STORE_CONNECT_API_KEY` | Notarization + TestFlight | Same as above |
+| `SPARKLE_PRIVATE_KEY` | `release.yml` (Sparkle appcast) | In-app updates for Developer ID builds |
 
 Without signing secrets (or when `.p12` import fails), `release.yml` still publishes an **unsigned** DMG. `release-store.yml` exits successfully without uploading.
 

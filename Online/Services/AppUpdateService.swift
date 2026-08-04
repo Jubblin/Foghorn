@@ -2,6 +2,10 @@ import AppKit
 import Foundation
 import UserNotifications
 
+#if canImport(Sparkle) && !APP_STORE
+import Sparkle
+#endif
+
 enum AppUpdateStatus: Equatable {
     case idle
     case checking
@@ -11,20 +15,27 @@ enum AppUpdateStatus: Equatable {
 }
 
 @MainActor
-final class AppUpdateService: ObservableObject {
+final class AppUpdateService: NSObject, ObservableObject {
     static let shared = AppUpdateService()
 
     @Published private(set) var status: AppUpdateStatus = .idle
     @Published private(set) var lastCheckedAt: Date?
 
-    private let client: AppReleaseFetching
     private let currentVersionProvider: () -> String
-    private let architecture: AppArchitecture
     private let notificationCenter: UNUserNotificationCenter
+
+#if canImport(Sparkle) && !APP_STORE
+    private var updaterController: SPUStandardUpdaterController?
+#endif
+
+    /// Legacy GitHub client retained for unit-testable selection helpers / APP_STORE stub.
+    private let client: AppReleaseFetching
+    private let architecture: AppArchitecture
     private var automaticCheckTask: Task<Void, Never>?
 
     private static let automaticCheckInterval: TimeInterval = 24 * 60 * 60
     private static let updateNotificationID = "online.app-update.available"
+    nonisolated private static let prereleaseChannel = "prerelease"
 
     init(
         client: AppReleaseFetching = GitHubReleaseClient(),
@@ -38,28 +49,60 @@ final class AppUpdateService: ObservableObject {
         self.currentVersionProvider = currentVersionProvider
         self.architecture = architecture
         self.notificationCenter = notificationCenter
+        super.init()
+
+#if canImport(Sparkle) && !APP_STORE
+        updaterController = SPUStandardUpdaterController(
+            startingUpdater: false,
+            updaterDelegate: self,
+            userDriverDelegate: nil
+        )
+#endif
     }
 
     func startAutomaticChecksIfNeeded() {
         automaticCheckTask?.cancel()
+        automaticCheckTask = nil
+
         guard AppSettings.shared.automaticUpdatesEnabled else { return }
         guard !UITestConfiguration.isActive, !UITestConfiguration.isXCTestProcess else { return }
 
+#if canImport(Sparkle) && !APP_STORE
+        guard let updater = updaterController?.updater else { return }
+        applyPreferencesToUpdater(updater)
+        do {
+            try updater.start()
+        } catch {
+            status = .failed(error.localizedDescription)
+        }
+#else
+        // App Store / no Sparkle: fall back to notify-only GitHub checks.
         automaticCheckTask = Task { [weak self] in
-            // Defer first check briefly so launch probes aren't competing for bandwidth.
             try? await Task.sleep(nanoseconds: 5_000_000_000)
             while !Task.isCancelled {
                 guard let self else { return }
                 guard AppSettings.shared.automaticUpdatesEnabled else { return }
-                _ = await self.checkForUpdates(userInitiated: false)
+                _ = await self.checkForUpdatesUsingGitHub(userInitiated: false)
                 try? await Task.sleep(nanoseconds: UInt64(Self.automaticCheckInterval * 1_000_000_000))
             }
         }
+#endif
     }
 
     func stopAutomaticChecks() {
         automaticCheckTask?.cancel()
         automaticCheckTask = nil
+
+#if canImport(Sparkle) && !APP_STORE
+        updaterController?.updater.automaticallyChecksForUpdates = false
+#endif
+    }
+
+    func applyChannelPreferences() {
+#if canImport(Sparkle) && !APP_STORE
+        guard let updater = updaterController?.updater else { return }
+        applyPreferencesToUpdater(updater)
+#endif
     }
 
     @discardableResult
@@ -69,40 +112,42 @@ final class AppUpdateService: ObservableObject {
             return status
         }
 
+#if canImport(Sparkle) && !APP_STORE
+        guard let controller = updaterController else {
+            status = .failed("Updater is not available.")
+            return status
+        }
+        applyPreferencesToUpdater(controller.updater)
         status = .checking
-        do {
-            let releases = try await client.fetchReleases()
-            let current = currentVersionProvider()
-            lastCheckedAt = Date()
-
-            if let update = AppUpdateSelection.latestAvailableUpdate(
-                in: releases,
-                currentVersion: current,
-                includePrereleases: AppSettings.shared.includePrereleaseUpdates
-            ) {
-                status = .available(update)
-                if !userInitiated {
-                    await postUpdateNotification(for: update)
-                }
-            } else {
-                status = .upToDate(current: current)
-            }
-        } catch {
-            status = .failed(error.localizedDescription)
+        if userInitiated {
+            controller.checkForUpdates(nil)
+        } else if controller.updater.automaticallyChecksForUpdates {
+            controller.updater.checkForUpdatesInBackground()
         }
         return status
+#else
+        return await checkForUpdatesUsingGitHub(userInitiated: userInitiated)
+#endif
     }
 
     func openAvailableUpdate() {
+#if canImport(Sparkle) && !APP_STORE
+        updaterController?.checkForUpdates(nil)
+#else
         guard case let .available(release) = status else {
             AppLinks.openInBrowser(AppLinks.releases)
             return
         }
         let url = release.preferredDownloadURL(architecture: architecture) ?? release.htmlURL
         AppLinks.openInBrowser(url)
+#endif
     }
 
     func presentManualCheckResult() {
+#if canImport(Sparkle) && !APP_STORE
+        // Sparkle presents its own update UI from checkForUpdates(_:).
+        return
+#else
         switch status {
         case .available:
             let alert = NSAlert()
@@ -132,6 +177,7 @@ final class AppUpdateService: ObservableObject {
                 AppLinks.openInBrowser(AppLinks.releases)
             }
         }
+#endif
     }
 
     var statusSummary: String {
@@ -139,14 +185,48 @@ final class AppUpdateService: ObservableObject {
         case .idle:
             return "Not checked yet"
         case .checking:
-            return "Checking GitHub Releases…"
+            return "Checking for updates…"
         case .upToDate(let current):
-            return "Online \(current) is the latest release."
+            return "Online \(current) is up to date."
         case .available(let release):
             return "Online \(Self.labeledVersion(release)) is available (you have \(currentVersionProvider()))."
         case .failed(let message):
             return message
         }
+    }
+
+#if canImport(Sparkle) && !APP_STORE
+    private func applyPreferencesToUpdater(_ updater: SPUUpdater) {
+        updater.automaticallyChecksForUpdates = AppSettings.shared.automaticUpdatesEnabled
+        updater.updateCheckInterval = Self.automaticCheckInterval
+        // Channel filtering is via SPUUpdaterDelegate.allowedChannels(for:).
+    }
+#endif
+
+    @discardableResult
+    private func checkForUpdatesUsingGitHub(userInitiated: Bool) async -> AppUpdateStatus {
+        status = .checking
+        do {
+            let releases = try await client.fetchReleases()
+            let current = currentVersionProvider()
+            lastCheckedAt = Date()
+
+            if let update = AppUpdateSelection.latestAvailableUpdate(
+                in: releases,
+                currentVersion: current,
+                includePrereleases: AppSettings.shared.includePrereleaseUpdates
+            ) {
+                status = .available(update)
+                if !userInitiated {
+                    await postUpdateNotification(for: update)
+                }
+            } else {
+                status = .upToDate(current: current)
+            }
+        } catch {
+            status = .failed(error.localizedDescription)
+        }
+        return status
     }
 
     private func postUpdateNotification(for release: AppRelease) async {
@@ -159,7 +239,7 @@ final class AppUpdateService: ObservableObject {
 
         let content = UNMutableNotificationContent()
         content.title = "Update available"
-        content.body = "Online \(Self.labeledVersion(release)) is ready to download."
+        content.body = "Online \(Self.labeledVersion(release)) is ready to install."
         content.sound = .default
 
         let request = UNNotificationRequest(
@@ -177,3 +257,65 @@ final class AppUpdateService: ObservableObject {
         return release.versionString
     }
 }
+
+#if canImport(Sparkle) && !APP_STORE
+extension AppUpdateService: SPUUpdaterDelegate {
+    nonisolated func allowedChannels(for updater: SPUUpdater) -> Set<String> {
+        // Default channel is always included by Sparkle; only add extras here.
+        // Read UserDefaults directly so this stays safe off the main actor.
+        if UserDefaults.standard.bool(forKey: "includePrereleaseUpdates") {
+            return [Self.prereleaseChannel]
+        }
+        return []
+    }
+
+    nonisolated func updater(_ updater: SPUUpdater, didFindValidUpdate item: SUAppcastItem) {
+        Task { @MainActor in
+            lastCheckedAt = Date()
+            let version = item.displayVersionString
+            let tag = version.hasPrefix("v") ? version : "v\(version)"
+            let channel = item.channel ?? ""
+            let release = AppRelease(
+                tagName: tag,
+                name: item.title,
+                htmlURL: item.infoURL ?? AppLinks.releases,
+                isPrerelease: !channel.isEmpty,
+                publishedAt: item.date,
+                assets: [
+                    AppReleaseAsset(
+                        name: item.fileURL?.lastPathComponent ?? "Online-update.zip",
+                        downloadURL: item.fileURL ?? AppLinks.releases
+                    )
+                ]
+            )
+            status = .available(release)
+        }
+    }
+
+    nonisolated func updaterDidNotFindUpdate(_ updater: SPUUpdater, error: any Error) {
+        Task { @MainActor in
+            lastCheckedAt = Date()
+            let nsError = error as NSError
+            if nsError.domain == SUSparkleErrorDomain,
+               nsError.code == Int(SUError.noUpdateError.rawValue) {
+                status = .upToDate(current: currentVersionProvider())
+            } else if nsError.code == Int(SUError.installationCanceledError.rawValue) {
+                status = .idle
+            } else {
+                status = .failed(error.localizedDescription)
+            }
+        }
+    }
+
+    nonisolated func updater(_ updater: SPUUpdater, didAbortWithError error: any Error) {
+        Task { @MainActor in
+            let nsError = error as NSError
+            if nsError.domain == SUSparkleErrorDomain,
+               nsError.code == Int(SUError.installationCanceledError.rawValue) {
+                return
+            }
+            status = .failed(error.localizedDescription)
+        }
+    }
+}
+#endif

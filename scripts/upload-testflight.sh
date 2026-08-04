@@ -53,6 +53,7 @@ xcodebuild archive \
   -derivedDataPath "$BUILD_DIR" \
   DEVELOPMENT_TEAM="$DEVELOPMENT_TEAM" \
   CODE_SIGN_STYLE=Automatic \
+  SWIFT_ACTIVE_COMPILATION_CONDITIONS='$(inherited) APP_STORE' \
   archive
 
 xcodebuild -exportArchive \

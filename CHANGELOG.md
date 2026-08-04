@@ -9,9 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- In-app updates via Sparkle (signed appcast): Settings → Help installs updates without opening a browser
+- Release pipeline publishes Sparkle zip archives + rolling `sparkle-appcast` feed (`SPARKLE_PRIVATE_KEY`)
+
 ### Changed
 
 - Settings visual pass: quieter promise captions, shared option-row grammar, segmented interval picker, Remembers primary/secondary actions, Help trust/updates bands
+- Update checks for GitHub Builds use Sparkle; Mac App Store / TestFlight builds compile Sparkle API out (`APP_STORE`) and keep notify-only GitHub fallback
 
 ### Fixed
 

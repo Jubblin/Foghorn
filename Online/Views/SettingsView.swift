@@ -367,7 +367,7 @@ private struct SettingsHelpPrivacySection: View {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
                     SettingsHelperText(
-                        text: "Online monitors connectivity locally — no personal data collected or transmitted.",
+                        text: "Online monitors connectivity locally — no personal data collected. Updates use a signed appcast over HTTPS.",
                         palette: palette
                     )
 
@@ -399,8 +399,8 @@ private struct SettingsHelpPrivacySection: View {
 
                     SettingsHelperText(
                         text: settings.includePrereleaseUpdates
-                            ? "Daily check includes GitHub prereleases and -build tags."
-                            : "Daily check for the latest official GitHub release.",
+                            ? "Installs updates in-app, including the prerelease channel."
+                            : "Installs official updates in-app when a newer release is available.",
                         palette: palette
                     )
 
@@ -417,7 +417,7 @@ private struct SettingsHelpPrivacySection: View {
                         .accessibilityIdentifier("settings.checkForUpdates")
 
                         if case .available = updateService.status {
-                            Button("Download") {
+                            Button("Install Update…") {
                                 updateService.openAvailableUpdate()
                             }
                             .accessibilityIdentifier("settings.downloadUpdate")
