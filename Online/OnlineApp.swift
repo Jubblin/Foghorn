@@ -72,6 +72,7 @@ struct OnlineApp: App {
             }
         }
         .defaultSize(width: 480, height: 420)
+        .windowResizability(.contentSize)
 
         Window("Outage Log", id: "outage-log") {
             if UITestConfiguration.isActive {
