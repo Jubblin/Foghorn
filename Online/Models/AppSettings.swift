@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AppKit)
+import AppKit
+#endif
+
 @MainActor
 final class AppSettings: ObservableObject {
     static let shared = AppSettings()
@@ -32,7 +36,11 @@ final class AppSettings: ObservableObject {
     }
 
     @Published var appearancePreference: AppearancePreference {
-        didSet { UserDefaults.standard.set(appearancePreference.rawValue, forKey: Keys.appearancePreference) }
+        didSet {
+            UserDefaults.standard.set(appearancePreference.rawValue, forKey: Keys.appearancePreference)
+            guard !isRestoringDefaults else { return }
+            Self.applyAppKitAppearance(appearancePreference)
+        }
     }
 
     /// When true, Online checks for updates about once per day (Sparkle on Developer ID builds).
@@ -85,6 +93,21 @@ final class AppSettings: ObservableObject {
 
         includePrereleaseUpdates = UserDefaults.standard.bool(forKey: Keys.includePrereleaseUpdates)
         isRestoringDefaults = false
+        Self.applyAppKitAppearance(appearancePreference)
+    }
+
+    /// SwiftUI `preferredColorScheme(nil)` often stays stuck after Light/Dark; drive AppKit too.
+    static func applyAppKitAppearance(_ preference: AppearancePreference) {
+        #if canImport(AppKit)
+        switch preference {
+        case .system:
+            NSApp.appearance = nil
+        case .light:
+            NSApp.appearance = NSAppearance(named: .aqua)
+        case .dark:
+            NSApp.appearance = NSAppearance(named: .darkAqua)
+        }
+        #endif
     }
 
     func addCustomHost(_ host: String) {

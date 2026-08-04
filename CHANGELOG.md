@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sparkle feed uses one universal update zip (generate_appcast rejects dual thin archives with the same bundle version)
 - Settings window chrome follows DESIGN.md: title stays "Settings", graphite fills the pane (no system white gap), content top-aligned at 480×420
 - Settings tabs show an SF Symbol above each label
+- Appearance → System correctly leaves Dark/Light and follows the macOS appearance again
 
 ### Removed
 

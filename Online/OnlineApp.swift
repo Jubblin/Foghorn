@@ -68,6 +68,8 @@ struct OnlineApp: App {
                 SettingsView()
                     .environmentObject(appDelegate.coordinator)
                     .preferredColorScheme(settings.appearancePreference.colorScheme)
+                    // Force SwiftUI to drop a cached Light/Dark override when returning to System.
+                    .id(settings.appearancePreference)
                     .background(OutageLogWindowBridge())
             }
         }
@@ -81,8 +83,9 @@ struct OnlineApp: App {
                     .frame(width: 1, height: 1)
                     .accessibilityHidden(true)
             } else {
-                OutageLogView()
-                    .preferredColorScheme(settings.appearancePreference.colorScheme)
+            OutageLogView()
+                .preferredColorScheme(settings.appearancePreference.colorScheme)
+                .id(settings.appearancePreference)
             }
         }
         .defaultSize(width: 800, height: 440)
