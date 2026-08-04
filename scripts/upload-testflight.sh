@@ -45,6 +45,8 @@ cat >"$EXPORT_PLIST" <<PLIST
 </plist>
 PLIST
 
+# Intentional literal $(inherited) for xcodebuild — do not expand in bash.
+# shellcheck disable=SC2016
 xcodebuild archive \
   -project Online.xcodeproj \
   -scheme "$SCHEME" \
