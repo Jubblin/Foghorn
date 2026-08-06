@@ -238,9 +238,6 @@ enum AppNavigation {
     private static var outageLogWindow: NSWindow?
 
     @MainActor
-    private static var settingsWindow: NSWindow?
-
-    @MainActor
     private static var settingsCloseObserver: NSObjectProtocol?
 
     /// Titles the Settings scene / chrome may briefly use before forcing "Settings".
@@ -248,6 +245,9 @@ enum AppNavigation {
         "Settings", "Interrupt", "Checks", "Remembers", "Help"
     ]
 
+    /// Opens the SwiftUI `Settings` scene only.
+    /// Do **not** host `SettingsView` in a plain `NSWindow` — that drops preferences
+    /// tab chrome and looks like corrupted tabs (icons/labels wrong or doubled).
     @MainActor
     static func openSettings() {
         AppSettings.shared.showInMenuBar = true
@@ -255,7 +255,7 @@ enum AppNavigation {
         // Transient popover must resign key first or showSettingsWindow: is a no-op.
         StatusItemController.shared.dismissPopover()
 
-        if let existing = settingsWindow, existing.isVisible {
+        if let existing = visibleSettingsWindow() {
             bringToFront(existing)
             return
         }
@@ -265,17 +265,10 @@ enum AppNavigation {
             NSApp.setActivationPolicy(.regular)
         }
 
-        // Defer past popover teardown so the Settings scene can become key.
+        // Defer past popover teardown; retry if the scene is slow to materialize.
         DispatchQueue.main.async {
-            _ = NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-            NSApp.activate(ignoringOtherApps: true)
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                if !hasVisibleSettingsWindow() {
-                    presentSettingsWindowFallback()
-                }
-                scheduleAccessoryRestore(previousPolicy: previousPolicy)
-            }
+            showSettingsScene(remainingAttempts: 4)
+            scheduleAccessoryRestore(previousPolicy: previousPolicy)
         }
     }
 
@@ -309,31 +302,32 @@ enum AppNavigation {
     }
 
     @MainActor
-    private static func hasVisibleSettingsWindow() -> Bool {
-        NSApp.windows.contains { window in
-            window.isVisible && settingsWindowTitles.contains(window.title)
-        }
-    }
-
-    @MainActor
-    private static func presentSettingsWindowFallback() {
-        if let existing = settingsWindow {
+    private static func showSettingsScene(remainingAttempts: Int) {
+        if let existing = visibleSettingsWindow() {
             bringToFront(existing)
             return
         }
 
-        // Match UITestConfiguration / DESIGN.md default size — no second coordinator.
-        let root = SettingsView()
-            .preferredColorScheme(AppSettings.shared.appearancePreference.colorScheme)
-            .id(AppSettings.shared.appearancePreference)
-        let hosting = NSHostingController(rootView: root)
-        let window = NSWindow(contentViewController: hosting)
-        window.title = "Settings"
-        window.setContentSize(NSSize(width: 480, height: 420))
-        window.center()
-        window.isReleasedWhenClosed = false
-        bringToFront(window)
-        settingsWindow = window
+        _ = NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        NSApp.activate(ignoringOtherApps: true)
+
+        guard remainingAttempts > 1 else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            if visibleSettingsWindow() == nil {
+                showSettingsScene(remainingAttempts: remainingAttempts - 1)
+            } else if let existing = visibleSettingsWindow() {
+                bringToFront(existing)
+            }
+        }
+    }
+
+    @MainActor
+    private static func visibleSettingsWindow() -> NSWindow? {
+        NSApp.windows.first { window in
+            window.isVisible
+                && window.styleMask.contains(.titled)
+                && settingsWindowTitles.contains(window.title)
+        }
     }
 
     @MainActor

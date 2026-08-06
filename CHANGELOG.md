@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Settings tabs use the SwiftUI Settings scene only (removed plain `NSWindow` fallback that corrupted preferences tab chrome)
+
 ### Removed
 
 ## [0.3.1] - 2026-08-06
