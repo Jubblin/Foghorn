@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Menu bar **Settings…** opens reliably from the AppKit popover (dismiss popover, defer `showSettingsWindow:`, imperative window fallback, restore accessory policy)
+
 ### Removed
 
 ## [0.3.0] - 2026-08-04

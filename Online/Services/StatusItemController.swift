@@ -195,6 +195,12 @@ final class StatusItemController: NSObject, ObservableObject {
         startEventMonitor()
     }
 
+    /// Dismisses the status-item popover if it is showing.
+    /// Call before opening Settings / other key windows so they can become key.
+    func dismissPopover() {
+        closePopover()
+    }
+
     private func closePopover() {
         popover?.performClose(nil)
         statusItem?.button?.isHighlighted = false
@@ -232,20 +238,54 @@ enum AppNavigation {
     private static var outageLogWindow: NSWindow?
 
     @MainActor
+    private static var settingsWindow: NSWindow?
+
+    @MainActor
+    private static var settingsCloseObserver: NSObjectProtocol?
+
+    /// Titles the Settings scene / chrome may briefly use before forcing "Settings".
+    private static let settingsWindowTitles: Set<String> = [
+        "Settings", "Interrupt", "Checks", "Remembers", "Help"
+    ]
+
+    @MainActor
     static func openSettings() {
         AppSettings.shared.showInMenuBar = true
         StatusItemController.shared.applyVisibility(true)
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-        NSApp.activate(ignoringOtherApps: true)
+        // Transient popover must resign key first or showSettingsWindow: is a no-op.
+        StatusItemController.shared.dismissPopover()
+
+        if let existing = settingsWindow, existing.isVisible {
+            bringToFront(existing)
+            return
+        }
+
+        let previousPolicy = NSApp.activationPolicy()
+        if previousPolicy != .regular {
+            NSApp.setActivationPolicy(.regular)
+        }
+
+        // Defer past popover teardown so the Settings scene can become key.
+        DispatchQueue.main.async {
+            _ = NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            NSApp.activate(ignoringOtherApps: true)
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                if !hasVisibleSettingsWindow() {
+                    presentSettingsWindowFallback()
+                }
+                scheduleAccessoryRestore(previousPolicy: previousPolicy)
+            }
+        }
     }
 
     @MainActor
     static func openOutageLog() {
+        StatusItemController.shared.dismissPopover()
         NotificationCenter.default.post(name: openOutageLogNotification, object: nil)
 
         if let existing = outageLogWindow, existing.isVisible {
-            existing.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
+            bringToFront(existing)
             return
         }
 
@@ -258,8 +298,74 @@ enum AppNavigation {
         window.setContentSize(NSSize(width: 800, height: 440))
         window.center()
         window.isReleasedWhenClosed = false
-        window.makeKeyAndOrderFront(nil)
+        bringToFront(window)
         outageLogWindow = window
+    }
+
+    @MainActor
+    private static func bringToFront(_ window: NSWindow) {
+        window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @MainActor
+    private static func hasVisibleSettingsWindow() -> Bool {
+        NSApp.windows.contains { window in
+            window.isVisible && settingsWindowTitles.contains(window.title)
+        }
+    }
+
+    @MainActor
+    private static func presentSettingsWindowFallback() {
+        if let existing = settingsWindow {
+            bringToFront(existing)
+            return
+        }
+
+        // Match UITestConfiguration / DESIGN.md default size — no second coordinator.
+        let root = SettingsView()
+            .preferredColorScheme(AppSettings.shared.appearancePreference.colorScheme)
+            .id(AppSettings.shared.appearancePreference)
+        let hosting = NSHostingController(rootView: root)
+        let window = NSWindow(contentViewController: hosting)
+        window.title = "Settings"
+        window.setContentSize(NSSize(width: 480, height: 420))
+        window.center()
+        window.isReleasedWhenClosed = false
+        bringToFront(window)
+        settingsWindow = window
+    }
+
+    @MainActor
+    private static func scheduleAccessoryRestore(previousPolicy: NSApplication.ActivationPolicy) {
+        guard previousPolicy == .accessory else { return }
+
+        if let settingsCloseObserver {
+            NotificationCenter.default.removeObserver(settingsCloseObserver)
+        }
+
+        settingsCloseObserver = NotificationCenter.default.addObserver(
+            forName: NSWindow.willCloseNotification,
+            object: nil,
+            queue: .main
+        ) { _ in
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 50_000_000)
+                guard !hasVisibleUserWindow() else { return }
+                NSApp.setActivationPolicy(.accessory)
+                if let settingsCloseObserver {
+                    NotificationCenter.default.removeObserver(settingsCloseObserver)
+                    self.settingsCloseObserver = nil
+                }
+            }
+        }
+    }
+
+    @MainActor
+    private static func hasVisibleUserWindow() -> Bool {
+        NSApp.windows.contains { window in
+            guard window.isVisible, window.canBecomeKey else { return false }
+            return settingsWindowTitles.contains(window.title) || window.title == "Outage Log"
+        }
     }
 }
