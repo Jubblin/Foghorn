@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Settings tabs use the SwiftUI Settings scene only (removed plain `NSWindow` fallback that corrupted preferences tab chrome)
+- Settings/Outage Log no longer auto-reopen on launch via macOS window-state restoration, which also bypassed the tab chrome setup and rendered corrupted tabs
 
 ### Removed
 

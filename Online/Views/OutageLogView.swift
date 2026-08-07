@@ -1,5 +1,9 @@
 import SwiftUI
 
+#if canImport(AppKit)
+import AppKit
+#endif
+
 struct OutageLogView: View {
     @ObservedObject private var outageLog = OutageLog.shared
     @State private var sortOrder = [KeyPathComparator(\OutageRecord.startedAt, order: .reverse)]
@@ -99,6 +103,14 @@ struct OutageLogView: View {
         .frame(minWidth: 720, minHeight: 360)
         .onAppear {
             outageLog.reload()
+            #if canImport(AppKit)
+            // Never let macOS auto-reopen this window on next launch.
+            DispatchQueue.main.async {
+                for window in NSApp.windows where window.title == "Outage Log" {
+                    window.isRestorable = false
+                }
+            }
+            #endif
         }
     }
 }

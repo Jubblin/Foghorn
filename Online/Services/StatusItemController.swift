@@ -291,6 +291,7 @@ enum AppNavigation {
         window.setContentSize(NSSize(width: 800, height: 440))
         window.center()
         window.isReleasedWhenClosed = false
+        window.isRestorable = false
         bringToFront(window)
         outageLogWindow = window
     }
@@ -351,6 +352,22 @@ enum AppNavigation {
                     NotificationCenter.default.removeObserver(settingsCloseObserver)
                     self.settingsCloseObserver = nil
                 }
+            }
+        }
+    }
+
+    /// Closes any Settings / Outage Log window macOS auto-restored from a previous
+    /// session (its "reopen windows" state-restoration feature). This app is a
+    /// menu-bar accessory utility — it should never show a window at launch unless
+    /// the user explicitly asks (`-open-settings` / UI test flags). An auto-restored
+    /// window also skips the chrome setup in `showSettingsScene`, which is what
+    /// produces corrupted preferences tabs.
+    @MainActor
+    static func closeAutoRestoredWindows() {
+        for window in NSApp.windows where window.isVisible {
+            guard window.styleMask.contains(.titled) else { continue }
+            if settingsWindowTitles.contains(window.title) || window.title == "Outage Log" {
+                window.close()
             }
         }
     }
