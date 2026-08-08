@@ -106,6 +106,10 @@ struct SettingsView: View {
                     window.backgroundColor = background
                     window.contentView?.wantsLayer = true
                     window.contentView?.layer?.backgroundColor = background.cgColor
+                    // Never let macOS auto-reopen Settings on next launch — a restored
+                    // window skips the showSettingsWindow: chrome setup and renders
+                    // with corrupted tabs.
+                    window.isRestorable = false
                 }
             }
         }

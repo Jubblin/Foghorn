@@ -38,6 +38,7 @@ final class AppLifecycleDelegate: NSObject, NSApplicationDelegate {
         }
 
         if !UITestConfiguration.isXCTestProcess {
+            AppNavigation.closeAutoRestoredWindows()
             coordinator.start()
             StatusItemController.shared.install(coordinator: coordinator)
         }
