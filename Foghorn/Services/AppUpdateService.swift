@@ -29,7 +29,7 @@ final class AppUpdateService: NSObject, ObservableObject {
 #endif
 
     /// Legacy GitHub client retained for unit-testable selection helpers / APP_STORE stub.
-    private let client: AppReleaseFetching
+    private let client: GitHubReleaseClient
     private let architecture: AppArchitecture
     private var automaticCheckTask: Task<Void, Never>?
 
@@ -38,7 +38,7 @@ final class AppUpdateService: NSObject, ObservableObject {
     nonisolated private static let prereleaseChannel = "prerelease"
 
     init(
-        client: AppReleaseFetching = GitHubReleaseClient(),
+        client: GitHubReleaseClient = GitHubReleaseClient(),
         currentVersionProvider: @escaping () -> String = {
             Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
         },
