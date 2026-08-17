@@ -1,6 +1,6 @@
 # Foghorn
 
-[![CI](https://github.com/Jubblin/online/actions/workflows/ci.yml/badge.svg)](https://github.com/Jubblin/online/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![macOS](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/) [![Swift](https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white)](https://swift.org)
+[![CI](https://github.com/Jubblin/Foghorn/actions/workflows/ci.yml/badge.svg)](https://github.com/Jubblin/Foghorn/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![macOS](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/) [![Swift](https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white)](https://swift.org)
 
 **The truth about your connection.**
 
@@ -42,7 +42,7 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 
 ### From GitHub Releases (recommended)
 
-1. Download the DMG for your Mac from [Releases](https://github.com/Jubblin/online/releases):
+1. Download the DMG for your Mac from [Releases](https://github.com/Jubblin/Foghorn/releases):
    - Apple Silicon: `Foghorn-<version>-arm64.dmg`
    - Intel: `Foghorn-<version>-amd64.dmg`
 2. Open the DMG and drag **Foghorn** onto **Applications**
@@ -57,15 +57,15 @@ Right-click → Open does **not** fix that for unsigned downloads. Clear quarant
 xattr -cr /Applications/Foghorn.app
 ```
 
-Then launch Foghorn again. Proper fix: restore signing/notarization ([issue #39](https://github.com/Jubblin/online/issues/39)). Details: [docs/RELEASE.md](docs/RELEASE.md#unsigned-dmgs-and-gatekeeper).
+Then launch Foghorn again. Proper fix: restore signing/notarization ([issue #39](https://github.com/Jubblin/Foghorn/issues/39)). Details: [docs/RELEASE.md](docs/RELEASE.md#unsigned-dmgs-and-gatekeeper).
 
 ### Build from source
 
 **Requirements:** macOS 14 Sonoma or later, Xcode 15+
 
 ```
-git clone https://github.com/Jubblin/online.git
-cd online
+git clone https://github.com/Jubblin/Foghorn.git
+cd Foghorn
 open Foghorn.xcodeproj
 ```
 
