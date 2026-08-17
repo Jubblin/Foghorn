@@ -4,7 +4,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PBXPROJ="$ROOT/Online.xcodeproj/project.pbxproj"
+PBXPROJ="$ROOT/Foghorn.xcodeproj/project.pbxproj"
 
 if [[ $# -lt 1 ]]; then
   echo "usage: bump-version.sh <patch|minor|major|build>" >&2

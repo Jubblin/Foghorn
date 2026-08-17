@@ -157,8 +157,8 @@ private struct SettingsInterruptSection: View {
 
                     SettingsHelperText(
                         text: """
-                        When Off, monitoring continues. On macOS 26+, enable Online under \
-                        System Settings → Menu Bar. Recovery: open -a Online --args -open-settings
+                        When Off, monitoring continues. On macOS 26+, enable Foghorn under \
+                        System Settings → Menu Bar. Recovery: open -a Foghorn --args -open-settings
                         """,
                         palette: palette
                     )
@@ -413,7 +413,7 @@ private struct SettingsHelpPrivacySection: View {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
                     SettingsHelperText(
-                        text: "Online monitors connectivity locally — no personal data collected. Updates use a signed appcast over HTTPS.",
+                        text: "Foghorn monitors connectivity locally — no personal data collected. Updates use a signed appcast over HTTPS.",
                         palette: palette
                     )
 

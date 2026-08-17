@@ -1,6 +1,6 @@
 import XCTest
 import Network
-@testable import Online
+@testable import Foghorn
 
 private struct StubGatewayResolver: GatewayResolving {
     let gateway: String?

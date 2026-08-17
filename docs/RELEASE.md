@@ -1,6 +1,6 @@
-# Releasing Online
+# Releasing Foghorn
 
-Online ships on two channels with the **same version number**:
+Foghorn ships on two channels with the **same version number**:
 
 | Channel | Artifact | Signing |
 |---------|----------|---------|
@@ -13,22 +13,22 @@ Installed **Developer ID** copies update in-app via Sparkle (`Settings → Help 
 
 [release.yml](../.github/workflows/release.yml) (signed builds only) runs [`scripts/prepare-sparkle-feed.sh`](../scripts/prepare-sparkle-feed.sh) when `SPARKLE_PRIVATE_KEY` is set:
 
-1. Builds a **universal** `Online.app` (lipo of arm64 + amd64 exports), re-signs it, and zips it (Sparkle rejects two thin archives that share one `CFBundleVersion`).
+1. Builds a **universal** `Foghorn.app` (lipo of arm64 + amd64 exports), re-signs it, and zips it (Sparkle rejects two thin archives that share one `CFBundleVersion`).
 2. Runs Sparkle’s `generate_appcast` with Ed25519 signing and a download URL prefix pointing at the versioned GitHub Release.
 3. Tags with a hyphen (e.g. `v0.2.27-build.40`) get `sparkle:channel` = `prerelease`.
 4. Uploads the zip (+ refreshed `docs/appcast.xml`) to the versioned release, and uploads `appcast.xml` to the rolling **`sparkle-appcast`** release used by `SUFeedURL`.
 
-**Secret:** `SPARKLE_PRIVATE_KEY` — Ed25519 private key from `generate_keys` (public key is `SUPublicEDKey` in `Online/Info.plist`). Never commit the private key.
+**Secret:** `SPARKLE_PRIVATE_KEY` — Ed25519 private key from `generate_keys` (public key is `SUPublicEDKey` in `Foghorn/Info.plist`). Never commit the private key.
 
 **Local note:** regenerating keys requires shipping a new public key in the app; treat key rotation like a breaking update for existing installs.
 
 ## macOS versions
 
-Online uses **two different macOS version concepts** — do not confuse them when cutting a release.
+Foghorn uses **two different macOS version concepts** — do not confuse them when cutting a release.
 
 | Context | macOS version | Where it is set |
 |---------|---------------|-----------------|
-| **Running the app** (customers) | **macOS 14 Sonoma or later** | `MACOSX_DEPLOYMENT_TARGET = 14.0` in `Online.xcodeproj` |
+| **Running the app** (customers) | **macOS 14 Sonoma or later** | `MACOSX_DEPLOYMENT_TARGET = 14.0` in `Foghorn.xcodeproj` |
 | **Building in CI** (tagged releases) | **`macos-27` GitHub Actions runners** | `runs-on:` in `ci.yml`, `release.yml`, `release-store.yml` |
 | **Local signed release** (optional) | **macOS 26 Tahoe or later**; **macOS 27** when available on your Mac | Your machine + Xcode 26+ (Xcode 27 on macOS 27) |
 
@@ -39,7 +39,7 @@ Tagged releases (`release.yml`, `release-store.yml`) and [CI](../.github/workflo
 | Workflow | Runner | What it produces |
 |----------|--------|------------------|
 | [ci.yml](../.github/workflows/ci.yml) | `macos-27` | Lint, unit tests, UI smoke, Release `.app` artifact |
-| [release.yml](../.github/workflows/release.yml) | `macos-27` | Signed/notarized `Online-<version>-arm64.dmg` + `Online-<version>-amd64.dmg` → GitHub Release |
+| [release.yml](../.github/workflows/release.yml) | `macos-27` | Signed/notarized `Foghorn-<version>-arm64.dmg` + `Foghorn-<version>-amd64.dmg` → GitHub Release |
 | [release-store.yml](../.github/workflows/release-store.yml) | `macos-27` | App Store archive → TestFlight |
 
 **Runner labels (GitHub Actions):**
@@ -59,7 +59,7 @@ Tagged releases (`release.yml`, `release-store.yml`) and [CI](../.github/workflo
 
 > **Requirements:** macOS 14 Sonoma or later
 
-That is the **minimum OS to run Online**, not the OS used to compile the build. Do not change it to macOS 27 unless you intentionally raise `MACOSX_DEPLOYMENT_TARGET` in Xcode and ship a breaking major release.
+That is the **minimum OS to run Foghorn**, not the OS used to compile the build. Do not change it to macOS 27 unless you intentionally raise `MACOSX_DEPLOYMENT_TARGET` in Xcode and ship a breaking major release.
 
 ### Local release verification
 
@@ -69,7 +69,7 @@ When testing a signed build before dispatch:
 xcodebuild -version          # Xcode 26+ (27 on macOS 27)
 sw_vers                      # macOS 26+ recommended
 ./scripts/build-signed-dmg.sh Release arm64   # or amd64
-# DMG: build/Online-<MARKETING_VERSION>-arm64.dmg
+# DMG: build/Foghorn-<MARKETING_VERSION>-arm64.dmg
 ```
 
 Match the major Xcode/macOS generation to what CI uses when possible so archive and export behaviour stays consistent.
@@ -80,8 +80,8 @@ Match the major Xcode/macOS generation to what CI uses when possible so archive 
 
 | Artifact | Mac |
 |----------|-----|
-| `Online-<version>-arm64.dmg` | Apple Silicon |
-| `Online-<version>-amd64.dmg` | Intel (x86_64) |
+| `Foghorn-<version>-arm64.dmg` | Apple Silicon |
+| `Foghorn-<version>-amd64.dmg` | Intel (x86_64) |
 
 `<version>` is the release tag without the leading `v` (e.g. `0.2.14` or `0.2.14-build.31`). Locally, omit `RELEASE_VERSION` to use `MARKETING_VERSION` from the Xcode project.
 
@@ -91,7 +91,7 @@ Each DMG is packaged with:
 - A **volume icon** (`packaging/VolumeIcon.icns`, matching the app icon)
 - Optional Finder icon layout when `ONLINE_DMG_LAYOUT=1` (skipped in CI)
 
-Regenerate icons after changing `packaging/Online-icon.svg`:
+Regenerate icons after changing `packaging/Foghorn-icon.svg`:
 
 ```bash
 ./scripts/generate-app-icon.sh
@@ -243,14 +243,14 @@ Without signing secrets (or when `.p12` import fails), `release.yml` still publi
 
 Adhoc/unsigned `.app` bundles downloaded from the internet are blocked on Apple Silicon with:
 
-> “Online” is damaged and can’t be opened. You should move it to the Bin.
+> “Foghorn” is damaged and can’t be opened. You should move it to the Bin.
 
 This is **not** a corrupt disk image — Gatekeeper rejects the quarantine + adhoc signature combination. Right-click → Open does not help.
 
 **Workaround** (after dragging to Applications):
 
 ```bash
-xattr -cr /Applications/Online.app
+xattr -cr /Applications/Foghorn.app
 ```
 
 Use only for local testing. Tracked in [issue #38](https://github.com/Jubblin/online/issues/38). End-user installs need Developer ID + notarization ([issue #39](https://github.com/Jubblin/online/issues/39)).
@@ -265,7 +265,7 @@ security: SecKeychainItemImport: Unable to decode the provided data.
 Confirm a published binary is unsigned with:
 
 ```bash
-codesign -dv /path/to/Online.app 2>&1 | grep -E 'Signature|TeamIdentifier'
+codesign -dv /path/to/Foghorn.app 2>&1 | grep -E 'Signature|TeamIdentifier'
 # Signature=adhoc  and  TeamIdentifier=not set  → unsigned fallback
 ```
 
@@ -273,7 +273,7 @@ codesign -dv /path/to/Online.app 2>&1 | grep -E 'Signature|TeamIdentifier'
 
 1. **Apple Developer Program** — enroll at [developer.apple.com/programs/enroll](https://developer.apple.com/programs/enroll/) (£99/year). Approval can take up to 48 hours for new accounts.
 2. **Verify membership** — [developer.apple.com/account](https://developer.apple.com/account/) → **Membership** shows **Active**.
-3. **Register bundle ID** — [Identifiers](https://developer.apple.com/account/resources/identifiers/list) → **+** → **App IDs** → explicit `com.online.menu` (must match `Online.xcodeproj`). Enable **App Sandbox**.
+3. **Register bundle ID** — [Identifiers](https://developer.apple.com/account/resources/identifiers/list) → **+** → **App IDs** → explicit `com.online.menu` (must match `Foghorn.xcodeproj`). Enable **App Sandbox**.
 4. **App Store Connect app** (for TestFlight only) — [appstoreconnect.apple.com](https://appstoreconnect.apple.com/) → **Apps** → **+** → macOS app using bundle ID `com.online.menu`.
 5. **Mac with macOS 26+** (macOS 27 when available) and **Keychain Access** — certificates are created and exported locally, not in CI.
 
@@ -304,7 +304,7 @@ codesign -dv /path/to/Online.app 2>&1 | grep -E 'Signature|TeamIdentifier'
    - Choose **Developer ID Application** → Continue.
    - On your Mac: **Keychain Access** → **Certificate Assistant** → **Request a Certificate From a Certificate Authority**.
      - Email: your Apple ID email.
-     - Common Name: e.g. `Online Developer ID`.
+     - Common Name: e.g. `Foghorn Developer ID`.
      - Select **Saved to disk** → save the `.certSigningRequest` file.
    - Upload the CSR → Download the `.cer` → double-click to install.
    - In Keychain Access → **My Certificates**, confirm **Developer ID Application: … (TEAMID)** appears.
@@ -319,7 +319,7 @@ codesign -dv /path/to/Online.app 2>&1 | grep -E 'Signature|TeamIdentifier'
 3. **Base64-encode for GitHub:**
 
    ```bash
-   base64 -i ~/Downloads/Online-DeveloperID.p12 | pbcopy
+   base64 -i ~/Downloads/Foghorn-DeveloperID.p12 | pbcopy
    ```
 
    Paste the entire output (one long line) into the secret value.
@@ -355,7 +355,7 @@ codesign -dv /path/to/Online.app 2>&1 | grep -E 'Signature|TeamIdentifier'
 4. **Base64-encode:**
 
    ```bash
-   base64 -i ~/Downloads/Online-Distribution.p12 | pbcopy
+   base64 -i ~/Downloads/Foghorn-Distribution.p12 | pbcopy
    ```
 
 **GitHub secret value:** base64 string of the `.p12` file.
@@ -394,7 +394,7 @@ codesign -dv /path/to/Online.app 2>&1 | grep -E 'Signature|TeamIdentifier'
 1. Sign in at [appstoreconnect.apple.com](https://appstoreconnect.apple.com/).
 2. **Users and Access** → **Integrations** → **App Store Connect API**.
 3. Click **+** to generate a key:
-   - **Name:** e.g. `GitHub Actions Online`
+   - **Name:** e.g. `GitHub Actions Foghorn`
    - **Access:** **Developer** (minimum — can upload builds) or **Admin**
 4. Click **Generate**.
 5. **Download the `.p8` file immediately** — Apple only allows one download. Store it in a password manager.

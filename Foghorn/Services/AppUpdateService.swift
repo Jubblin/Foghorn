@@ -34,7 +34,7 @@ final class AppUpdateService: NSObject, ObservableObject {
     private var automaticCheckTask: Task<Void, Never>?
 
     private static let automaticCheckInterval: TimeInterval = 24 * 60 * 60
-    private static let updateNotificationID = "online.app-update.available"
+    private static let updateNotificationID = "foghorn.app-update.available"
     nonisolated private static let prereleaseChannel = "prerelease"
 
     init(
@@ -187,9 +187,9 @@ final class AppUpdateService: NSObject, ObservableObject {
         case .checking:
             return "Checking for updates…"
         case .upToDate(let current):
-            return "Online \(current) is up to date."
+            return "Foghorn \(current) is up to date."
         case .available(let release):
-            return "Online \(Self.labeledVersion(release)) is available (you have \(currentVersionProvider()))."
+            return "Foghorn \(Self.labeledVersion(release)) is available (you have \(currentVersionProvider()))."
         case .failed(let message):
             return message
         }
@@ -239,7 +239,7 @@ final class AppUpdateService: NSObject, ObservableObject {
 
         let content = UNMutableNotificationContent()
         content.title = "Update available"
-        content.body = "Online \(Self.labeledVersion(release)) is ready to install."
+        content.body = "Foghorn \(Self.labeledVersion(release)) is ready to install."
         content.sound = .default
 
         let request = UNNotificationRequest(
@@ -285,7 +285,7 @@ extension AppUpdateService: SPUUpdaterDelegate {
                 publishedAt: item.date,
                 assets: [
                     AppReleaseAsset(
-                        name: item.fileURL?.lastPathComponent ?? "Online-update.zip",
+                        name: item.fileURL?.lastPathComponent ?? "Foghorn-update.zip",
                         downloadURL: item.fileURL ?? AppLinks.releases
                     )
                 ]

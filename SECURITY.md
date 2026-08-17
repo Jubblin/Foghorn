@@ -27,13 +27,13 @@ a fix and disclosure timeline before any public announcement.
 
 ## Security Model
 
-Online is a local macOS menu bar utility. It:
+Foghorn is a local macOS menu bar utility. It:
 
 - Performs outbound network probes (HTTP HEAD, DNS, TCP reachability to default gateway)
 - Optionally queries the public GitHub Releases API for update checks (disable in Settings)
-- Stores outage history locally at `~/Library/Application Support/Online/outages.json`
+- Stores outage history locally at `~/Library/Application Support/Foghorn/outages.json`
 - Requests notification permission via `UserNotifications`
-- Does **not** use the App Sandbox (see `Online.entitlements`)
+- Does **not** use the App Sandbox (see `Foghorn.entitlements`)
 
 The app does not collect analytics or transmit outage data off-device.
 

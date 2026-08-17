@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B10000000000000000000001 /* OnlineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000001 /* OnlineApp.swift */; };
+		B10000000000000000000001 /* FoghornApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000001 /* FoghornApp.swift */; };
 		B10000000000000000000002 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000002 /* AppCoordinator.swift */; };
 		B10000000000000000000003 /* ProbeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000003 /* ProbeResult.swift */; };
 		B10000000000000000000004 /* ConnectivityState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000004 /* ConnectivityState.swift */; };
@@ -53,19 +53,19 @@
 			containerPortal = PR1000000000000000000001 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = T10000000000000000000001;
-			remoteInfo = Online;
+			remoteInfo = Foghorn;
 		};
 		CP100000000000000000002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = PR1000000000000000000001 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = T10000000000000000000001;
-			remoteInfo = Online;
+			remoteInfo = Foghorn;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F10000000000000000000001 /* OnlineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineApp.swift; sourceTree = "<group>"; };
+		F10000000000000000000001 /* FoghornApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoghornApp.swift; sourceTree = "<group>"; };
 		F10000000000000000000002 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		F10000000000000000000003 /* ProbeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeResult.swift; sourceTree = "<group>"; };
 		F10000000000000000000004 /* ConnectivityState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityState.swift; sourceTree = "<group>"; };
@@ -85,19 +85,19 @@
 		F10000000000000000000012 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		F10000000000000000000013 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F10000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F10000000000000000000015 /* Online.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Online.entitlements; sourceTree = "<group>"; };
-		F10000000000000000000016 /* Online.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Online.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F10000000000000000000015 /* Foghorn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Foghorn.entitlements; sourceTree = "<group>"; };
+		F10000000000000000000016 /* Foghorn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Foghorn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10000000000000000000017 /* GatewayResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayResolver.swift; sourceTree = "<group>"; };
 		F10000000000000000000018 /* ProbeSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeSnapshotTests.swift; sourceTree = "<group>"; };
 		F10000000000000000000019 /* ConnectivityStateMachineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityStateMachineTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001A /* HTTPProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPProbeTests.swift; sourceTree = "<group>"; };
-		F1000000000000000000001B /* OnlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1000000000000000000001B /* FoghornTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FoghornTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1000000000000000000001C /* OutageLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageLogView.swift; sourceTree = "<group>"; };
 		F1000000000000000000001D /* OutageRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageRecordTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001E /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
 		F1000000000000000000001F /* GatewayProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayProbeTests.swift; sourceTree = "<group>"; };
 		F10000000000000000000020 /* AppLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLinks.swift; sourceTree = "<group>"; };
-		F10000000000000000000021 /* OnlineUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnlineUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F10000000000000000000021 /* FoghornUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FoghornUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10000000000000000000022 /* SettingsSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSmokeTests.swift; sourceTree = "<group>"; };
 		F10000000000000000000023 /* UITestConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestConfiguration.swift; sourceTree = "<group>"; };
 		F10000000000000000000025 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -137,17 +137,17 @@
 		G10000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
-				G10000000000000000000002 /* Online */,
-				G10000000000000000000009 /* OnlineTests */,
-				G1000000000000000000000B /* OnlineUITests */,
+				G10000000000000000000002 /* Foghorn */,
+				G10000000000000000000009 /* FoghornTests */,
+				G1000000000000000000000B /* FoghornUITests */,
 				G10000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		G10000000000000000000002 /* Online */ = {
+		G10000000000000000000002 /* Foghorn */ = {
 			isa = PBXGroup;
 			children = (
-				F10000000000000000000001 /* OnlineApp.swift */,
+				F10000000000000000000001 /* FoghornApp.swift */,
 				F10000000000000000000002 /* AppCoordinator.swift */,
 				G10000000000000000000004 /* Models */,
 				G10000000000000000000005 /* Probes */,
@@ -157,18 +157,18 @@
 				G1000000000000000000000C /* UITest */,
 				G1000000000000000000000A /* Design */,
 				F10000000000000000000014 /* Assets.xcassets */,
-				F10000000000000000000015 /* Online.entitlements */,
+				F10000000000000000000015 /* Foghorn.entitlements */,
 				F10000000000000000000025 /* PrivacyInfo.xcprivacy */,
 			);
-			path = Online;
+			path = Foghorn;
 			sourceTree = "<group>";
 		};
 		G10000000000000000000003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F10000000000000000000016 /* Online.app */,
-				F1000000000000000000001B /* OnlineTests.xctest */,
-				F10000000000000000000021 /* OnlineUITests.xctest */,
+				F10000000000000000000016 /* Foghorn.app */,
+				F1000000000000000000001B /* FoghornTests.xctest */,
+				F10000000000000000000021 /* FoghornUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -233,7 +233,7 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		G10000000000000000000009 /* OnlineTests */ = {
+		G10000000000000000000009 /* FoghornTests */ = {
 			isa = PBXGroup;
 			children = (
 				F10000000000000000000018 /* ProbeSnapshotTests.swift */,
@@ -243,7 +243,7 @@
 				F1000000000000000000001D /* OutageRecordTests.swift */,
 				F10000000000000000000029 /* AppUpdateModelsTests.swift */,
 			);
-			path = OnlineTests;
+			path = FoghornTests;
 			sourceTree = "<group>";
 		};
 		G1000000000000000000000A /* Design */ = {
@@ -254,12 +254,12 @@
 			path = Design;
 			sourceTree = "<group>";
 		};
-		G1000000000000000000000B /* OnlineUITests */ = {
+		G1000000000000000000000B /* FoghornUITests */ = {
 			isa = PBXGroup;
 			children = (
 				F10000000000000000000022 /* SettingsSmokeTests.swift */,
 			);
-			path = OnlineUITests;
+			path = FoghornUITests;
 			sourceTree = "<group>";
 		};
 		G1000000000000000000000C /* UITest */ = {
@@ -273,9 +273,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		T10000000000000000000001 /* Online */ = {
+		T10000000000000000000001 /* Foghorn */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C10000000000000000000003 /* Build configuration list for PBXNativeTarget "Online" */;
+			buildConfigurationList = C10000000000000000000003 /* Build configuration list for PBXNativeTarget "Foghorn" */;
 			buildPhases = (
 				P10000000000000000000006 /* SwiftLint */,
 				P10000000000000000000001 /* Sources */,
@@ -286,17 +286,17 @@
 			);
 			dependencies = (
 			);
-			name = Online;
+			name = Foghorn;
 			packageProductDependencies = (
 				B94F0973F765A8A72B11628F /* Sparkle */,
 			);
-			productName = Online;
-			productReference = F10000000000000000000016 /* Online.app */;
+			productName = Foghorn;
+			productReference = F10000000000000000000016 /* Foghorn.app */;
 			productType = "com.apple.product-type.application";
 		};
-		T10000000000000000000002 /* OnlineTests */ = {
+		T10000000000000000000002 /* FoghornTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C10000000000000000000004 /* Build configuration list for PBXNativeTarget "OnlineTests" */;
+			buildConfigurationList = C10000000000000000000004 /* Build configuration list for PBXNativeTarget "FoghornTests" */;
 			buildPhases = (
 				P10000000000000000000005 /* Sources */,
 				P10000000000000000000004 /* Frameworks */,
@@ -306,14 +306,14 @@
 			dependencies = (
 				D10000000000000000000001 /* PBXTargetDependency */,
 			);
-			name = OnlineTests;
-			productName = OnlineTests;
-			productReference = F1000000000000000000001B /* OnlineTests.xctest */;
+			name = FoghornTests;
+			productName = FoghornTests;
+			productReference = F1000000000000000000001B /* FoghornTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		T10000000000000000000003 /* OnlineUITests */ = {
+		T10000000000000000000003 /* FoghornUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C10000000000000000000005 /* Build configuration list for PBXNativeTarget "OnlineUITests" */;
+			buildConfigurationList = C10000000000000000000005 /* Build configuration list for PBXNativeTarget "FoghornUITests" */;
 			buildPhases = (
 				P10000000000000000000007 /* Sources */,
 				P10000000000000000000008 /* Frameworks */,
@@ -323,9 +323,9 @@
 			dependencies = (
 				D10000000000000000000002 /* PBXTargetDependency */,
 			);
-			name = OnlineUITests;
-			productName = OnlineUITests;
-			productReference = F10000000000000000000021 /* OnlineUITests.xctest */;
+			name = FoghornUITests;
+			productName = FoghornUITests;
+			productReference = F10000000000000000000021 /* FoghornUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -338,7 +338,7 @@
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 			};
-			buildConfigurationList = C10000000000000000000001 /* Build configuration list for PBXProject "Online" */;
+			buildConfigurationList = C10000000000000000000001 /* Build configuration list for PBXProject "Foghorn" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -354,9 +354,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				T10000000000000000000001 /* Online */,
-				T10000000000000000000002 /* OnlineTests */,
-				T10000000000000000000003 /* OnlineUITests */,
+				T10000000000000000000001 /* Foghorn */,
+				T10000000000000000000002 /* FoghornTests */,
+				T10000000000000000000003 /* FoghornUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -400,7 +400,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B10000000000000000000001 /* OnlineApp.swift in Sources */,
+				B10000000000000000000001 /* FoghornApp.swift in Sources */,
 				B10000000000000000000002 /* AppCoordinator.swift in Sources */,
 				B10000000000000000000003 /* ProbeResult.swift in Sources */,
 				B10000000000000000000004 /* ConnectivityState.swift in Sources */,
@@ -458,12 +458,12 @@
 /* Begin PBXTargetDependency section */
 		D10000000000000000000001 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = T10000000000000000000001 /* Online */;
+			target = T10000000000000000000001 /* Foghorn */;
 			targetProxy = CP100000000000000000001 /* PBXContainerItemProxy */;
 		};
 		D10000000000000000000002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = T10000000000000000000001 /* Online */;
+			target = T10000000000000000000001 /* Foghorn */;
 			targetProxy = CP100000000000000000002 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -503,7 +503,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Online/Online.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Foghorn/Foghorn.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 65;
@@ -511,8 +511,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Online/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Online;
+				INFOPLIST_FILE = Foghorn/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Foghorn;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -531,7 +531,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Online/Online.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Foghorn/Foghorn.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 65;
@@ -539,8 +539,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Online/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Online;
+				INFOPLIST_FILE = Foghorn/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Foghorn;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -570,7 +570,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Online.app/Contents/MacOS/Online";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Foghorn.app/Contents/MacOS/Foghorn";
 			};
 			name = Debug;
 		};
@@ -589,7 +589,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Online.app/Contents/MacOS/Online";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Foghorn.app/Contents/MacOS/Foghorn";
 			};
 			name = Release;
 		};
@@ -607,7 +607,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = Online;
+				TEST_TARGET_NAME = Foghorn;
 			};
 			name = Debug;
 		};
@@ -625,14 +625,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = Online;
+				TEST_TARGET_NAME = Foghorn;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C10000000000000000000001 /* Build configuration list for PBXProject "Online" */ = {
+		C10000000000000000000001 /* Build configuration list for PBXProject "Foghorn" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				X10000000000000000000001 /* Debug */,
@@ -641,7 +641,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C10000000000000000000003 /* Build configuration list for PBXNativeTarget "Online" */ = {
+		C10000000000000000000003 /* Build configuration list for PBXNativeTarget "Foghorn" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				X10000000000000000000003 /* Debug */,
@@ -650,7 +650,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C10000000000000000000004 /* Build configuration list for PBXNativeTarget "OnlineTests" */ = {
+		C10000000000000000000004 /* Build configuration list for PBXNativeTarget "FoghornTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				X10000000000000000000005 /* Debug */,
@@ -659,7 +659,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C10000000000000000000005 /* Build configuration list for PBXNativeTarget "OnlineUITests" */ = {
+		C10000000000000000000005 /* Build configuration list for PBXNativeTarget "FoghornUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				X10000000000000000000007 /* Debug */,

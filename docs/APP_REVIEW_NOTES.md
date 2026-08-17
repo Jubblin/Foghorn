@@ -1,15 +1,15 @@
 # App Review notes (Mac App Store)
 
-Use this text in **App Review Information → Notes** when submitting Online.
+Use this text in **App Review Information → Notes** when submitting Foghorn.
 
 ---
 
-Online is a local network connectivity monitor for macOS. It runs in the menu bar and checks whether your internet connection is working.
+Foghorn is a local network connectivity monitor for macOS. It runs in the menu bar and checks whether your internet connection is working.
 
 **What the app does**
 - Monitors network path, default gateway, DNS, and HTTP reachability on a timer
 - Shows status in the menu bar and optional local notifications on confirmed outages
-- Stores outage history locally at `~/Library/Application Support/Online/outages.json`
+- Stores outage history locally at `~/Library/Application Support/Foghorn/outages.json`
 
 **What the app does NOT do**
 - No accounts, login, or cloud sync
@@ -22,7 +22,7 @@ Online is a local network connectivity monitor for macOS. It runs in the menu ba
 - **App Sandbox** — enabled
 
 **How to test**
-1. Launch Online — menu bar icon appears (dim green when healthy)
+1. Launch Foghorn — menu bar icon appears (dim green when healthy)
 2. Open Settings (app menu → Settings or popover → Settings)
 3. Disconnect Wi‑Fi or Ethernet for ~20 seconds — status should change to offline; notification may appear if permission granted
 4. Reconnect — status returns to healthy; recovery notification if permission granted

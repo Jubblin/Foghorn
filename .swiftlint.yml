@@ -1,6 +1,6 @@
 included:
-  - Online
-  - OnlineTests
+  - Foghorn
+  - FoghornTests
 
 excluded:
   - build

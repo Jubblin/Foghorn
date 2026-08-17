@@ -45,12 +45,12 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild test \
-            -project Online.xcodeproj \
-            -scheme Online \
+            -project Foghorn.xcodeproj \
+            -scheme Foghorn \
             -configuration Debug \
             -derivedDataPath build \
             -destination 'platform=macOS' \
-            -only-testing:OnlineTests \
+            -only-testing:FoghornTests \
             CODE_SIGN_IDENTITY=- \
             CODE_SIGNING_ALLOWED=NO
         env:
@@ -71,12 +71,12 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild test \
-            -project Online.xcodeproj \
-            -scheme Online \
+            -project Foghorn.xcodeproj \
+            -scheme Foghorn \
             -configuration Debug \
             -derivedDataPath build-ui \
             -destination 'platform=macOS' \
-            -only-testing:OnlineUITests \
+            -only-testing:FoghornUITests \
             CODE_SIGN_IDENTITY=- \
             CODE_SIGNING_ALLOWED=NO
         env:
@@ -99,8 +99,8 @@ jobs:
       - name: Build release app
         run: |
           xcodebuild \
-            -project Online.xcodeproj \
-            -scheme Online \
+            -project Foghorn.xcodeproj \
+            -scheme Foghorn \
             -configuration Release \
             -derivedDataPath build \
             CODE_SIGN_IDENTITY=- \
@@ -110,7 +110,7 @@ jobs:
       - name: Upload app artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: Online-app
-          path: build/Build/Products/Release/Online.app
+          name: Foghorn-app
+          path: build/Build/Products/Release/Foghorn.app
           if-no-files-found: error
           retention-days: 7

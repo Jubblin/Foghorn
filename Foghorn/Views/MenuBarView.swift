@@ -111,7 +111,7 @@ struct MenuBarView: View {
                 AppNavigation.openSettings()
             }
             paletteDivider
-            PopoverActionRow(title: "Quit Online", palette: palette) {
+            PopoverActionRow(title: "Quit Foghorn", palette: palette) {
                 coordinator.quit()
             }
         }

@@ -8,7 +8,7 @@ import SwiftUI
 final class StatusItemController: NSObject, ObservableObject {
     static let shared = StatusItemController()
 
-    private static let autosaveName = "OnlineMenuBarItem"
+    private static let autosaveName = "FoghornMenuBarItem"
 
     private var statusItem: NSStatusItem?
     private var popover: NSPopover?
@@ -39,7 +39,7 @@ final class StatusItemController: NSObject, ObservableObject {
             button.target = self
             button.action = #selector(togglePopover(_:))
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
-            button.setAccessibilityLabel("Online")
+            button.setAccessibilityLabel("Foghorn")
             // Ensure a first-frame glyph even before Combine delivers state.
             button.title = "●"
         }
@@ -81,11 +81,11 @@ final class StatusItemController: NSObject, ObservableObject {
         guard offScreen || invisibleFlag else { return }
 
         let alert = NSAlert()
-        alert.messageText = "Online’s menu bar icon is hidden"
+        alert.messageText = "Foghorn’s menu bar icon is hidden"
         alert.informativeText = """
-        Online is running (alerts still work), but macOS is not showing its menu bar icon.
+        Foghorn is running (alerts still work), but macOS is not showing its menu bar icon.
 
-        Open System Settings → Menu Bar and turn Online on under “Allow in the menu bar”.
+        Open System Settings → Menu Bar and turn Foghorn on under “Allow in the menu bar”.
         """
         alert.alertStyle = .informational
         alert.addButton(withTitle: "Open Menu Bar Settings")
@@ -161,8 +161,8 @@ final class StatusItemController: NSObject, ObservableObject {
         button.title = ""
         button.contentTintColor = nil
         button.appearsDisabled = false
-        button.toolTip = "Online — \(coordinator.status.state.displayName)"
-        button.setAccessibilityLabel("Online — \(coordinator.status.state.displayName)")
+        button.toolTip = "Foghorn — \(coordinator.status.state.displayName)"
+        button.setAccessibilityLabel("Foghorn — \(coordinator.status.state.displayName)")
     }
 
     private func makePopoverContent() -> NSViewController? {
@@ -232,7 +232,7 @@ extension StatusItemController: NSPopoverDelegate {
 }
 
 enum AppNavigation {
-    static let openOutageLogNotification = Notification.Name("online.openOutageLog")
+    static let openOutageLogNotification = Notification.Name("foghorn.openOutageLog")
 
     @MainActor
     private static var outageLogWindow: NSWindow?

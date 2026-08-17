@@ -12,10 +12,21 @@ final class OutageLog: ObservableObject {
 
     private init() {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let directory = appSupport.appendingPathComponent("Online", isDirectory: true)
+        let directory = appSupport.appendingPathComponent("Foghorn", isDirectory: true)
+        Self.migrateLegacyDirectoryIfNeeded(appSupport: appSupport, newDirectory: directory)
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         fileURL = directory.appendingPathComponent("outages.json")
         load()
+    }
+
+    /// One-time migration for installs upgrading from the app's former name ("Online").
+    /// Moves `~/Library/Application Support/Online` to `.../Foghorn` so existing outage
+    /// history survives the rebrand instead of appearing to vanish.
+    private static func migrateLegacyDirectoryIfNeeded(appSupport: URL, newDirectory: URL) {
+        let legacyDirectory = appSupport.appendingPathComponent("Online", isDirectory: true)
+        let fm = FileManager.default
+        guard fm.fileExists(atPath: legacyDirectory.path), !fm.fileExists(atPath: newDirectory.path) else { return }
+        try? fm.moveItem(at: legacyDirectory, to: newDirectory)
     }
 
     var lastRecord: OutageRecord? {

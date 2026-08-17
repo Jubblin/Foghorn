@@ -24,8 +24,8 @@ shellcheck scripts/*.sh
 
 echo "== Typecheck (xcodebuild build) =="
 xcodebuild \
-  -project Online.xcodeproj \
-  -scheme Online \
+  -project Foghorn.xcodeproj \
+  -scheme Foghorn \
   -configuration Debug \
   -derivedDataPath build-health \
   -destination 'platform=macOS' \
@@ -35,8 +35,8 @@ xcodebuild \
 
 echo "== Test (xcodebuild test) =="
 xcodebuild \
-  -project Online.xcodeproj \
-  -scheme Online \
+  -project Foghorn.xcodeproj \
+  -scheme Foghorn \
   -configuration Debug \
   -derivedDataPath build-health \
   -destination 'platform=macOS' \

@@ -18,7 +18,7 @@ struct GitHubReleaseClient: AppReleaseFetching {
         var request = URLRequest(url: releasesURL)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
-        request.setValue("Online/\(version)", forHTTPHeaderField: "User-Agent")
+        request.setValue("Foghorn/\(version)", forHTTPHeaderField: "User-Agent")
         request.timeoutInterval = 15
 
         let (data, response) = try await session.data(for: request)

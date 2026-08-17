@@ -1,5 +1,5 @@
 import XCTest
-@testable import Online
+@testable import Foghorn
 
 class MockURLProtocol: URLProtocol {
     static var handler: ((URLRequest) throws -> (HTTPURLResponse, Data))?

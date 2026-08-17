@@ -1,4 +1,4 @@
-# UI testing (OnlineUITests)
+# UI testing (FoghornUITests)
 
 XCUITest smoke tests for Settings and the outage log window.
 
@@ -6,11 +6,11 @@ XCUITest smoke tests for Settings and the outage log window.
 
 ```bash
 xcodebuild test \
-  -project Online.xcodeproj \
-  -scheme Online \
+  -project Foghorn.xcodeproj \
+  -scheme Foghorn \
   -configuration Debug \
   -destination 'platform=macOS' \
-  -only-testing:OnlineUITests \
+  -only-testing:FoghornUITests \
   CODE_SIGN_IDENTITY=- \
   CODE_SIGNING_ALLOWED=NO
 ```

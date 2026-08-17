@@ -1,8 +1,8 @@
-# Design System - Online
+# Design System - Foghorn
 
 ## Product Context
 
-- **What this is:** Online is a native macOS menu bar utility that monitors real internet connectivity with layered probes. It stays quiet when the network is healthy and alerts only when a confirmed failure survives debounce checks.
+- **What this is:** Foghorn is a native macOS menu bar utility that monitors real internet connectivity with layered probes. It stays quiet when the network is healthy and alerts only when a confirmed failure survives debounce checks.
 - **Who it's for:** Remote workers, developers, and Mac users who need to know whether the problem is their router, DNS, ISP, captive portal, or custom endpoint.
 - **Space/industry:** macOS menu bar utilities, lightweight network monitors, and local diagnostic tools. Relevant peers include iStat Menus, Little Snitch Mini, Pulse, Me Or Them, Yifi, and native macOS status utilities.
 - **Project type:** Native macOS SwiftUI app with a menu bar popover, Settings window, and outage log table.
@@ -11,7 +11,7 @@
 
 - **Direction:** Industrial minimal field instrument.
 - **Decoration level:** Intentional. Use subtle graphite/glass surfaces, thin dividers, small signal marks, and restrained glow only for live status.
-- **Mood:** Online should feel like a quiet sentinel: invisible until the network lies. The product should feel calm, precise, and hard to fool, not like a dashboard trying to entertain the user.
+- **Mood:** Foghorn should feel like a quiet sentinel: invisible until the network lies. The product should feel calm, precise, and hard to fool, not like a dashboard trying to entertain the user.
 - **Reference sites:** Research included iStat Menus, Little Snitch Mini, Pulse, Me Or Them, Yifi, and macOS `MenuBarExtra` design patterns.
 
 ## Typography
@@ -59,8 +59,8 @@
 - **Popover:** Lead with a sentence-level status, then show probe rows. Avoid making the popover a mini analytics dashboard.
 - **Settings:** Group by user promises:
   - When to interrupt me
-  - What Online checks
-  - What Online remembers
+  - What Foghorn checks
+  - What Foghorn remembers
   - Help & privacy
   - About
 - **Outage Log:** Treat as evidence. Rows should emphasize started, ended, duration, failure layer, and probe summary.
@@ -85,7 +85,7 @@
 
 ## Settings Screen
 
-The Settings window is a **configuration panel for a field instrument**, not a preferences junk drawer. It should feel as calm and precise as the popover: readable at a glance, dense but not cramped, and honest about what Online does with permissions and data.
+The Settings window is a **configuration panel for a field instrument**, not a preferences junk drawer. It should feel as calm and precise as the popover: readable at a glance, dense but not cramped, and honest about what Foghorn does with permissions and data.
 
 ### Window chrome
 
@@ -102,8 +102,8 @@ Use four promise-based **tabs** in this order (short tab labels; full titles rem
 | Tab label | Panel title | User promise | Controls |
 |-----------|-------------|--------------|----------|
 | **Interrupt** | When to interrupt me | I control visibility and alerts | Menu bar toggle, appearance segmented control, notification permission status |
-| **Checks** | What Online checks | I control probe cadence and targets | Base interval picker, custom hosts list + add field |
-| **Remembers** | What Online remembers | I control persistence and history | Launch at login, View outage log, Reveal in Finder, log path |
+| **Checks** | What Foghorn checks | I control probe cadence and targets | Base interval picker, custom hosts list + add field |
+| **Remembers** | What Foghorn remembers | I control persistence and history | Launch at login, View outage log, Reveal in Finder, log path |
 | **Help** | Help & privacy | I can get help and understand data use | Privacy / Support / Report; version/build; update checks |
 
 About content stays under **Help** (no fifth tab). Do not add tabs for features that do not exist. Keep the sentinel posture: every row earns its place.
@@ -129,21 +129,21 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; layout an
 
 **When to interrupt me**
 
-- **Show in menu bar:** Existing toggle. Helper notes Tahoe **System Settings → Menu Bar → Allow in the menu bar**, plus `open -a Online --args -open-settings` recovery when the icon is gone.
+- **Show in menu bar:** Existing toggle. Helper notes Tahoe **System Settings → Menu Bar → Allow in the menu bar**, plus `open -a Foghorn --args -open-settings` recovery when the icon is gone.
 - **Appearance:** Segmented control — System / Light / Dark (accessibility: Follow System / Light / Dark). Applies to popover and Settings immediately.
 - **Notifications:** Show permission status as `LabeledContent`:
   - Granted → "Alerts enabled"
   - Not determined → "Not set up" + **Enable alerts** button (requests permission from Settings; no first-run nag modal)
-  - Denied → "Denied" + button **Open Notification Settings** (deep link to System Settings → Notifications → Online)
+  - Denied → "Denied" + button **Open Notification Settings** (deep link to System Settings → Notifications → Foghorn)
 - Do not use red for denied unless the user is in an active outage context.
 
-**What Online checks**
+**What Foghorn checks**
 
 - **Base interval:** Segmented picker with 2s / 5s / 10s / 30s. Helper: "Doubles on battery (max 8s)."
 - **Custom hosts:** Empty state: "No custom hosts configured." (muted). List with quiet row dividers + remove control. Add row: placeholder `vpn.company.com`, **Add** disabled when empty.
 - Host rows: monospace hostname, no decorative icons.
 
-**What Online remembers**
+**What Foghorn remembers**
 
 - **Launch at login:** Toggle with error caption on failure (red, one line).
 - **View outage log…** — primary action; opens the outage log window (`openWindow(id: "outage-log")`); does not dismiss Settings.

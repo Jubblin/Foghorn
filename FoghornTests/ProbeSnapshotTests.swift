@@ -1,5 +1,5 @@
 import XCTest
-@testable import Online
+@testable import Foghorn
 
 @MainActor
 final class ProbeSnapshotTests: XCTestCase {

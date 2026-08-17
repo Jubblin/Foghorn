@@ -1,22 +1,19 @@
-# Online
+# Foghorn
 
-[![CI](https://github.com/Jubblin/online/actions/workflows/ci.yml/badge.svg)](https://github.com/Jubblin/online/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![macOS](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/)
-[![Swift](https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white)](https://swift.org)
+[![CI](https://github.com/Jubblin/online/actions/workflows/ci.yml/badge.svg)](https://github.com/Jubblin/online/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![macOS](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/) [![Swift](https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white)](https://swift.org)
 
-A native macOS menu bar app that monitors **real** internet connectivity and alerts you when the connection drops. Stays subtle when everything works.
+**The truth about your connection.**
 
-macOS can show Wi‑Fi as connected while pages fail to load — router issues, ISP outages, captive portals, and DNS failures all leave the system indicator green. **Online** probes your network in layers and only surfaces alerts when something is actually wrong.
+macOS can show Wi‑Fi as connected while pages fail to load — router issues, ISP outages, captive portals, and DNS failures all leave the system indicator green. Foghorn probes your network in layers and only surfaces an alert when something is actually wrong. Silent in clear weather. Impossible to miss in the fog.
 
-## Why Online?
+## Why Foghorn?
 
-| macOS indicator | Online |
-|-----------------|--------|
-| Link up (Wi‑Fi/Ethernet) | Layered reachability probes |
-| No failure attribution | Router, DNS, ISP, captive portal, custom host |
-| Silent failures | Notification on confirmed outage + restore |
-| No history | JSON outage log with timestamps |
+| macOS indicator          | Foghorn                                       |
+| ------------------------ | ---------------------------------------------- |
+| Link up (Wi‑Fi/Ethernet) | Layered reachability probes                    |
+| No failure attribution   | Router, DNS, ISP, captive portal, custom host  |
+| Silent failures          | Notification on confirmed outage + restore     |
+| No history                | JSON outage log with timestamps                |
 
 **Alert-first by design** — the opposite of menu bar clutter. You forget it exists until your VPN dies mid-call and macOS never told you.
 
@@ -35,7 +32,7 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 
 **Healthy — menu bar popover**
 
-![Online menu bar popover showing healthy status](docs/screenshots/menu-bar-healthy.png)
+![Foghorn menu bar popover showing healthy status](docs/screenshots/menu-bar-healthy.png)
 
 **Traffic-light states** — green (online), yellow (degraded), red (offline), gray (recovering)
 
@@ -46,47 +43,46 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 ### From GitHub Releases (recommended)
 
 1. Download the DMG for your Mac from [Releases](https://github.com/Jubblin/online/releases):
-   - Apple Silicon: `Online-<version>-arm64.dmg`
-   - Intel: `Online-<version>-amd64.dmg`
-2. Open the DMG and drag **Online** onto **Applications**
-3. Launch Online and grant notification permission when prompted
+   - Apple Silicon: `Foghorn-<version>-arm64.dmg`
+   - Intel: `Foghorn-<version>-amd64.dmg`
+2. Open the DMG and drag **Foghorn** onto **Applications**
+3. Launch Foghorn and grant notification permission when prompted
 
 **Signing status:** When Developer ID + notarization secrets are configured, DMGs open normally. If CI falls back to an **unsigned** build (adhoc), Apple Silicon Gatekeeper may show:
-
-> “Online” is damaged and can’t be opened. You should move it to the Bin.
+> "Foghorn" is damaged and can't be opened. You should move it to the Bin.
 
 Right-click → Open does **not** fix that for unsigned downloads. Clear quarantine after install (local workaround only):
 
-```bash
-xattr -cr /Applications/Online.app
+```
+xattr -cr /Applications/Foghorn.app
 ```
 
-Then launch Online again. Proper fix: restore signing/notarization ([issue #39](https://github.com/Jubblin/online/issues/39)). Details: [docs/RELEASE.md](docs/RELEASE.md#unsigned-dmgs-and-gatekeeper).
+Then launch Foghorn again. Proper fix: restore signing/notarization ([issue #39](https://github.com/Jubblin/online/issues/39)). Details: [docs/RELEASE.md](docs/RELEASE.md#unsigned-dmgs-and-gatekeeper).
 
 ### Build from source
 
 **Requirements:** macOS 14 Sonoma or later, Xcode 15+
 
-```bash
+```
 git clone https://github.com/Jubblin/online.git
 cd online
-open Online.xcodeproj
+open Foghorn.xcodeproj
 ```
 
 Or from the command line:
 
-```bash
-xcodebuild -project Online.xcodeproj -scheme Online -configuration Release build
-# App: build/Build/Products/Release/Online.app
+```
+xcodebuild -project Foghorn.xcodeproj -scheme Foghorn -configuration Release build
+# App: build/Build/Products/Release/Foghorn.app
 
 chmod +x scripts/build-dmg.sh
 ./scripts/build-dmg.sh Release arm64   # or amd64
-# DMG: build/Online-<version>-arm64.dmg
+# DMG: build/Foghorn-<version>-arm64.dmg
 ```
 
 ## Usage
 
-1. **Online** appears in the menu bar (subtle when healthy)
+1. **Foghorn** appears in the menu bar (subtle when healthy)
 2. Click the icon to see current status, last probe time, and the most recent outage
 3. Open **Settings** to configure:
    - **Show in menu bar** — hide the icon while keeping probes running (re-open Settings from the app menu if hidden)
@@ -120,24 +116,24 @@ Outputs
 
 ### Connectivity states
 
-| State | Menu bar | Alerts |
-|-------|----------|--------|
-| Healthy | Subtle green dot | None |
-| Degraded | Warning icon | None |
-| Outage | Wi‑Fi slash | Notification |
-| Recovering | Spinner | None |
+| State      | Menu bar         | Alerts       |
+| ---------- | ---------------- | ------------ |
+| Healthy    | Subtle green dot | None         |
+| Degraded   | Warning icon     | None         |
+| Outage     | Wi‑Fi slash      | Notification |
+| Recovering | Spinner          | None         |
 
 ## Development
 
-```bash
+```
 # Run the full local health stack (lint, shellcheck, build, test)
 chmod +x scripts/health.sh
 ./scripts/health.sh
 
 # Or run unit tests only
 xcodebuild test \
-  -project Online.xcodeproj \
-  -scheme Online \
+  -project Foghorn.xcodeproj \
+  -scheme Foghorn \
   -configuration Debug \
   -destination 'platform=macOS'
 
@@ -150,25 +146,25 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for PR workflow, version labels, and code
 ### Project structure
 
 ```
-Online/
+Foghorn/
   Probes/     PathProbe, GatewayProbe, DNSProbe, HTTPProbe, ProbeEngine
   State/      ConnectivityStateMachine
   Services/   AlertService, OutageLog, WakeObserver, LaunchAtLoginService
   Models/     ProbeResult, ConnectivityState, AppSettings
   Views/      MenuBarView, SettingsView
-OnlineTests/  State machine, snapshot, HTTP mock tests
+FoghornTests/  State machine, snapshot, HTTP mock tests
 scripts/      build-dmg.sh, build-signed-dmg.sh, resolve-release-arch.sh, bump-version.sh, health.sh
 ```
 
 ## CI / Release
 
-| Workflow | Trigger | What it does |
-|----------|---------|--------------|
-| [CI](.github/workflows/ci.yml) | Push to `main`, PRs | Test + build Release artifact |
-| [Release dispatch](.github/workflows/release-dispatch.yml) | Manual | Finalize CHANGELOG + tag `v*` |
-| [Release](.github/workflows/release.yml) | Tag `v*` | Signed/notarized DMG → GitHub Release |
-| [Release Store](.github/workflows/release-store.yml) | Tag `v*` or manual | Upload to TestFlight |
-| [Version bump](.github/workflows/version-bump.yml) | PR to `main` | Auto-bump semver + build number |
+| Workflow          | Trigger             | What it does                          |
+| ------------------ | -------------------- | -------------------------------------- |
+| [CI](.github/workflows/ci.yml)                             | Push to `main`, PRs | Test + build Release artifact         |
+| [Release dispatch](.github/workflows/release-dispatch.yml) | Manual              | Finalize CHANGELOG + tag `v*`         |
+| [Release](.github/workflows/release.yml)                   | Tag `v*`            | Signed/notarized DMG → GitHub Release |
+| [Release Store](.github/workflows/release-store.yml)       | Tag `v*` or manual  | Upload to TestFlight                  |
+| [Version bump](.github/workflows/version-bump.yml)         | PR to `main`        | Auto-bump semver + build number       |
 
 **Cut a release:** Actions → **Release dispatch** on `main`, or see [docs/RELEASE.md](docs/RELEASE.md).
 
@@ -180,7 +176,7 @@ scripts/      build-dmg.sh, build-signed-dmg.sh, resolve-release-arch.sh, bump-v
 
 CI can produce Developer ID signed and notarized DMGs when [signing secrets](docs/RELEASE.md#ci-signing-secrets) are configured. For local distribution:
 
-```bash
+```
 ./scripts/build-signed-dmg.sh Release arm64   # requires DEVELOPMENT_TEAM + cert in keychain
 ./scripts/build-signed-dmg.sh Release amd64
 # or unsigned:
@@ -214,3 +210,5 @@ See [CHANGELOG.md](CHANGELOG.md).
 ## License
 
 [MIT](LICENSE) © 2026 [Jubblin](https://github.com/Jubblin)
+
+*Foghorn was formerly named Online.*

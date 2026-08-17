@@ -6,14 +6,14 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting a bug. Online probes your network locally — please avoid pasting sensitive hostnames if they identify internal infrastructure.
+        Thanks for reporting a bug. Foghorn probes your network locally — please avoid pasting sensitive hostnames if they identify internal infrastructure.
 
   - type: textarea
     id: description
     attributes:
       label: What happened?
       description: What did you expect vs what actually happened?
-      placeholder: macOS showed WiFi connected but Online alerted offline for 30s after wake...
+      placeholder: macOS showed WiFi connected but Foghorn alerted offline for 30s after wake...
     validations:
       required: true
 
@@ -31,7 +31,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Online version
+      label: Foghorn version
       description: Menu bar → About, or GitHub Release tag
       placeholder: 0.1.0 (build 1)
     validations:
@@ -62,7 +62,7 @@ body:
     id: logs
     attributes:
       label: Outage log excerpt (optional)
-      description: Redact hostnames if needed. Path `~/Library/Application Support/Online/outages.json`
+      description: Redact hostnames if needed. Path `~/Library/Application Support/Foghorn/outages.json`
       render: shell
 
   - type: checkboxes

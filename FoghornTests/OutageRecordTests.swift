@@ -1,5 +1,5 @@
 import XCTest
-@testable import Online
+@testable import Foghorn
 
 final class OutageRecordTests: XCTestCase {
     func testProbeSummaryFormatsResults() {

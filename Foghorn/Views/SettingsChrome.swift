@@ -53,8 +53,8 @@ enum SettingsTab: String, CaseIterable, Identifiable, Hashable {
     var promiseCaption: String {
         switch self {
         case .interrupt: return "When to interrupt me"
-        case .checks: return "What Online checks"
-        case .remembers: return "What Online remembers"
+        case .checks: return "What Foghorn checks"
+        case .remembers: return "What Foghorn remembers"
         case .help: return "Help & privacy"
         }
     }

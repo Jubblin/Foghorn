@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Regenerate AppIcon PNGs and packaging/VolumeIcon.icns from packaging/Online-icon.svg.
+# Regenerate AppIcon PNGs and packaging/VolumeIcon.icns from packaging/Foghorn-icon.svg.
 # Requires: rsvg-convert (librsvg), iconutil, sips
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SVG="$ROOT/packaging/Online-icon.svg"
-ICONSET_DIR="$ROOT/Online/Assets.xcassets/AppIcon.appiconset"
+SVG="$ROOT/packaging/Foghorn-icon.svg"
+ICONSET_DIR="$ROOT/Foghorn/Assets.xcassets/AppIcon.appiconset"
 TMP_ICONSET="$ROOT/packaging/VolumeIcon.iconset"
-MASTER="$ROOT/packaging/Online-icon-1024.png"
+MASTER="$ROOT/packaging/Foghorn-icon-1024.png"
 # Compose the retina suffix without embedding an email-like token in source.
 RETINA="$(printf '@%s' '2x')"
 
@@ -24,7 +24,7 @@ rsvg-convert -w 1024 -h 1024 "$SVG" -o "$MASTER"
 render() {
   local size="$1" name="$2" dest="$3"
   local tmp
-  tmp="$(mktemp "${TMPDIR:-/tmp}/online-icon.XXXXXX.png")"
+  tmp="$(mktemp "${TMPDIR:-/tmp}/foghorn-icon.XXXXXX.png")"
   sips -z "$size" "$size" "$MASTER" --out "$tmp" >/dev/null
   mv -f "$tmp" "$dest/$name"
 }

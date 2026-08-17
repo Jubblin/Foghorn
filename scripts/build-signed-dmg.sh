@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build a Developer ID signed and notarized Online DMG for one architecture.
+# Build a Developer ID signed and notarized Foghorn DMG for one architecture.
 # Usage: ./scripts/build-signed-dmg.sh [Configuration] [arm64|amd64]
 # Env:
 #   DEVELOPMENT_TEAM              — required Apple Team ID
@@ -11,7 +11,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SCHEME="Online"
+SCHEME="Foghorn"
 CONFIGURATION="${1:-Release}"
 ARCH_INPUT="${2:-${ARCH:-}}"
 
@@ -23,11 +23,11 @@ resolve_release_arch "$ARCH_INPUT"
 
 VERSION="${RELEASE_VERSION:-"$("$ROOT/scripts/read-marketing-version.sh")"}"
 BUILD_DIR="$ROOT/build/${ARCH_LABEL}"
-ARCHIVE_PATH="$BUILD_DIR/Online.xcarchive"
+ARCHIVE_PATH="$BUILD_DIR/Foghorn.xcarchive"
 EXPORT_DIR="$BUILD_DIR/export"
 EXPORT_PLIST="$BUILD_DIR/ExportOptions-developer-id.plist"
-APP_PATH="$EXPORT_DIR/Online.app"
-DMG_PATH="$ROOT/build/Online-${VERSION}-${ARCH_LABEL}.dmg"
+APP_PATH="$EXPORT_DIR/Foghorn.app"
+DMG_PATH="$ROOT/build/Foghorn-${VERSION}-${ARCH_LABEL}.dmg"
 
 cd "$ROOT"
 mkdir -p "$BUILD_DIR"
@@ -68,7 +68,7 @@ if [[ -n "${CERTIFICATE_P12:-}" ]]; then
 fi
 
 xcodebuild archive \
-  -project Online.xcodeproj \
+  -project Foghorn.xcodeproj \
   -scheme "$SCHEME" \
   -configuration "$CONFIGURATION" \
   -archivePath "$ARCHIVE_PATH" \

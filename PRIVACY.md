@@ -1,23 +1,23 @@
-# Privacy Policy — Online
+# Privacy Policy — Foghorn
 
 **Last updated:** 2026-08-04
 
-Online is a native macOS menu bar utility. This policy describes what the app does with your data.
+Foghorn is a native macOS menu bar utility. This policy describes what the app does with your data.
 
 ## Summary
 
-Online does **not** collect, transmit, or sell personal data. Connectivity probes and outage history stay on your Mac. Optional update checks fetch a public signed appcast (and, for App Store builds, GitHub Releases metadata) over HTTPS.
+Foghorn does **not** collect, transmit, or sell personal data. Connectivity probes and outage history stay on your Mac. Optional update checks fetch a public signed appcast (and, for App Store builds, GitHub Releases metadata) over HTTPS.
 
 ## Data stored on your device
 
 - **Settings** — poll interval, custom hosts, appearance, menu bar preferences, and whether automatic update checks are enabled (UserDefaults).
-- **Outage log** — JSON file at `~/Library/Application Support/Online/outages.json` with timestamps, failure reasons, and probe summaries.
+- **Outage log** — JSON file at `~/Library/Application Support/Foghorn/outages.json` with timestamps, failure reasons, and probe summaries.
 
 You can view, copy, or delete outage records from the app.
 
 ## Network activity
 
-Online performs connectivity checks (path monitor, gateway, DNS, HTTP HEAD, optional custom hosts) to determine whether your internet connection is working. Those requests go to your network and configured endpoints only.
+Foghorn performs connectivity checks (path monitor, gateway, DNS, HTTP HEAD, optional custom hosts) to determine whether your internet connection is working. Those requests go to your network and configured endpoints only.
 
 When automatic updates are enabled (default), or when you choose **Check for Updates…**:
 
@@ -28,11 +28,11 @@ Those requests send a standard User-Agent including the installed app version. N
 
 ## Notifications
 
-If you grant permission, macOS delivers local alerts when Online detects a confirmed outage or recovery, and optionally when a newer official release is available. Notification content is generated on device.
+If you grant permission, macOS delivers local alerts when Foghorn detects a confirmed outage or recovery, and optionally when a newer official release is available. Notification content is generated on device.
 
 ## Analytics and tracking
 
-Online includes no analytics SDKs, advertising, or third-party tracking.
+Foghorn includes no analytics SDKs, advertising, or third-party tracking.
 
 ## Contact
 

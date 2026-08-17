@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>Online</title>
+    <title>Foghorn</title>
     <link>https://github.com/Jubblin/online/releases/download/sparkle-appcast/appcast.xml</link>
-    <description>Most recent updates to Online</description>
+    <description>Most recent updates to Foghorn</description>
     <language>en</language>
   </channel>
 </rss>

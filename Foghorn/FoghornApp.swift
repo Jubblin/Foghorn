@@ -54,7 +54,7 @@ final class AppLifecycleDelegate: NSObject, NSApplicationDelegate {
 }
 
 @main
-struct OnlineApp: App {
+struct FoghornApp: App {
     @NSApplicationDelegateAdaptor(AppLifecycleDelegate.self) private var appDelegate
     @ObservedObject private var settings = AppSettings.shared
 

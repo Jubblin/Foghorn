@@ -5,7 +5,7 @@ import SwiftUI
 import AppKit
 #endif
 
-/// Launch-argument harness for `OnlineUITests`. Active only when `-ui_testing` is passed.
+/// Launch-argument harness for `FoghornUITests`. Active only when `-ui_testing` is passed.
 enum UITestConfiguration {
     static let uiTestingFlag = "-ui_testing"
     static let openSettingsFlag = "-ui_testing_open_settings"

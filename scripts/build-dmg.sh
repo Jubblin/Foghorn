@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build an unsigned Online DMG for one architecture.
+# Build an unsigned Foghorn DMG for one architecture.
 # Usage: ./scripts/build-dmg.sh [Configuration] [arm64|amd64]
 # Env:
 #   RELEASE_VERSION — version segment in the DMG name (default: MARKETING_VERSION)
@@ -7,7 +7,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SCHEME="Online"
+SCHEME="Foghorn"
 CONFIGURATION="${1:-Release}"
 ARCH_INPUT="${2:-${ARCH:-}}"
 
@@ -17,14 +17,14 @@ resolve_release_arch "$ARCH_INPUT"
 
 VERSION="${RELEASE_VERSION:-"$("$ROOT/scripts/read-marketing-version.sh")"}"
 BUILD_DIR="$ROOT/build/${ARCH_LABEL}"
-APP_PATH="$BUILD_DIR/Build/Products/$CONFIGURATION/Online.app"
-DMG_PATH="$ROOT/build/Online-${VERSION}-${ARCH_LABEL}.dmg"
+APP_PATH="$BUILD_DIR/Build/Products/$CONFIGURATION/Foghorn.app"
+DMG_PATH="$ROOT/build/Foghorn-${VERSION}-${ARCH_LABEL}.dmg"
 
 cd "$ROOT"
 mkdir -p "$ROOT/build"
 
 XCODEBUILD_ARGS=(
-  -project Online.xcodeproj
+  -project Foghorn.xcodeproj
   -scheme "$SCHEME"
   -configuration "$CONFIGURATION"
   -derivedDataPath "$BUILD_DIR"

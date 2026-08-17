@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Archive, export, and upload Online to TestFlight (Mac App Store).
+# Archive, export, and upload Foghorn to TestFlight (Mac App Store).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SCHEME="Online"
+SCHEME="Foghorn"
 CONFIGURATION="${1:-Release}"
 BUILD_DIR="$ROOT/build"
-ARCHIVE_PATH="$BUILD_DIR/Online.xcarchive"
+ARCHIVE_PATH="$BUILD_DIR/Foghorn.xcarchive"
 EXPORT_DIR="$BUILD_DIR/store-export"
 EXPORT_PLIST="$BUILD_DIR/ExportOptions-appstore.plist"
 
@@ -48,7 +48,7 @@ PLIST
 # Intentional literal $(inherited) for xcodebuild — do not expand in bash.
 # shellcheck disable=SC2016
 xcodebuild archive \
-  -project Online.xcodeproj \
+  -project Foghorn.xcodeproj \
   -scheme "$SCHEME" \
   -configuration "$CONFIGURATION" \
   -archivePath "$ARCHIVE_PATH" \

@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed the project and app from **Online** to **Foghorn** — menu bar/app display name, Xcode target and scheme, DMG naming, notification copy, and docs all updated. `PRODUCT_BUNDLE_IDENTIFIER` (`com.online.menu`) is unchanged to preserve existing notification permissions, launch-at-login registration, and user defaults. The outage log's Application Support folder migrates automatically from `Online/` to `Foghorn/` on first launch after update.
+
 ### Fixed
 
 ### Removed

@@ -8,7 +8,7 @@
 		<true/>
 	</dict>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Online checks whether your router (default gateway) is reachable to distinguish a local network problem from an internet outage.</string>
+	<string>Foghorn checks whether your router (default gateway) is reachable to distinguish a local network problem from an internet outage.</string>
 	<key>SUFeedURL</key>
 	<string>https://github.com/Jubblin/online/releases/download/sparkle-appcast/appcast.xml</string>
 	<key>SUPublicEDKey</key>

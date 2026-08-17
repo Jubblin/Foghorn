@@ -43,7 +43,7 @@ final class AppSettings: ObservableObject {
         }
     }
 
-    /// When true, Online checks for updates about once per day (Sparkle on Developer ID builds).
+    /// When true, Foghorn checks for updates about once per day (Sparkle on Developer ID builds).
     @Published var automaticUpdatesEnabled: Bool {
         didSet {
             UserDefaults.standard.set(automaticUpdatesEnabled, forKey: Keys.automaticUpdatesEnabled)

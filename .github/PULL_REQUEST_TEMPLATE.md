@@ -14,7 +14,7 @@
 
 <!-- How did you verify this works? -->
 
-- [ ] `xcodebuild test -project Online.xcodeproj -scheme Online -configuration Debug -destination 'platform=macOS'`
+- [ ] `xcodebuild test -project Foghorn.xcodeproj -scheme Foghorn -configuration Debug -destination 'platform=macOS'`
 - [ ] Manual testing on macOS (describe):
 
 ## Version labels

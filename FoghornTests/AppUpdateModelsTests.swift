@@ -1,5 +1,5 @@
 import XCTest
-@testable import Online
+@testable import Foghorn
 
 final class AppUpdateModelsTests: XCTestCase {
     func testVersionOrderingNumeric() {
@@ -18,17 +18,17 @@ final class AppUpdateModelsTests: XCTestCase {
     func testPreferredDownloadURLPicksArchitecture() {
         let release = AppRelease(
             tagName: "v0.2.20",
-            name: "Online v0.2.20",
+            name: "Foghorn v0.2.20",
             htmlURL: URL(string: "https://github.com/Jubblin/online/releases/tag/v0.2.20")!,
             isPrerelease: false,
             publishedAt: nil,
             assets: [
                 AppReleaseAsset(
-                    name: "Online-0.2.20-amd64.dmg",
+                    name: "Foghorn-0.2.20-amd64.dmg",
                     downloadURL: URL(string: "https://example.com/amd64.dmg")!
                 ),
                 AppReleaseAsset(
-                    name: "Online-0.2.20-arm64.dmg",
+                    name: "Foghorn-0.2.20-arm64.dmg",
                     downloadURL: URL(string: "https://example.com/arm64.dmg")!
                 )
             ]

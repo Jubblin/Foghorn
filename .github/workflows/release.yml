@@ -112,9 +112,9 @@ jobs:
           ### Install
 
           1. Download the DMG for your Mac below:
-             - Apple Silicon: \`Online-${RELEASE_VERSION}-arm64.dmg\`
-             - Intel: \`Online-${RELEASE_VERSION}-amd64.dmg\`
-          2. Open the DMG and drag **Online** onto **Applications**
+             - Apple Silicon: \`Foghorn-${RELEASE_VERSION}-arm64.dmg\`
+             - Intel: \`Foghorn-${RELEASE_VERSION}-amd64.dmg\`
+          2. Open the DMG and drag **Foghorn** onto **Applications**
           3. Grant notification permission on first launch
 
           Installed copies can update in-app via **Settings → Help → Check for Updates…** (Sparkle).
@@ -166,25 +166,25 @@ jobs:
           SPARKLE_PREPARED: ${{ steps.sparkle.outputs.prepared }}
         run: |
           set -euo pipefail
-          ARM_DMG="build/Online-${RELEASE_VERSION}-arm64.dmg"
-          AMD_DMG="build/Online-${RELEASE_VERSION}-amd64.dmg"
+          ARM_DMG="build/Foghorn-${RELEASE_VERSION}-arm64.dmg"
+          AMD_DMG="build/Foghorn-${RELEASE_VERSION}-amd64.dmg"
           ASSETS=("$ARM_DMG" "$AMD_DMG")
           if [[ "${SPARKLE_PREPARED:-}" == "true" ]]; then
             ASSETS+=(
-              "build/sparkle-feed/Online-${RELEASE_VERSION}.zip"
+              "build/sparkle-feed/Foghorn-${RELEASE_VERSION}.zip"
               "docs/appcast.xml"
             )
           fi
           if gh release view "$REF_NAME" >/dev/null 2>&1; then
             gh release upload "$REF_NAME" "${ASSETS[@]}" --clobber
-            gh release edit "$REF_NAME" --title "Online $REF_NAME" --notes-file release-notes.md
+            gh release edit "$REF_NAME" --title "Foghorn $REF_NAME" --notes-file release-notes.md
             if [[ "$REF_NAME" == *-* ]]; then
               gh release edit "$REF_NAME" --prerelease
             else
               gh release edit "$REF_NAME" --latest
             fi
           else
-            ARGS=(release create "$REF_NAME" --title "Online $REF_NAME" --notes-file release-notes.md "${ASSETS[@]}")
+            ARGS=(release create "$REF_NAME" --title "Foghorn $REF_NAME" --notes-file release-notes.md "${ASSETS[@]}")
             if [[ "$REF_NAME" == *-* ]]; then
               ARGS+=(--prerelease)
             fi
@@ -197,7 +197,7 @@ jobs:
             else
               gh release create sparkle-appcast docs/appcast.xml \
                 --title "Sparkle appcast" \
-                --notes "Rolling Sparkle appcast feed for in-app updates. Not an Online app release." \
+                --notes "Rolling Sparkle appcast feed for in-app updates. Not an Foghorn app release." \
                 --prerelease
             fi
           fi

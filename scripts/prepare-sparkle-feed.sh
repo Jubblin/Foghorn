@@ -4,7 +4,7 @@
 #
 # generate_appcast rejects multiple archives that share the same CFBundleVersion,
 # so arm64 + amd64 thin zips cannot both sit in the feed directory. We lipo a
-# single universal Online.app instead.
+# single universal Foghorn.app instead.
 #
 # Usage (after arm64 + amd64 signed exports exist):
 #   RELEASE_VERSION=0.2.28 SPARKLE_PRIVATE_KEY=... ./scripts/prepare-sparkle-feed.sh
@@ -26,10 +26,10 @@ IDENTITY="${CODE_SIGN_IDENTITY:-Developer ID Application}"
 FEED_DIR="$ROOT/build/sparkle-feed"
 TOOLS_DIR="$ROOT/build/sparkle-tools"
 UNIVERSAL_ROOT="$ROOT/build/universal"
-UNIVERSAL_APP="$UNIVERSAL_ROOT/export/Online.app"
+UNIVERSAL_APP="$UNIVERSAL_ROOT/export/Foghorn.app"
 APPCAST_OUT="$ROOT/docs/appcast.xml"
 DOWNLOAD_PREFIX="https://github.com/Jubblin/online/releases/download/${TAG}/"
-ZIP_PATH="$FEED_DIR/Online-${VERSION}.zip"
+ZIP_PATH="$FEED_DIR/Foghorn-${VERSION}.zip"
 
 mkdir -p "$FEED_DIR" "$TOOLS_DIR"
 rm -f "$FEED_DIR"/*.zip "$FEED_DIR"/*.xml "$FEED_DIR"/*.md
@@ -51,8 +51,8 @@ download_sparkle_tools() {
 
 # Merge thin Mach-O binaries from arm64 + amd64 exports into one universal app.
 create_universal_app() {
-  local arm_app="$ROOT/build/arm64/export/Online.app"
-  local intel_app="$ROOT/build/amd64/export/Online.app"
+  local arm_app="$ROOT/build/arm64/export/Foghorn.app"
+  local intel_app="$ROOT/build/amd64/export/Foghorn.app"
 
   if [[ ! -d "$arm_app" ]]; then
     echo "error: missing exported app at $arm_app" >&2
@@ -86,16 +86,16 @@ create_universal_app() {
     if [[ -n "$arm_archs" && "$arm_archs" == "$intel_archs" ]]; then
       continue
     fi
-    if /usr/bin/lipo -create "$arm_file" "$intel_file" -output "$UNIVERSAL_APP/$rel.universal" 2>/tmp/online-lipo.err; then
+    if /usr/bin/lipo -create "$arm_file" "$intel_file" -output "$UNIVERSAL_APP/$rel.universal" 2>/tmp/foghorn-lipo.err; then
       mv "$UNIVERSAL_APP/$rel.universal" "$UNIVERSAL_APP/$rel"
     else
-      echo "warning: lipo skipped for $rel ($(tr '\n' ' ' </tmp/online-lipo.err))" >&2
+      echo "warning: lipo skipped for $rel ($(tr '\n' ' ' </tmp/foghorn-lipo.err))" >&2
       rm -f "$UNIVERSAL_APP/$rel.universal"
     fi
   done < <(cd "$arm_app" && find . -type f -print0)
 
   echo "Created universal app at $UNIVERSAL_APP"
-  /usr/bin/lipo -info "$UNIVERSAL_APP/Contents/MacOS/Online" || true
+  /usr/bin/lipo -info "$UNIVERSAL_APP/Contents/MacOS/Foghorn" || true
 }
 
 # Re-sign after lipo. Prefer nested Sparkle helpers before the outer bundle.
@@ -103,11 +103,11 @@ resign_universal_app() {
   local sparkle="$UNIVERSAL_APP/Contents/Frameworks/Sparkle.framework/Versions/B"
   local sign=(/usr/bin/codesign --force --options runtime --timestamp --sign "$IDENTITY")
   local entitlements
-  entitlements="$(mktemp -t online-sparkle-ents.XXXXXX.plist)"
+  entitlements="$(mktemp -t foghorn-sparkle-ents.XXXXXX.plist)"
   # Use expanded entitlements from the already-exported arm64 app (not the raw
   # source plist, which still contains $(PRODUCT_BUNDLE_IDENTIFIER)).
-  /usr/bin/codesign -d --entitlements ":-" "$ROOT/build/arm64/export/Online.app" >"$entitlements" 2>/dev/null \
-    || /usr/bin/codesign -d --entitlements "$entitlements" "$ROOT/build/arm64/export/Online.app"
+  /usr/bin/codesign -d --entitlements ":-" "$ROOT/build/arm64/export/Foghorn.app" >"$entitlements" 2>/dev/null \
+    || /usr/bin/codesign -d --entitlements "$entitlements" "$ROOT/build/arm64/export/Foghorn.app"
 
   if [[ -d "$sparkle/XPCServices/Installer.xpc" ]]; then
     "${sign[@]}" "$sparkle/XPCServices/Installer.xpc"
@@ -146,14 +146,14 @@ if [[ -f "$APPCAST_OUT" ]]; then
 fi
 
 # Release notes sidecar — basename must match the zip stem for generate_appcast.
-NOTES="$FEED_DIR/Online-${VERSION}.md"
+NOTES="$FEED_DIR/Foghorn-${VERSION}.md"
 {
-  echo "# Online ${VERSION}"
+  echo "# Foghorn ${VERSION}"
   echo
   if [[ -f "$ROOT/release-notes.md" ]]; then
     sed -n '1,/^---$/p' "$ROOT/release-notes.md" | sed '$d' || cat "$ROOT/release-notes.md"
   else
-    echo "Update to Online ${VERSION}."
+    echo "Update to Foghorn ${VERSION}."
   fi
 } >"$NOTES"
 

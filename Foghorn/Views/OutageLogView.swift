@@ -19,7 +19,7 @@ struct OutageLogView: View {
                 ContentUnavailableView {
                     Label("No outages recorded", systemImage: "checkmark.circle")
                 } description: {
-                    Text("When Online detects a confirmed outage, it will appear here.")
+                    Text("When Foghorn detects a confirmed outage, it will appear here.")
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .accessibilityIdentifier("outageLog.emptyState")

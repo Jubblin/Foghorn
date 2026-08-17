@@ -1,6 +1,6 @@
-# Contributing to Online
+# Contributing to Foghorn
 
-Thanks for your interest in improving Online. This is a small native macOS app;
+Thanks for your interest in improving Foghorn. This is a small native macOS app;
 focused PRs are easier to review than large rewrites.
 
 ## Before You Start
@@ -16,15 +16,15 @@ focused PRs are easier to review than large rewrites.
 ```bash
 git clone https://github.com/Jubblin/online.git
 cd online
-open Online.xcodeproj
+open Foghorn.xcodeproj
 ```
 
 Run tests from the command line:
 
 ```bash
 xcodebuild test \
-  -project Online.xcodeproj \
-  -scheme Online \
+  -project Foghorn.xcodeproj \
+  -scheme Foghorn \
   -configuration Debug \
   -destination 'platform=macOS'
 ```
@@ -77,7 +77,7 @@ PRs run [CI](.github/workflows/ci.yml) on `macos-26`: SwiftLint + ShellCheck (`q
 
 ## Code Guidelines
 
-- Match existing Swift style and file layout (`Online/Probes/`, `Online/State/`, etc.)
+- Match existing Swift style and file layout (`Foghorn/Probes/`, `Foghorn/State/`, etc.)
 - Prefer small, testable units; add XCTest coverage for state machine and probe logic
 - Keep the **alert-first** product goal: invisible when healthy, loud when broken
 - No new dependencies unless discussed in an issue first (project currently has zero SPM packages)
@@ -85,14 +85,14 @@ PRs run [CI](.github/workflows/ci.yml) on `macos-26`: SwiftLint + ShellCheck (`q
 ## Project Layout
 
 ```
-Online/           App target
+Foghorn/           App target
   Probes/         Network probe implementations
   State/          ConnectivityStateMachine
   Services/       Alerts, outage log, wake observer
   Models/         Shared types
   Views/          SwiftUI menu bar and settings
-OnlineTests/      Unit tests
-OnlineUITests/    UI smoke tests (XCUITest)
+FoghornTests/      Unit tests
+FoghornUITests/    UI smoke tests (XCUITest)
 scripts/          build-dmg.sh, bump-version.sh, extract-changelog-section.sh, health.sh
 .github/          Workflows, issue/PR templates
 ```

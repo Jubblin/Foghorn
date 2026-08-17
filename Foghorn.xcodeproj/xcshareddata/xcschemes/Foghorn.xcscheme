@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "T10000000000000000000001"
-               BuildableName = "Online.app"
-               BlueprintName = "Online"
-               ReferencedContainer = "container:Online.xcodeproj">
+               BuildableName = "Foghorn.app"
+               BlueprintName = "Foghorn"
+               ReferencedContainer = "container:Foghorn.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,9 +35,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "T10000000000000000000002"
-               BuildableName = "OnlineTests.xctest"
-               BlueprintName = "OnlineTests"
-               ReferencedContainer = "container:Online.xcodeproj">
+               BuildableName = "FoghornTests.xctest"
+               BlueprintName = "FoghornTests"
+               ReferencedContainer = "container:Foghorn.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -46,9 +46,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "T10000000000000000000003"
-               BuildableName = "OnlineUITests.xctest"
-               BlueprintName = "OnlineUITests"
-               ReferencedContainer = "container:Online.xcodeproj">
+               BuildableName = "FoghornUITests.xctest"
+               BlueprintName = "FoghornUITests"
+               ReferencedContainer = "container:Foghorn.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -68,9 +68,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "T10000000000000000000001"
-            BuildableName = "Online.app"
-            BlueprintName = "Online"
-            ReferencedContainer = "container:Online.xcodeproj">
+            BuildableName = "Foghorn.app"
+            BlueprintName = "Foghorn"
+            ReferencedContainer = "container:Foghorn.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -85,9 +85,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "T10000000000000000000001"
-            BuildableName = "Online.app"
-            BlueprintName = "Online"
-            ReferencedContainer = "container:Online.xcodeproj">
+            BuildableName = "Foghorn.app"
+            BlueprintName = "Foghorn"
+            ReferencedContainer = "container:Foghorn.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
