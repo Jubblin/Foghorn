@@ -1,16 +1,12 @@
 import Foundation
 
-protocol AppReleaseFetching: Sendable {
-    func fetchReleases() async throws -> [AppRelease]
-}
-
 enum AppReleaseFetchError: Error, Equatable {
     case invalidResponse
     case httpStatus(Int)
     case decodingFailed
 }
 
-struct GitHubReleaseClient: AppReleaseFetching {
+struct GitHubReleaseClient: Sendable {
     var session: URLSession = .shared
     var releasesURL = URL(string: "https://api.github.com/repos/Jubblin/online/releases")!
 
