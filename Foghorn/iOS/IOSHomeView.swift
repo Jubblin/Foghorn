@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct iOSHomeView: View {
+struct IOSHomeView: View {
     @EnvironmentObject private var coordinator: AppCoordinator
     @Environment(\.colorScheme) private var colorScheme
 
@@ -116,4 +116,3 @@ struct iOSHomeView: View {
         date.formatted(date: .omitted, time: .standard)
     }
 }
-

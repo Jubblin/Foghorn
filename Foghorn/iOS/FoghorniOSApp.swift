@@ -7,10 +7,9 @@ struct FoghorniOSApp: App {
 
     var body: some Scene {
         WindowGroup {
-            iOSHomeView()
+            IOSHomeView()
                 .environmentObject(coordinator)
         }
     }
 }
 #endif
-
