@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Menu bar popover **Settings…** now activates the app before sending `showSettingsWindow:`, instead of after — fixes it silently no-oping (`⌘,` was unaffected since it's only reachable once the app is already active)
+
 ### Removed
 
 ## [0.4.0] - 2026-08-18
