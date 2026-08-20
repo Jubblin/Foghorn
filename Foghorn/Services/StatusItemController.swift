@@ -267,6 +267,9 @@ enum AppNavigation {
 
         // Defer past popover teardown; retry if the scene is slow to materialize.
         DispatchQueue.main.async {
+            // showSettingsWindow: no-ops unless the app is already active — activate
+            // first, not after (see #59).
+            NSApp.activate(ignoringOtherApps: true)
             showSettingsScene(remainingAttempts: 4)
             scheduleAccessoryRestore(previousPolicy: previousPolicy)
         }
@@ -309,8 +312,8 @@ enum AppNavigation {
             return
         }
 
-        _ = NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
         NSApp.activate(ignoringOtherApps: true)
+        _ = NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
 
         guard remainingAttempts > 1 else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
