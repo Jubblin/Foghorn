@@ -395,8 +395,8 @@ enum AppNavigation {
 final class StatusItemController: ObservableObject {
     static let shared = StatusItemController()
 
-    func install(coordinator: AppCoordinator) {
-        // No-op
+    func install(coordinator _: AppCoordinator) {
+        // No-op on platforms without AppKit menu-bar APIs.
     }
 }
 
