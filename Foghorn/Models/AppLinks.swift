@@ -1,5 +1,12 @@
-import AppKit
 import Foundation
+
+#if canImport(AppKit)
+import AppKit
+#endif
+
+#if canImport(UIKit)
+import UIKit
+#endif
 
 enum AppLinks {
     static let privacyPolicy = URL(string: "https://jubblin.github.io/online/privacy.html")!
@@ -9,6 +16,10 @@ enum AppLinks {
     static let appcast = URL(string: "https://github.com/Jubblin/online/releases/download/sparkle-appcast/appcast.xml")!
 
     static func openInBrowser(_ url: URL) {
+#if canImport(AppKit)
         NSWorkspace.shared.open(url)
+#else
+        UIApplication.shared.open(url)
+#endif
     }
 }

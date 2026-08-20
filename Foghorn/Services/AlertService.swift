@@ -1,6 +1,13 @@
-import AppKit
 import Foundation
 import UserNotifications
+
+#if canImport(AppKit)
+import AppKit
+#endif
+
+#if canImport(UIKit)
+import UIKit
+#endif
 
 enum NotificationAuthorizationDisplay: Equatable {
     case granted
@@ -86,11 +93,17 @@ final class AlertService: NSObject, ObservableObject {
     }
 
     static func openSystemNotificationSettings() {
+#if canImport(AppKit)
         guard let bundleID = Bundle.main.bundleIdentifier,
               let url = URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension?id=\(bundleID)") else {
             return
         }
         NSWorkspace.shared.open(url)
+#else
+        // iOS uses System Settings; opening the exact notifications pane
+        // isn't available in a universal, App-Store-friendly way.
+        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+#endif
     }
 
     func notifyOutage(record: OutageRecord) {

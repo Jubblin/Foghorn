@@ -133,11 +133,15 @@ private struct SettingsWindowBackgroundModifier: ViewModifier {
     let color: Color
 
     func body(content: Content) -> some View {
+        #if os(macOS)
         if #available(macOS 15.0, *) {
             content.containerBackground(color, for: .window)
         } else {
             content
         }
+        #else
+        content
+        #endif
     }
 }
 

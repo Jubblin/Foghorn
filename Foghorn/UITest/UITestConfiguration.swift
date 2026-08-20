@@ -71,12 +71,15 @@ enum UITestConfiguration {
             if shouldOpenOutageLog {
                 presentOutageLogWindow()
             }
+            #if canImport(AppKit)
             NSApp.activate(ignoringOtherApps: true)
+            #endif
         }
     }
 
     @MainActor
     private static func presentSettingsWindow() {
+        #if canImport(AppKit)
         let settings = AppSettings.shared
         let hostingController = NSHostingController(
             rootView: SettingsView()
@@ -87,15 +90,22 @@ enum UITestConfiguration {
         window.setContentSize(NSSize(width: 480, height: 560))
         window.center()
         window.makeKeyAndOrderFront(nil)
+        #else
+        // iOS has no equivalent UI-test window presentation path.
+        #endif
     }
 
     @MainActor
     private static func presentOutageLogWindow() {
+        #if canImport(AppKit)
         let hostingController = NSHostingController(rootView: OutageLogView())
         let window = NSWindow(contentViewController: hostingController)
         window.title = "Outage Log"
         window.setContentSize(NSSize(width: 800, height: 440))
         window.center()
         window.makeKeyAndOrderFront(nil)
+        #else
+        // iOS has no equivalent UI-test window presentation path.
+        #endif
     }
 }
