@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security vulnerability
-    url: https://github.com/Jubblin/online/security/advisories/new
+    url: https://github.com/Jubblin/Foghorn/security/advisories/new
     about: Report security issues privately (do not open a public issue)
   - name: Contributing guide
-    url: https://github.com/Jubblin/online/blob/main/CONTRIBUTING.md
+    url: https://github.com/Jubblin/Foghorn/blob/main/CONTRIBUTING.md
     about: How to build, test, and submit pull requests
+  - name: Documentation site
+    url: https://jubblin.github.io/Foghorn/
+    about: Browse Foghorn docs on GitHub Pages
