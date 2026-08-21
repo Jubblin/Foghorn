@@ -60,7 +60,7 @@ shellcheck scripts/*.sh
 
 ### Version bumps
 
-Do **not** manually edit version numbers in `project.pbxproj`. The [version bump workflow](.github/workflows/version-bump.yml) handles this on PRs:
+Do **not** manually edit version numbers in `project.pbxproj`. The [version bump workflow](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/version-bump.yml) handles this on PRs:
 
 | Label | Semver bump |
 |-------|-------------|
@@ -73,7 +73,7 @@ Each new commit on the PR increments the build number automatically.
 
 ### CI
 
-PRs run [CI](.github/workflows/ci.yml) on `macos-26`: SwiftLint + ShellCheck (`quality` job), unit tests, UI smoke tests, then a Release build.
+PRs run [CI](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/ci.yml) on `macos-26`: SwiftLint + ShellCheck (`quality` job), unit tests, UI smoke tests, then a Release build.
 
 Semgrep in Actions is **advisory** (`continue-on-error` + `semgrep ci || true`) and must not gate merge. If the Semgrep GitHub App check (`semgrep-cloud-platform/scan`) is enabled, keep **Fail Open** on in Semgrep Managed Scans and leave that check **non-required** in branch protection so a stuck/failed App scan cannot block the PR.
 
@@ -105,7 +105,7 @@ User-facing changes should be noted in [CHANGELOG.md](CHANGELOG.md) under `[Unre
 
 ### Releasing
 
-GitHub Releases are created when you push a `v*` tag. The release body is taken from the matching `CHANGELOG.md` section (see [release workflow](.github/workflows/release.yml)).
+GitHub Releases are created when you push a `v*` tag. The release body is taken from the matching `CHANGELOG.md` section (see [release workflow](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release.yml)).
 
 Before tagging:
 

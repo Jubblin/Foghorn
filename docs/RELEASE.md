@@ -11,7 +11,7 @@ Installed **Developer ID** copies update in-app via Sparkle (`Settings → Help 
 
 ## Sparkle appcast (GitHub channel)
 
-[release.yml](../.github/workflows/release.yml) (signed builds only) runs [`scripts/prepare-sparkle-feed.sh`](../scripts/prepare-sparkle-feed.sh) when `SPARKLE_PRIVATE_KEY` is set:
+[release.yml](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release.yml) (signed builds only) runs [`scripts/prepare-sparkle-feed.sh`](https://github.com/Jubblin/Foghorn/blob/main/scripts/prepare-sparkle-feed.sh) when `SPARKLE_PRIVATE_KEY` is set:
 
 1. Builds a **universal** `Foghorn.app` (lipo of arm64 + amd64 exports), re-signs it, and zips it (Sparkle rejects two thin archives that share one `CFBundleVersion`).
 2. Runs Sparkle’s `generate_appcast` with Ed25519 signing and a download URL prefix pointing at the versioned GitHub Release.
@@ -34,13 +34,13 @@ Foghorn uses **two different macOS version concepts** — do not confuse them wh
 
 ### CI and release workflows (`macos-27`)
 
-Tagged releases (`release.yml`, `release-store.yml`) and [CI](../.github/workflows/ci.yml) build on GitHub-hosted **`macos-27`** runners (Apple Silicon). Xcode is selected via the repo-owned [`.github/actions/setup-xcode`](../.github/actions/setup-xcode) composite action (default toolchain on the runner image).
+Tagged releases (`release.yml`, `release-store.yml`) and [CI](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/ci.yml) build on GitHub-hosted **`macos-27`** runners (Apple Silicon). Xcode is selected via the repo-owned [`.github/actions/setup-xcode`](https://github.com/Jubblin/Foghorn/blob/main/.github/actions/setup-xcode) composite action (default toolchain on the runner image).
 
 | Workflow | Runner | What it produces |
 |----------|--------|------------------|
-| [ci.yml](../.github/workflows/ci.yml) | `macos-27` | Lint, unit tests, UI smoke, Release `.app` artifact |
-| [release.yml](../.github/workflows/release.yml) | `macos-27` | Signed/notarized `Foghorn-<version>-arm64.dmg` + `Foghorn-<version>-amd64.dmg` → GitHub Release |
-| [release-store.yml](../.github/workflows/release-store.yml) | `macos-27` | App Store archive → TestFlight |
+| [ci.yml](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/ci.yml) | `macos-27` | Lint, unit tests, UI smoke, Release `.app` artifact |
+| [release.yml](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release.yml) | `macos-27` | Signed/notarized `Foghorn-<version>-arm64.dmg` + `Foghorn-<version>-amd64.dmg` → GitHub Release |
+| [release-store.yml](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-store.yml) | `macos-27` | App Store archive → TestFlight |
 
 **Runner labels (GitHub Actions):**
 
@@ -76,7 +76,7 @@ Match the major Xcode/macOS generation to what CI uses when possible so archive 
 
 ### Architecture-specific GitHub DMGs
 
-[release.yml](../.github/workflows/release.yml) builds **two** Developer ID DMGs from the Apple Silicon runner (cross-compiling Intel):
+[release.yml](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release.yml) builds **two** Developer ID DMGs from the Apple Silicon runner (cross-compiling Intel):
 
 | Artifact | Mac |
 |----------|-----|
@@ -120,17 +120,17 @@ When GitHub announces macOS 27 runner GA:
 
 ### Continuous releases (every merge)
 
-After green CI on `main`, [release-on-main.yml](../.github/workflows/release-on-main.yml) creates a tag like `v0.2.9-build.24` from `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`, then [release.yml](../.github/workflows/release.yml) publishes a **prerelease** DMG to GitHub Releases. Release notes use the matching `## [X.Y.Z]` changelog section when present, otherwise `[Unreleased]`.
+After green CI on `main`, [release-on-main.yml](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-on-main.yml) creates a tag like `v0.2.9-build.24` from `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`, then [release.yml](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release.yml) publishes a **prerelease** DMG to GitHub Releases. Release notes use the matching `## [X.Y.Z]` changelog section when present, otherwise `[Unreleased]`.
 
 Commits with message `chore(release): …` (from **Release dispatch**) are skipped so official releases are not duplicated.
 
-TestFlight ([release-store.yml](../.github/workflows/release-store.yml)) runs only for official `vX.Y.Z` tags, not continuous `-build.N` tags.
+TestFlight ([release-store.yml](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-store.yml)) runs only for official `vX.Y.Z` tags, not continuous `-build.N` tags.
 
 **Note:** Tags pushed with `GITHUB_TOKEN` do not trigger other workflows. `release-on-main` therefore dispatches `release.yml` via `workflow_dispatch`. Official **Release dispatch** pushes the tag with `VERSION_BUMP_TOKEN`, so `release.yml` and `release-store.yml` start from the tag push itself.
 
 ## Before you release
 
-1. Ensure `[Unreleased]` in [CHANGELOG.md](../CHANGELOG.md) has user-facing bullets.
+1. Ensure `[Unreleased]` in [CHANGELOG.md](CHANGELOG.md) has user-facing bullets.
 2. Ensure `MARKETING_VERSION` on `main` matches the version you are about to ship (set by the version-bump bot on the merging PR).
 3. Run [PRE_RELEASE_CHECKLIST.md](PRE_RELEASE_CHECKLIST.md) on a Release build locally.
 4. Run `./scripts/health.sh` (or rely on green CI).
@@ -139,9 +139,10 @@ TestFlight ([release-store.yml](../.github/workflows/release-store.yml)) runs on
 
 1. Repo **Settings → Pages**
 2. Source: **Deploy from branch** → `main` → `/docs`
-3. Verify https://jubblin.github.io/online/privacy.html loads
+3. Verify https://jubblin.github.io/Foghorn/privacy.html loads
+4. Verify https://jubblin.github.io/Foghorn/ shows the documentation index
 
-This URL is used in App Store Connect and in-app Help links.
+The privacy URL is used in App Store Connect and in-app Help links. The site root mirrors repo docs (see `scripts/sync-docs-site.sh`).
 
 ## GitHub release (dispatch workflow)
 
@@ -150,7 +151,7 @@ Use **Actions → Release dispatch → Run workflow** on `main`.
 1. Enter the version **without** the `v` prefix (must match `MARKETING_VERSION` on `main`, e.g. `0.2.6`).
 2. Leave **Validate only** unchecked to auto-finalize the changelog and tag.
 
-The workflow ([release-dispatch.yml](../.github/workflows/release-dispatch.yml)) will:
+The workflow ([release-dispatch.yml](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-dispatch.yml)) will:
 
 1. Require `VERSION_BUMP_TOKEN` (same PAT as version bumps — needed to push the changelog commit to protected `main`).
 2. Validate `[Unreleased]` has at least one bullet (or an existing `## [VERSION]` section when validating only).
@@ -162,8 +163,8 @@ Tag push triggers:
 
 | Workflow | Artifact |
 |----------|----------|
-| [release.yml](../.github/workflows/release.yml) | Developer ID signed + notarized arm64 + amd64 DMGs → GitHub Release |
-| [release-store.yml](../.github/workflows/release-store.yml) | Mac App Store archive → TestFlight |
+| [release.yml](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release.yml) | Developer ID signed + notarized arm64 + amd64 DMGs → GitHub Release |
+| [release-store.yml](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-store.yml) | Mac App Store archive → TestFlight |
 
 The PAT owner must be allowed to bypass required PRs on `main` (this repo has `enforce_admins` disabled for the owner account). Do **not** fall back to `GITHUB_TOKEN` for the changelog push — that fails with `GH006` under branch protection.
 
@@ -198,7 +199,7 @@ Tags containing `-` (e.g. `v1.0.0-beta.1`) are marked as GitHub prereleases auto
 
 GitHub holds `pull_request` workflow runs for approval when the PR update is attributed to `github-actions[bot]` ([changelog](https://github.blog/changelog/2026-06-11-bot-created-pull-requests-can-run-workflows-if-approved/)). There is **no repo setting to disable that gate**.
 
-[Version bump](../.github/workflows/version-bump.yml) therefore **requires** repo secret `VERSION_BUMP_TOKEN` (a human/app PAT). Bumps fail closed if it is missing, instead of falling back to `GITHUB_TOKEN` and reintroducing the approval prompt.
+[Version bump](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/version-bump.yml) therefore **requires** repo secret `VERSION_BUMP_TOKEN` (a human/app PAT). Bumps fail closed if it is missing, instead of falling back to `GITHUB_TOKEN` and reintroducing the approval prompt.
 
 **Setup (one-time):**
 
@@ -253,7 +254,7 @@ This is **not** a corrupt disk image — Gatekeeper rejects the quarantine + adh
 xattr -cr /Applications/Foghorn.app
 ```
 
-Use only for local testing. Tracked in [issue #38](https://github.com/Jubblin/online/issues/38). End-user installs need Developer ID + notarization ([issue #39](https://github.com/Jubblin/online/issues/39)).
+Use only for local testing. Tracked in [issue #38](https://github.com/Jubblin/Foghorn/issues/38). End-user installs need Developer ID + notarization ([issue #39](https://github.com/Jubblin/Foghorn/issues/39)).
 
 CI log signal that produced the unsigned fallback:
 
@@ -422,7 +423,7 @@ pbcopy < ~/Downloads/AuthKey_AB12CD34EF.p8
 
 ### Add secrets to GitHub
 
-1. Open `https://github.com/Jubblin/online/settings/secrets/actions`.
+1. Open `https://github.com/Jubblin/Foghorn/settings/secrets/actions`.
 2. **New repository secret** for each name above.
 3. Paste the value → **Add secret**.
 
@@ -464,5 +465,6 @@ export APP_STORE_CONNECT_API_KEY="$(cat AuthKey_XXXXX.p8)"
 - [ ] Export password → `P12_PASSWORD`
 - [ ] App Store Connect API key downloaded → `APP_STORE_CONNECT_API_KEY_*` (all three)
 - [ ] App Store Connect macOS app record created (TestFlight)
-- [ ] Privacy policy live at https://jubblin.github.io/online/privacy.html
+- [ ] Privacy policy live at https://jubblin.github.io/Foghorn/privacy.html
+- [ ] Documentation index live at https://jubblin.github.io/Foghorn/
 - [ ] Run **Release dispatch** with **Validate only** to confirm gates before first real release

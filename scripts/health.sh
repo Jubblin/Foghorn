@@ -22,6 +22,9 @@ echo "== ShellCheck =="
 require_cmd shellcheck shellcheck
 shellcheck scripts/*.sh
 
+echo "== Docs site sync =="
+./scripts/sync-docs-site.sh --check
+
 echo "== Typecheck (xcodebuild build) =="
 xcodebuild \
   -project Foghorn.xcodeproj \

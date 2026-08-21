@@ -424,6 +424,8 @@ private struct SettingsHelpPrivacySection: View {
                     HStack(spacing: 6) {
                         linkButton("Privacy", url: AppLinks.privacyPolicy, identifier: "settings.link.privacy")
                         linkSeparator
+                        linkButton("Docs", url: AppLinks.documentation, identifier: "settings.link.docs")
+                        linkSeparator
                         linkButton("Support", url: AppLinks.support, identifier: "settings.link.support")
                         linkSeparator
                         linkButton("Report", url: AppLinks.reportIssue, identifier: "settings.link.report")

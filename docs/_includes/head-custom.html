@@ -1,0 +1,54 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --foghorn-abyss: #050708;
+    --foghorn-graphite: #0e1415;
+    --foghorn-signal: #1c2828;
+    --foghorn-text: #d7e2da;
+    --foghorn-muted: #7f918a;
+    --foghorn-probe: #5cb7e8;
+    --foghorn-light-bg: #eef3ef;
+    --foghorn-light-text: #17201e;
+  }
+
+  body {
+    font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  code, pre, tt, kbd, samp {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .markdown-body > h1:first-of-type a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .foghorn-site-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin: 0 0 1.5rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(127, 145, 138, 0.35);
+    font-size: 0.95rem;
+  }
+
+  .foghorn-site-nav a {
+    color: var(--foghorn-probe);
+    text-decoration: none;
+  }
+
+  .foghorn-site-nav a:hover {
+    text-decoration: underline;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background: var(--foghorn-abyss);
+      color: var(--foghorn-text);
+    }
+  }
+</style>
