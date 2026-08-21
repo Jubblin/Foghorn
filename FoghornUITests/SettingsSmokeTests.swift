@@ -115,6 +115,7 @@ final class SettingsSmokeTests: XCTestCase {
         selectTab("Help")
 
         XCTAssertTrue(app.buttons["settings.link.privacy"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["settings.link.docs"].exists)
         XCTAssertTrue(app.buttons["settings.link.support"].exists)
         XCTAssertTrue(app.buttons["settings.link.report"].exists)
     }

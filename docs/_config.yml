@@ -1,0 +1,24 @@
+# Foghorn documentation site (GitHub Pages → /docs)
+# Type and palette accents follow DESIGN.md (industrial minimal field instrument).
+
+title: Foghorn
+description: The truth about your connection — docs for the Foghorn macOS menu bar utility.
+url: https://jubblin.github.io
+baseurl: /Foghorn
+
+markdown: kramdown
+highlighter: rouge
+theme: jekyll-theme-primer
+
+# Keep release/privacy static files published alongside Markdown pages.
+include:
+  - appcast.xml
+  - privacy.html
+
+plugins:
+  - jekyll-relative-links
+  - jekyll-seo-tag
+
+relative_links:
+  enabled: true
+  collections: true
