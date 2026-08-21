@@ -83,7 +83,11 @@ final class AppCoordinator: ObservableObject {
     }
 
     func quit() {
+        #if canImport(AppKit)
         NSApplication.shared.terminate(nil)
+        #else
+        // iOS apps can't/shouldn't quit programmatically. Keep as no-op.
+        #endif
     }
 
     private func updatePresentation() {

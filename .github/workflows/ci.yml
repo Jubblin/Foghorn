@@ -116,3 +116,21 @@ jobs:
           path: build/Build/Products/Release/Foghorn.app
           if-no-files-found: error
           retention-days: 7
+
+  # Advisory only: never blocks Quality / Test / UI Test / Build Release.
+  # Managed Scan App check (semgrep-cloud-platform/scan) is separate; keep
+  # Fail Open enabled in Semgrep and do not require that check to merge.
+  semgrep:
+    name: Semgrep
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    container:
+      image: semgrep/semgrep
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Run Semgrep (soft-fail)
+        run: semgrep ci || true
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}

@@ -1,6 +1,9 @@
-import AppKit
 import Foundation
 import UserNotifications
+
+#if canImport(AppKit)
+import AppKit
+#endif
 
 #if canImport(Sparkle) && !APP_STORE
 import Sparkle
@@ -148,6 +151,7 @@ final class AppUpdateService: NSObject, ObservableObject {
         // Sparkle presents its own update UI from checkForUpdates(_:).
         return
 #else
+        #if canImport(AppKit)
         switch status {
         case .available:
             let alert = NSAlert()
@@ -177,6 +181,11 @@ final class AppUpdateService: NSObject, ObservableObject {
                 AppLinks.openInBrowser(AppLinks.releases)
             }
         }
+        #else
+        // iOS doesn't have a drop-in equivalent for the AppKit modal prompt.
+        // Keep this method as a no-op; update information can be surfaced via
+        // notifications or in-app UI later.
+        #endif
 #endif
     }
 
