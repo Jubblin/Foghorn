@@ -10,7 +10,7 @@
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Foghorn checks whether your router (default gateway) is reachable to distinguish a local network problem from an internet outage.</string>
 	<key>SUFeedURL</key>
-	<string>https://github.com/Jubblin/online/releases/download/sparkle-appcast/appcast.xml</string>
+	<string>https://github.com/Jubblin/Foghorn/releases/download/sparkle-appcast/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>8n85TJPu/VDkcaxrR9MQBwP9sw0DE8o/F4C55gZwFkc=</string>
 	<key>SUEnableInstallerLauncherService</key>
