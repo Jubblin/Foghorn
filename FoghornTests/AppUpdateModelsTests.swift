@@ -19,7 +19,7 @@ final class AppUpdateModelsTests: XCTestCase {
         let release = AppRelease(
             tagName: "v0.2.20",
             name: "Foghorn v0.2.20",
-            htmlURL: URL(string: "https://github.com/Jubblin/online/releases/tag/v0.2.20")!,
+            htmlURL: URL(string: "https://github.com/Jubblin/Foghorn/releases/tag/v0.2.20")!,
             isPrerelease: false,
             publishedAt: nil,
             assets: [
