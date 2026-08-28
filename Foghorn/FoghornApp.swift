@@ -1,5 +1,7 @@
 import SwiftUI
 
+#if canImport(AppKit)
+import AppKit
 @MainActor
 final class AppLifecycleDelegate: NSObject, NSApplicationDelegate {
     let coordinator = AppCoordinator()
@@ -108,3 +110,5 @@ private struct OutageLogWindowBridge: View {
             }
     }
 }
+
+#endif

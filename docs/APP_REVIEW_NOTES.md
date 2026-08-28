@@ -27,7 +27,7 @@ Foghorn is a local network connectivity monitor for macOS. It runs in the menu b
 3. Disconnect Wi‑Fi or Ethernet for ~20 seconds — status should change to offline; notification may appear if permission granted
 4. Reconnect — status returns to healthy; recovery notification if permission granted
 
-**Support URL:** https://github.com/Jubblin/online/issues  
-**Privacy Policy URL:** https://jubblin.github.io/online/privacy.html
+**Support URL:** https://github.com/Jubblin/Foghorn/issues  
+**Privacy Policy URL:** https://jubblin.github.io/Foghorn/privacy.html
 
 **Export compliance:** App uses only standard HTTPS/TLS provided by macOS; `ITSAppUsesNonExemptEncryption` = NO.

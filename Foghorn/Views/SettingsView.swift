@@ -133,11 +133,15 @@ private struct SettingsWindowBackgroundModifier: ViewModifier {
     let color: Color
 
     func body(content: Content) -> some View {
+        #if os(macOS)
         if #available(macOS 15.0, *) {
             content.containerBackground(color, for: .window)
         } else {
             content
         }
+        #else
+        content
+        #endif
     }
 }
 
@@ -420,6 +424,8 @@ private struct SettingsHelpPrivacySection: View {
 
                     HStack(spacing: 6) {
                         linkButton("Privacy", url: AppLinks.privacyPolicy, identifier: "settings.link.privacy")
+                        linkSeparator
+                        linkButton("Docs", url: AppLinks.documentation, identifier: "settings.link.docs")
                         linkSeparator
                         linkButton("Support", url: AppLinks.support, identifier: "settings.link.support")
                         linkSeparator

@@ -1,6 +1,9 @@
 import Combine
 import Foundation
+
+#if canImport(IOKit)
 import IOKit.ps
+#endif
 
 @MainActor
 final class ProbeEngine: ObservableObject {
@@ -81,6 +84,7 @@ final class ProbeEngine: ObservableObject {
 
 enum PowerSource {
     static var isOnBattery: Bool {
+        #if canImport(IOKit)
         guard let snapshot = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
               let sources = IOPSCopyPowerSourcesList(snapshot)?.takeRetainedValue() as? [CFTypeRef],
               let source = sources.first,
@@ -90,5 +94,9 @@ enum PowerSource {
             return false
         }
         return state == kIOPSBatteryPowerValue
+        #else
+        // iOS doesn't expose the same IOKit power source API.
+        return false
+        #endif
     }
 }

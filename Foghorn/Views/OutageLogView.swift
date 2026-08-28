@@ -4,6 +4,7 @@ import SwiftUI
 import AppKit
 #endif
 
+#if os(macOS)
 struct OutageLogView: View {
     @ObservedObject private var outageLog = OutageLog.shared
     @State private var sortOrder = [KeyPathComparator(\OutageRecord.startedAt, order: .reverse)]
@@ -114,6 +115,83 @@ struct OutageLogView: View {
         }
     }
 }
+#else
+struct OutageLogView: View {
+    @ObservedObject private var outageLog = OutageLog.shared
+    @State private var copiedNotice = false
+
+    private var sortedRecords: [OutageRecord] {
+        outageLog.records.sorted { $0.startedAt > $1.startedAt }
+    }
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 12) {
+                if outageLog.records.isEmpty {
+                    VStack(spacing: 8) {
+                        Image(systemName: "checkmark.circle")
+                            .font(.system(size: 28))
+                        Text("No outages recorded")
+                            .font(.headline)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.top, 32)
+                } else {
+                    List(sortedRecords) { record in
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(record.reason.displayName)
+                                .font(.headline)
+                            Text(record.reasonDetail)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+
+                            Text("\(record.durationDescription) · \(record.startedAt.formatted(date: .abbreviated, time: .shortened))")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            if let endedAt = record.endedAt {
+                                Text("ended \(endedAt.formatted(date: .abbreviated, time: .shortened))")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            if let probeSummary = record.probeSummary {
+                                Text("Probes: \(probeSummary)")
+                                    .font(DesignTokens.dataFont)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(2)
+                            }
+                        }
+                    }
+                    .listStyle(.insetGrouped)
+                }
+
+                HStack {
+                    if copiedNotice {
+                        Text("Copied JSON")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Button("Copy JSON") {
+                        outageLog.copyJSONToPasteboard()
+                        copiedNotice = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            copiedNotice = false
+                        }
+                    }
+                    .disabled(outageLog.records.isEmpty)
+                }
+                .padding(.horizontal, 16)
+            }
+            .navigationTitle("Outage Log")
+        }
+        .onAppear {
+            outageLog.reload()
+        }
+    }
+}
+#endif
 
 #Preview {
     OutageLogView()
