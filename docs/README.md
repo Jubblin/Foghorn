@@ -34,11 +34,11 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 
 **Healthy — menu bar popover**
 
-![Foghorn menu bar popover showing healthy status](docs/screenshots/menu-bar-healthy.png)
+![Foghorn menu bar popover showing healthy status](screenshots/menu-bar-healthy.png)
 
 **Traffic-light states** — green (online), yellow (degraded), red (offline), gray (recovering)
 
-![Traffic-light menu bar icons for all connectivity states](docs/screenshots/traffic-lights.png)
+![Traffic-light menu bar icons for all connectivity states](screenshots/traffic-lights.png)
 
 ## Install
 
@@ -59,7 +59,7 @@ Right-click → Open does **not** fix that for unsigned downloads. Clear quarant
 xattr -cr /Applications/Foghorn.app
 ```
 
-Then launch Foghorn again. Proper fix: restore signing/notarization ([issue #39](https://github.com/Jubblin/Foghorn/issues/39)). Details: [docs/RELEASE.md](docs/RELEASE.md#unsigned-dmgs-and-gatekeeper).
+Then launch Foghorn again. Proper fix: restore signing/notarization ([issue #39](https://github.com/Jubblin/Foghorn/issues/39)). Details: [docs/RELEASE.md](RELEASE.md#unsigned-dmgs-and-gatekeeper).
 
 ### Build from source
 
@@ -162,13 +162,13 @@ scripts/      build-dmg.sh, build-signed-dmg.sh, resolve-release-arch.sh, bump-v
 
 | Workflow          | Trigger             | What it does                          |
 | ------------------ | -------------------- | -------------------------------------- |
-| [CI](.github/workflows/ci.yml)                             | Push to `main`, PRs | Test + build Release artifact         |
-| [Release dispatch](.github/workflows/release-dispatch.yml) | Manual              | Finalize CHANGELOG + tag `v*`         |
-| [Release](.github/workflows/release.yml)                   | Tag `v*`            | Signed/notarized DMG → GitHub Release |
-| [Release Store](.github/workflows/release-store.yml)       | Tag `v*` or manual  | Upload to TestFlight                  |
-| [Version bump](.github/workflows/version-bump.yml)         | PR to `main`        | Auto-bump semver + build number       |
+| [CI](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/ci.yml)                             | Push to `main`, PRs | Test + build Release artifact         |
+| [Release dispatch](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-dispatch.yml) | Manual              | Finalize CHANGELOG + tag `v*`         |
+| [Release](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release.yml)                   | Tag `v*`            | Signed/notarized DMG → GitHub Release |
+| [Release Store](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-store.yml)       | Tag `v*` or manual  | Upload to TestFlight                  |
+| [Version bump](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/version-bump.yml)         | PR to `main`        | Auto-bump semver + build number       |
 
-**Cut a release:** Actions → **Release dispatch** on `main`, or see [docs/RELEASE.md](docs/RELEASE.md).
+**Cut a release:** Actions → **Release dispatch** on `main`, or see [docs/RELEASE.md](RELEASE.md).
 
 **PR version labels:** `version:patch` (default), `version:minor`, `version:major`
 
@@ -176,7 +176,7 @@ scripts/      build-dmg.sh, build-signed-dmg.sh, resolve-release-arch.sh, bump-v
 
 ## Signing
 
-CI can produce Developer ID signed and notarized DMGs when [signing secrets](docs/RELEASE.md#ci-signing-secrets) are configured. For local distribution:
+CI can produce Developer ID signed and notarized DMGs when [signing secrets](RELEASE.md#ci-signing-secrets) are configured. For local distribution:
 
 ```
 ./scripts/build-signed-dmg.sh Release arm64   # requires DEVELOPMENT_TEAM + cert in keychain
@@ -201,8 +201,8 @@ All items from the initial roadmap are shipped. See [TODOS.md](TODOS.md) for fut
 
 Contributions welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
-- [Report a bug](.github/ISSUE_TEMPLATE/bug_report.yml)
-- [Request a feature](.github/ISSUE_TEMPLATE/feature_request.yml)
+- [Report a bug](https://github.com/Jubblin/Foghorn/blob/main/.github/ISSUE_TEMPLATE/bug_report.yml)
+- [Request a feature](https://github.com/Jubblin/Foghorn/blob/main/.github/ISSUE_TEMPLATE/feature_request.yml)
 - [Security policy](SECURITY.md)
 
 ## Changelog

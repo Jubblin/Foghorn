@@ -32,6 +32,9 @@ jobs:
       - name: Run ShellCheck
         run: shellcheck scripts/*.sh
 
+      - name: Check docs site sync
+        run: ./scripts/sync-docs-site.sh --check
+
   test:
     name: Test
     runs-on: macos-26
@@ -116,3 +119,21 @@ jobs:
           path: build/Build/Products/Release/Foghorn.app
           if-no-files-found: error
           retention-days: 7
+
+  # Advisory only: never blocks Quality / Test / UI Test / Build Release.
+  # Managed Scan App check (semgrep-cloud-platform/scan) is separate; keep
+  # Fail Open enabled in Semgrep and do not require that check to merge.
+  semgrep:
+    name: Semgrep
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    container:
+      image: semgrep/semgrep@sha256:67319956da3dcb58baf5b322899c15458e3963e7018a86aeeb5cd224e69cb77a
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Run Semgrep (soft-fail)
+        run: semgrep ci || true
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}

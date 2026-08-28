@@ -1,5 +1,12 @@
-import AppKit
 import Foundation
+
+#if canImport(AppKit)
+import AppKit
+#endif
+
+#if canImport(UIKit)
+import UIKit
+#endif
 
 @MainActor
 final class OutageLog: ObservableObject {
@@ -54,7 +61,11 @@ final class OutageLog: ObservableObject {
     }
 
     func revealInFinder() {
+#if canImport(AppKit)
         NSWorkspace.shared.activateFileViewerSelecting([fileURL])
+#else
+        // iOS doesn't have Finder; no-op for shared logic.
+#endif
     }
 
     func reload() {
@@ -67,8 +78,13 @@ final class OutageLog: ObservableObject {
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         guard let data = try? encoder.encode(records),
               let json = String(data: data, encoding: .utf8) else { return }
+
+#if canImport(AppKit)
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(json, forType: .string)
+#else
+        UIPasteboard.general.string = json
+#endif
     }
 
     var filePath: String {

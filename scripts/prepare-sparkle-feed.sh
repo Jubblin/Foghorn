@@ -28,7 +28,7 @@ TOOLS_DIR="$ROOT/build/sparkle-tools"
 UNIVERSAL_ROOT="$ROOT/build/universal"
 UNIVERSAL_APP="$UNIVERSAL_ROOT/export/Foghorn.app"
 APPCAST_OUT="$ROOT/docs/appcast.xml"
-DOWNLOAD_PREFIX="https://github.com/Jubblin/online/releases/download/${TAG}/"
+DOWNLOAD_PREFIX="https://github.com/Jubblin/Foghorn/releases/download/${TAG}/"
 ZIP_PATH="$FEED_DIR/Foghorn-${VERSION}.zip"
 
 mkdir -p "$FEED_DIR" "$TOOLS_DIR"
@@ -166,7 +166,7 @@ GENERATE_ARGS=(
   --ed-key-file -
   --embed-release-notes
   --download-url-prefix "$DOWNLOAD_PREFIX"
-  --link "https://github.com/Jubblin/online/releases"
+  --link "https://github.com/Jubblin/Foghorn/releases"
   -o "$FEED_DIR/appcast.xml"
 )
 

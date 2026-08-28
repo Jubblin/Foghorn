@@ -1,6 +1,9 @@
-import AppKit
 import Combine
+import Foundation
 import SwiftUI
+
+#if canImport(AppKit)
+import AppKit
 
 /// AppKit menu-bar item. Replaces SwiftUI `MenuBarExtra`, which is unreliable on
 /// macOS 26/27 (Control Center / Window Server compositing).
@@ -382,3 +385,32 @@ enum AppNavigation {
         settingsWindowTitles.contains(window.title) || window.title == "Outage Log"
     }
 }
+
+#else
+
+// iOS / platforms without AppKit: keep shared code compiling, but menu-bar
+// status item behavior is not available.
+@MainActor
+final class StatusItemController: ObservableObject {
+    static let shared = StatusItemController()
+
+    func install(coordinator _: AppCoordinator) {
+        // No-op on platforms without AppKit menu-bar APIs.
+    }
+}
+
+enum AppNavigation {
+    static let openOutageLogNotification = Notification.Name("foghorn.openOutageLog")
+
+    @MainActor
+    static func openSettings() {
+        // No-op
+    }
+
+    @MainActor
+    static func openOutageLog() {
+        // No-op
+    }
+}
+
+#endif

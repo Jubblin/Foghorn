@@ -8,7 +8,7 @@ enum AppReleaseFetchError: Error, Equatable {
 
 struct GitHubReleaseClient: Sendable {
     var session: URLSession = .shared
-    var releasesURL = URL(string: "https://api.github.com/repos/Jubblin/online/releases")!
+    var releasesURL = URL(string: "https://api.github.com/repos/Jubblin/Foghorn/releases")!
 
     func fetchReleases() async throws -> [AppRelease] {
         var request = URLRequest(url: releasesURL)
