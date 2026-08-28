@@ -31,9 +31,9 @@ final class OutageLog: ObservableObject {
     /// history survives the rebrand instead of appearing to vanish.
     private static func migrateLegacyDirectoryIfNeeded(appSupport: URL, newDirectory: URL) {
         let legacyDirectory = appSupport.appendingPathComponent("Online", isDirectory: true)
-        let fm = FileManager.default
-        guard fm.fileExists(atPath: legacyDirectory.path), !fm.fileExists(atPath: newDirectory.path) else { return }
-        try? fm.moveItem(at: legacyDirectory, to: newDirectory)
+        let manager = FileManager.default
+        guard manager.fileExists(atPath: legacyDirectory.path), !manager.fileExists(atPath: newDirectory.path) else { return }
+        try? manager.moveItem(at: legacyDirectory, to: newDirectory)
     }
 
     var lastRecord: OutageRecord? {

@@ -258,11 +258,6 @@ enum AppNavigation {
         // Transient popover must resign key first or showSettingsWindow: is a no-op.
         StatusItemController.shared.dismissPopover()
 
-        if let existing = visibleSettingsWindow() {
-            bringToFront(existing)
-            return
-        }
-
         let previousPolicy = NSApp.activationPolicy()
         if previousPolicy != .regular {
             NSApp.setActivationPolicy(.regular)
@@ -310,7 +305,7 @@ enum AppNavigation {
 
     @MainActor
     private static func showSettingsScene(remainingAttempts: Int) {
-        if let existing = visibleSettingsWindow() {
+        if let existing = settingsWindow() {
             bringToFront(existing)
             return
         }
@@ -320,19 +315,16 @@ enum AppNavigation {
 
         guard remainingAttempts > 1 else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            if visibleSettingsWindow() == nil {
-                showSettingsScene(remainingAttempts: remainingAttempts - 1)
-            } else if let existing = visibleSettingsWindow() {
-                bringToFront(existing)
-            }
+            showSettingsScene(remainingAttempts: remainingAttempts - 1)
         }
     }
 
+    /// The Settings scene window, visible or not. `showSettingsWindow:` builds the
+    /// window but does not always order it on screen, so callers must bring it front.
     @MainActor
-    private static func visibleSettingsWindow() -> NSWindow? {
+    private static func settingsWindow() -> NSWindow? {
         NSApp.windows.first { window in
-            window.isVisible
-                && window.styleMask.contains(.titled)
+            window.styleMask.contains(.titled)
                 && settingsWindowTitles.contains(window.title)
         }
     }
@@ -349,7 +341,10 @@ enum AppNavigation {
             forName: NSWindow.willCloseNotification,
             object: nil,
             queue: .main
-        ) { _ in
+        ) { note in
+            // Fires for every window, including the status-item popover. Only a real
+            // user window closing should hand the app back to accessory mode.
+            guard let closing = note.object as? NSWindow, isUserWindow(closing) else { return }
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: 50_000_000)
                 guard !hasVisibleUserWindow() else { return }
@@ -382,8 +377,12 @@ enum AppNavigation {
     private static func hasVisibleUserWindow() -> Bool {
         NSApp.windows.contains { window in
             guard window.isVisible, window.canBecomeKey else { return false }
-            return settingsWindowTitles.contains(window.title) || window.title == "Outage Log"
+            return isUserWindow(window)
         }
+    }
+
+    private static func isUserWindow(_ window: NSWindow) -> Bool {
+        settingsWindowTitles.contains(window.title) || window.title == "Outage Log"
     }
 }
 
