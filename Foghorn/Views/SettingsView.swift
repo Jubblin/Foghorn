@@ -413,7 +413,8 @@ private struct SettingsHelpPrivacySection: View {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
                     SettingsHelperText(
-                        text: "Foghorn monitors connectivity locally — no personal data collected. Updates use a signed appcast over HTTPS.",
+                        text: "Foghorn monitors connectivity locally — no personal data collected. "
+                            + "Updates use a signed appcast over HTTPS.",
                         palette: palette
                     )
 

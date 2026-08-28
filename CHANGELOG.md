@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Menu bar popover **Settings…** now activates the app before sending `showSettingsWindow:`, instead of after — fixes it silently no-oping (`⌘,` was unaffected since it's only reachable once the app is already active)
+- Menu bar **Settings…** now actually opens. `showSettingsWindow:` builds the Settings window but never orders it on screen, and the lookup that was supposed to find it filtered on `isVisible` — so the app kept re-sending the selector at a window it had already created and could not see. The lookup no longer requires visibility, and the window is brought to front explicitly. Reopening after closing Settings also restores `.regular` activation policy again, so it no longer comes up under another app's menu bar
+- The accessory-policy restore observer no longer fires on the status-item popover closing, which could flip the app back to `.accessory` while Settings was still opening
 
 ### Removed
 
