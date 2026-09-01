@@ -6,7 +6,7 @@ focused PRs are easier to review than large rewrites.
 ## Before You Start
 
 - Read the [README](README.md) for architecture and build instructions
-- Check [open issues](https://github.com/Jubblin/Foghorn/issues) and [TODOS.md](TODOS.md) for planned work
+- Check [open issues](https://github.com/Jubblin/Foghorn/issues) for planned work
 - For larger changes, open an issue first to discuss approach
 
 ## Development Setup
