@@ -13,6 +13,8 @@ struct SettingsView: View {
     @State private var newHost = ""
     @State private var launchError: String?
     @State private var customHostsExpanded = UITestConfiguration.isActive
+    @State private var paneHeights: [SettingsTab: CGFloat] = [:]
+    @State private var tabStripHeight: CGFloat = 30
 
     private var palette: DesignPalette {
         DesignPalette.palette(colorScheme: colorScheme)
@@ -20,7 +22,7 @@ struct SettingsView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            tabPane {
+            tabPane(.interrupt) {
                 SettingsInterruptSection(settings: settings, alertService: alertService, palette: palette)
             }
             .tabItem {
@@ -29,7 +31,7 @@ struct SettingsView: View {
             .tag(SettingsTab.interrupt)
             .accessibilityIdentifier(SettingsTab.interrupt.tabAccessibilityIdentifier)
 
-            tabPane {
+            tabPane(.checks) {
                 SettingsChecksSection(
                     settings: settings,
                     newHost: $newHost,
@@ -43,7 +45,7 @@ struct SettingsView: View {
             .tag(SettingsTab.checks)
             .accessibilityIdentifier(SettingsTab.checks.tabAccessibilityIdentifier)
 
-            tabPane {
+            tabPane(.remembers) {
                 SettingsRemembersSection(
                     settings: settings,
                     launchError: $launchError,
@@ -56,7 +58,7 @@ struct SettingsView: View {
             .tag(SettingsTab.remembers)
             .accessibilityIdentifier(SettingsTab.remembers.tabAccessibilityIdentifier)
 
-            tabPane {
+            tabPane(.help) {
                 SettingsHelpPrivacySection(palette: palette)
             }
             .tabItem {
@@ -65,7 +67,7 @@ struct SettingsView: View {
             .tag(SettingsTab.help)
             .accessibilityIdentifier(SettingsTab.help.tabAccessibilityIdentifier)
         }
-        .frame(width: 480, height: 420)
+        .frame(width: 480, height: paneHeight)
         .background(palette.graphite)
         .foregroundStyle(palette.fogText)
         .modifier(SettingsWindowBackgroundModifier(color: palette.graphite))
@@ -116,15 +118,43 @@ struct SettingsView: View {
         #endif
     }
 
-    private func tabPane<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+    private func tabPane<Content: View>(
+        _ tab: SettingsTab,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
         ScrollView {
             content()
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
+                .background(
+                    GeometryReader { proxy in
+                        Color.clear.preference(key: PaneHeightKey.self, value: proxy.size.height)
+                    }
+                )
         }
         .scrollBounceBehavior(.basedOnSize)
+        .onPreferenceChange(PaneHeightKey.self) { height in
+            paneHeights[tab] = height
+        }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(
+            GeometryReader { proxy in
+                Color.clear.preference(key: PaneRenderedHeightKey.self, value: proxy.size.height)
+            }
+        )
+        .onPreferenceChange(PaneRenderedHeightKey.self) { rendered in
+            // The tab strip sits inside the frame we set, so the pane renders shorter
+            // than requested. Measure that difference instead of hard-coding it.
+            guard rendered > 0, tab == selectedTab else { return }
+            tabStripHeight = max(0, paneHeight - rendered)
+        }
         .background(palette.graphite)
+    }
+
+    /// Window fits the selected tab so the bottom gutter matches the sides (#77).
+    /// Capped so a long custom-host list scrolls instead of stretching the window.
+    private var paneHeight: CGFloat {
+        min((paneHeights[selectedTab] ?? 420) + tabStripHeight, 520)
     }
 }
 
@@ -146,6 +176,22 @@ private struct SettingsWindowBackgroundModifier: ViewModifier {
 }
 
 // MARK: - Interrupt
+
+private struct PaneHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
+private struct PaneRenderedHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
 
 private struct SettingsInterruptSection: View {
     @ObservedObject var settings: AppSettings

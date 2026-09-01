@@ -120,6 +120,25 @@ final class SettingsSmokeTests: XCTestCase {
         XCTAssertTrue(app.buttons["settings.link.report"].exists)
     }
 
+    // MARK: - T9
+
+    func testSettingsWindowFitsEachTab() throws {
+        launchSettings()
+        let window = app.windows["Settings"]
+        XCTAssertTrue(window.waitForExistence(timeout: 5))
+
+        var heights: Set<CGFloat> = []
+        for tab in ["Interrupt", "Checks", "Remembers", "Help"] {
+            selectTab(tab)
+            Thread.sleep(forTimeInterval: 0.5)
+            // Content that overflows grows a scroll bar, which is what leaves the
+            // bottom gutter uneven (#77).
+            XCTAssertEqual(window.scrollBars.count, 0, "\(tab) tab content does not fit the window")
+            heights.insert(window.frame.height)
+        }
+        XCTAssertGreaterThan(heights.count, 1, "Settings window should resize to fit each tab")
+    }
+
     // MARK: - Helpers
 
     private func launchSettings(extraArguments: [String] = []) {
