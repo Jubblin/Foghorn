@@ -27,6 +27,28 @@ final class SettingsSmokeTests: XCTestCase {
         XCTAssertTrue(waitFor(identifier: "settings.section.help"))
     }
 
+    // MARK: - T1b
+
+    /// #80 held back removing the popover's duplicate update row until the popover's
+    /// own `Settings…` route was proven — it is the only remaining way in.
+    func testPopoverSettingsRowOpensSettings() throws {
+        app.launchArguments = ["-ui_testing", "-ui_testing_menu_bar"]
+        app.launch()
+
+        let statusItem = app.statusItems.firstMatch
+        XCTAssertTrue(statusItem.waitForExistence(timeout: 15), "Status item never appeared")
+        statusItem.click()
+
+        let settingsRow = app.buttons["Settings…"]
+        XCTAssertTrue(settingsRow.waitForExistence(timeout: 10), "Popover has no Settings… row")
+        settingsRow.click()
+
+        XCTAssertTrue(
+            app.windows["Settings"].waitForExistence(timeout: 15),
+            "Popover Settings… did not open the Settings window"
+        )
+    }
+
     // MARK: - T2
 
     func testLaunchAtLoginToggle() throws {
