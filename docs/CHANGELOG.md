@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- Duplicate "View outage log…" and "Reveal log file in Finder" entries from the menu bar popover; both remain in Settings, which DESIGN.md defines as their canonical home ([#76](https://github.com/Jubblin/Foghorn/issues/76))
+
 ## [0.5.0] - 2026-08-28
 
 ### Added

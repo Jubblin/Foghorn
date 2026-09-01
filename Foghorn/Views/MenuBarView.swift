@@ -101,12 +101,6 @@ struct MenuBarView: View {
                     AppUpdateService.shared.presentManualCheckResult()
                 }
             }
-            PopoverActionRow(title: "View outage log…", palette: palette) {
-                AppNavigation.openOutageLog()
-            }
-            PopoverActionRow(title: "Reveal log file in Finder", palette: palette) {
-                outageLog.revealInFinder()
-            }
             PopoverActionRow(title: "Settings…", palette: palette) {
                 AppNavigation.openSettings()
             }
