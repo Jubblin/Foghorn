@@ -46,8 +46,30 @@ final class PathProbe: @unchecked Sendable {
         let interfaces = Self.interfaceLabels(for: path).joined(separator: ", ")
         let detail = satisfied
             ? (interfaces.isEmpty ? "ok" : "via \(interfaces)")
-            : "status: \(path.status)"
+            : Self.unsatisfiedDetail(for: path)
         return SingleProbeResult(kind: .path, success: satisfied, detail: detail)
+    }
+
+    /// Concise evidence phrase for a down path, per DESIGN.md probe-row voice
+    /// (`PATH via en4/wired`, not a raw enum dump like `status: unsatisfied`).
+    private static func unsatisfiedDetail(for path: NWPath) -> String {
+        if path.status == .requiresConnection {
+            return "connection required"
+        }
+        switch path.unsatisfiedReason {
+        case .cellularDenied:
+            return "cellular access denied"
+        case .wifiDenied:
+            return "wifi access denied"
+        case .localNetworkDenied:
+            return "local network denied"
+        case .vpnInactive:
+            return "vpn inactive"
+        case .notAvailable:
+            return "no interfaces"
+        @unknown default:
+            return "unavailable"
+        }
     }
 
     /// Host strings from `NWPath.gateways` (no Local Network TCC required).
