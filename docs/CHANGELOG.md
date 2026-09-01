@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+## [0.5.0] - 2026-08-28
+
+### Added
+
 - Documentation site at [jubblin.github.io/Foghorn](https://jubblin.github.io/Foghorn/) mirrors root repo docs (README, design, contributing, changelog, privacy, and more) via `scripts/sync-docs-site.sh`
 
 ### Changed
@@ -22,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The accessory-policy restore observer no longer fires on the status-item popover closing, which could flip the app back to `.accessory` while Settings was still opening
 
 ### Removed
+
 
 ## [0.4.0] - 2026-08-18
 
