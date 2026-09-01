@@ -1,19 +1,20 @@
 # Foghorn — Backlog
 
-## P1 — Important
+Open work is tracked in [GitHub Issues](https://github.com/Jubblin/Foghorn/issues), not here.
+This file keeps only the shipped history below.
 
-_No open P1 items._
+Migrated 2026-09-01:
 
-## P2 — Polish
+| Was | Now |
+| --- | --- |
+| Bundle Instrument Sans + JetBrains Mono per DESIGN.md | [#79](https://github.com/Jubblin/Foghorn/issues/79) |
+| Remove "Check for Updates…" from the menu bar popover | [#80](https://github.com/Jubblin/Foghorn/issues/80) |
+| Update all docs to match current feature set | [#81](https://github.com/Jubblin/Foghorn/issues/81) |
+| Automated testing of all commands in the build pipeline | [#82](https://github.com/Jubblin/Foghorn/issues/82) |
 
-- [ ] Bundle Instrument Sans + JetBrains Mono per DESIGN.md (deferred from /design-review 2026-07-03, FINDING-005)
-- [ ] ~~Remove "View outage log…" / "Show in Finder" dropdown entries (SettingsView.swift:385,390)~~ — superseded by [#76](https://github.com/Jubblin/Foghorn/issues/76) on 2026-09-01: DESIGN.md:149-150 specs both as the canonical Settings actions, so the duplicate popover rows go instead
-- [ ] Remove "Check for Updates…" from the menu bar popover (MenuBarView.swift:98) — split out of [#76](https://github.com/Jubblin/Foghorn/issues/76) on 2026-09-01; held back because the app runs `.accessory` (no app menu bar), so Settings (SettingsView.swift:459) becomes the only route. Confirm AppNavigation.openSettings is reliable first (see #66, #70)
-- [ ] Update all docs (README, CONTRIBUTING, DESIGN, PRIVACY, docs/*) to match current feature set — idea logged 2026-08-29
-
-## Ideas — Unscoped
-
-- [ ] Automated testing of all commands as part of the build pipeline (logged 2026-08-29)
+The P2 entry proposing removal of the `SettingsView` outage-log actions was dropped
+rather than migrated — [#76](https://github.com/Jubblin/Foghorn/issues/76) resolved it
+in the opposite direction, and DESIGN.md:149-150 keeps those actions in Settings.
 
 ## Completed
 

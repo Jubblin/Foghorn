@@ -26,7 +26,7 @@ Product and contributor documentation for Foghorn — same content as the [GitHu
 | [Privacy (markdown)](PRIVACY.md) | Same policy as markdown |
 | [Changelog](CHANGELOG.md) | Keep a Changelog history |
 | [Design system](DESIGN.md) | Visual language and Settings guidance |
-| [Backlog](TODOS.md) | Future ideas |
+| [Backlog](TODOS.md) | Shipped history (open work lives in [issues](https://github.com/Jubblin/Foghorn/issues)) |
 
 ## Screenshots
 
