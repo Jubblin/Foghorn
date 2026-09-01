@@ -192,7 +192,7 @@ Split into two bands with a divider:
 
 - Prefer a single `SettingsView` composed of section subviews (`SettingsInterruptSection`, etc.) for testability.
 - `Help & privacy` link URLs should be constants (e.g. `AppLinks.privacyPolicy`, `AppLinks.support`) shared with App Store Connect copy.
-- Until fonts are bundled (`TODOS.md`), use system fonts with `.headline` / `.caption` / `.monospaced` roles that map to the scale above.
+- Until fonts are bundled ([#79](https://github.com/Jubblin/Foghorn/issues/79)), use system fonts with `.headline` / `.caption` / `.monospaced` roles that map to the scale above.
 
 ## Decisions Log
 

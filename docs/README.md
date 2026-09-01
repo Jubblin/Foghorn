@@ -190,7 +190,7 @@ Unsigned CI/local builds need the [`xattr -cr` workaround](#install) on Apple Si
 
 ## Roadmap
 
-All items from the initial roadmap are shipped. See [TODOS.md](TODOS.md) for future ideas.
+All items from the initial roadmap are shipped. Future work is tracked in [open issues](https://github.com/Jubblin/Foghorn/issues); [TODOS.md](TODOS.md) keeps the shipped history.
 
 ## Related projects
 
