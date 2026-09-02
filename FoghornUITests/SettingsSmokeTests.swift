@@ -195,6 +195,42 @@ final class SettingsSmokeTests: XCTestCase {
         XCTAssertGreaterThan(heights.count, 1, "Settings window should resize to fit each tab")
     }
 
+    // MARK: - T10
+
+    /// #95: Settings posted the open-window notification *and* built a window, so the
+    /// real Settings scene — the only place the bridge is mounted — opened two.
+    /// Needs `-ui_testing_menu_bar`: the stand-in Settings window has no bridge, so
+    /// the stock harness cannot see this bug at all.
+    ///
+    /// Skips when the Settings scene cannot take focus — `showSettingsWindow:` no-ops
+    /// for an inactive app, which happens on a busy desktop but not on CI.
+    /// `testPopoverSettingsRowOpensSettings` is what asserts that route still works,
+    /// so skipping here hides nothing.
+    func testOutageLogOpensOneWindow() throws {
+        app.launchArguments = ["-ui_testing", "-ui_testing_menu_bar", "-open-settings"]
+        app.launch()
+
+        let settings = app.windows["Settings"]
+        try XCTSkipUnless(
+            settings.waitForExistence(timeout: 15),
+            "Settings scene did not take focus in this environment"
+        )
+
+        selectTab("Remembers")
+        let viewLog = settings.descendants(matching: .any)["settings.viewOutageLog"]
+        XCTAssertTrue(viewLog.waitForExistence(timeout: 5), "No View outage log… button")
+        viewLog.click()
+
+        XCTAssertTrue(app.windows["Outage Log"].waitForExistence(timeout: 10), "No log window")
+        // The second window arrived a beat after the first, so settle before counting.
+        Thread.sleep(forTimeInterval: 2.0)
+        XCTAssertEqual(
+            app.windows.matching(NSPredicate(format: "title == %@", "Outage Log")).count,
+            1,
+            "View outage log… opened more than one window"
+        )
+    }
+
     // MARK: - Helpers
 
     private func launchSettings(extraArguments: [String] = []) {
