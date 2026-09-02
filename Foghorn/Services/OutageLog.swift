@@ -18,9 +18,15 @@ final class OutageLog: ObservableObject {
     private let fileURL: URL
 
     private init() {
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let directory = appSupport.appendingPathComponent("Foghorn", isDirectory: true)
-        Self.migrateLegacyDirectoryIfNeeded(appSupport: appSupport, newDirectory: directory)
+        let directory: URL
+        if let scratch = UITestConfiguration.stateDirectory {
+            // Test runs keep their outage history out of the developer's own log (#87).
+            directory = scratch
+        } else {
+            let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            directory = appSupport.appendingPathComponent("Foghorn", isDirectory: true)
+            Self.migrateLegacyDirectoryIfNeeded(appSupport: appSupport, newDirectory: directory)
+        }
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         fileURL = directory.appendingPathComponent("outages.json")
         load()
