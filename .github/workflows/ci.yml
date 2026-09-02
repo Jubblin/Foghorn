@@ -36,6 +36,9 @@ jobs:
       - name: Run ShellCheck
         run: shellcheck scripts/*.sh
 
+      - name: Test release scripts
+        run: ./scripts/test-scripts.sh
+
       - name: Check docs site sync
         run: ./scripts/sync-docs-site.sh --check
 
