@@ -16,7 +16,7 @@ permissions:
 jobs:
   quality:
     name: Quality
-    # Nothing here needs macOS, and each run already takes four macOS slots.
+    # Nothing here needs macOS, and macOS slots are capped at 5 per account.
     # Lint used to queue behind them — observed 23m for a 17s job (#89).
     runs-on: ubuntu-latest
     steps:
@@ -43,6 +43,9 @@ jobs:
     name: Test
     runs-on: macos-26
     needs: quality
+    # Unit and UI suites share one macOS job: they build the same scheme, and
+    # GitHub caps concurrent macOS jobs at 5 per account (#92). Building once
+    # with build-for-testing also drops a duplicate ~70s build.
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -50,10 +53,26 @@ jobs:
       - name: Set up Xcode
         uses: ./.github/actions/setup-xcode
 
+      - name: Build for testing
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing \
+            -project Foghorn.xcodeproj \
+            -scheme Foghorn \
+            -configuration Debug \
+            -derivedDataPath build \
+            -destination 'platform=macOS' \
+            CODE_SIGN_IDENTITY=- \
+            CODE_SIGNING_ALLOWED=NO
+        env:
+          NSUnbufferedIO: YES
+
+      # Two steps, not one -only-testing run: a red step name says which suite
+      # failed without opening the log.
       - name: Run unit tests
         run: |
           set -o pipefail
-          xcodebuild test \
+          xcodebuild test-without-building \
             -project Foghorn.xcodeproj \
             -scheme Foghorn \
             -configuration Debug \
@@ -65,25 +84,14 @@ jobs:
         env:
           NSUnbufferedIO: YES
 
-  ui-test:
-    name: UI Test
-    runs-on: macos-26
-    needs: test
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      - name: Set up Xcode
-        uses: ./.github/actions/setup-xcode
-
       - name: Run UI smoke tests
         run: |
           set -o pipefail
-          xcodebuild test \
+          xcodebuild test-without-building \
             -project Foghorn.xcodeproj \
             -scheme Foghorn \
             -configuration Debug \
-            -derivedDataPath build-ui \
+            -derivedDataPath build \
             -destination 'platform=macOS' \
             -only-testing:FoghornUITests \
             CODE_SIGN_IDENTITY=- \
@@ -95,6 +103,10 @@ jobs:
     name: Build Release
     runs-on: macos-26
     needs: test
+    # main only: this verifies the Release configuration compiles, which does not
+    # vary per PR, and Test already builds Debug. On PRs it cost a macOS slot for
+    # ~71s of duplicate signal (#92).
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: read
       actions: write
@@ -124,7 +136,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  # Advisory only: never blocks Quality / Test / UI Test / Build Release.
+  # Advisory only: never blocks Quality / Test / Build Release.
   # Managed Scan App check (semgrep-cloud-platform/scan) is separate; keep
   # Fail Open enabled in Semgrep and do not require that check to merge.
   semgrep:
