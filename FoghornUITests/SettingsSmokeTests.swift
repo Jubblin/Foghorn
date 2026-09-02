@@ -31,6 +31,10 @@ final class SettingsSmokeTests: XCTestCase {
 
     /// #80 held back removing the popover's duplicate update row until the popover's
     /// own `Settings…` route was proven — it is the only remaining way in.
+    ///
+    /// Needs the app to take focus: `showSettingsWindow:` no-ops for an inactive app
+    /// and `openSettings` retries for only ~0.6s. Reliable on CI; on a busy desktop
+    /// it can fail while the real route still works (verify by clicking the row).
     func testPopoverSettingsRowOpensSettings() throws {
         app.launchArguments = ["-ui_testing", "-ui_testing_menu_bar"]
         app.launch()
@@ -46,6 +50,25 @@ final class SettingsSmokeTests: XCTestCase {
         XCTAssertTrue(
             app.windows["Settings"].waitForExistence(timeout: 15),
             "Popover Settings… did not open the Settings window"
+        )
+    }
+
+    /// #80 left Settings → Help as the only manual update check. The route test
+    /// above proves the way in; this pins the row grammar it left behind.
+    func testPopoverOffersCheckSettingsQuitOnly() throws {
+        app.launchArguments = ["-ui_testing", "-ui_testing_menu_bar"]
+        app.launch()
+
+        let statusItem = app.statusItems.firstMatch
+        XCTAssertTrue(statusItem.waitForExistence(timeout: 15), "Status item never appeared")
+        statusItem.click()
+
+        XCTAssertTrue(app.buttons["Settings…"].waitForExistence(timeout: 10), "No Settings… row")
+        XCTAssertTrue(app.buttons["Check now"].exists, "No Check now row")
+        XCTAssertTrue(app.buttons["Quit Foghorn"].exists, "No Quit row")
+        XCTAssertFalse(
+            app.buttons["Check for Updates…"].exists,
+            "Update checks belong to Settings → Help only (#80)"
         )
     }
 
