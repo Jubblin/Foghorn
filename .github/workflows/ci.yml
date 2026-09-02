@@ -46,6 +46,9 @@ jobs:
       - name: Set up Xcode
         uses: ./.github/actions/setup-xcode
 
+      # Both suites share one job, and one derived data path, so the second run
+      # reuses the first one's build. macOS concurrency is capped at 5 jobs per
+      # account (#92), so a slot is the scarce resource here, not minutes.
       - name: Run unit tests
         run: |
           set -o pipefail
@@ -61,17 +64,6 @@ jobs:
         env:
           NSUnbufferedIO: YES
 
-  ui-test:
-    name: UI Test
-    runs-on: macos-26
-    needs: test
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      - name: Set up Xcode
-        uses: ./.github/actions/setup-xcode
-
       - name: Run UI smoke tests
         run: |
           set -o pipefail
@@ -79,7 +71,7 @@ jobs:
             -project Foghorn.xcodeproj \
             -scheme Foghorn \
             -configuration Debug \
-            -derivedDataPath build-ui \
+            -derivedDataPath build \
             -destination 'platform=macOS' \
             -only-testing:FoghornUITests \
             CODE_SIGN_IDENTITY=- \
@@ -91,6 +83,9 @@ jobs:
     name: Build Release
     runs-on: macos-26
     needs: test
+    # Release configuration does not vary per PR and Test already builds Debug,
+    # so this runs on main only rather than holding a macOS slot on every PR.
+    if: github.event_name == 'push'
     permissions:
       contents: read
       actions: write
@@ -120,7 +115,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  # Advisory only: never blocks Quality / Test / UI Test / Build Release.
+  # Advisory only: never blocks Quality / Test / Build Release.
   # Managed Scan App check (semgrep-cloud-platform/scan) is separate; keep
   # Fail Open enabled in Semgrep and do not require that check to merge.
   semgrep:
