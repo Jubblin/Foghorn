@@ -113,6 +113,16 @@ extension ConnectivityStatus {
         }
     }
 
+    /// Whether the probe rows still earn their place in the popover.
+    ///
+    /// Anything other than a settled healthy connection shows them — the rows are the
+    /// most useful thing in the app when something is wrong. A healthy connection keeps
+    /// them for `quietAfter`, then the headline says it on its own (#106).
+    func showsProbeEvidence(quietAfter: TimeInterval, now: Date = Date()) -> Bool {
+        guard state == .healthy, let healthySince else { return true }
+        return now.timeIntervalSince(healthySince) < quietAfter
+    }
+
     var probeRows: [ProbeRow] {
         guard let snapshot = lastSnapshot else { return [] }
 

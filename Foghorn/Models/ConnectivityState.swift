@@ -41,6 +41,9 @@ struct ConnectivityStatus: Equatable {
     var customHost: String?
     var lastCheck: Date
     var outageStartedAt: Date?
+    /// When the connection last settled into healthy, so the popover can stop
+    /// restating the obvious once nothing has gone wrong for a while (#106).
+    var healthySince: Date?
 
     static let initial = ConnectivityStatus(
         state: .healthy,
@@ -48,6 +51,7 @@ struct ConnectivityStatus: Equatable {
         failureReason: nil,
         customHost: nil,
         lastCheck: Date(),
-        outageStartedAt: nil
+        outageStartedAt: nil,
+        healthySince: nil
     )
 }
