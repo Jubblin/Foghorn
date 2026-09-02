@@ -33,6 +33,7 @@
 		B10000000000000000000018 /* HTTPProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001A /* HTTPProbeTests.swift */; };
 		B10000000000000000000019 /* OutageLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001C /* OutageLogView.swift */; };
 		B1000000000000000000001A /* OutageRecordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001D /* OutageRecordTests.swift */; };
+		B1000000000000000000009A /* LaunchAtLoginServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000000000000AD /* LaunchAtLoginServiceTests.swift */; };
 		B1000000000000000000001B /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001E /* DesignTokens.swift */; };
 		B1000000000000000000001C /* GatewayProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001F /* GatewayProbeTests.swift */; };
 		B1000000000000000000001D /* AppLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000020 /* AppLinks.swift */; };
@@ -94,6 +95,7 @@
 		F1000000000000000000001B /* FoghornTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FoghornTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1000000000000000000001C /* OutageLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageLogView.swift; sourceTree = "<group>"; };
 		F1000000000000000000001D /* OutageRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageRecordTests.swift; sourceTree = "<group>"; };
+		F100000000000000000000AD /* LaunchAtLoginServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginServiceTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001E /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
 		F1000000000000000000001F /* GatewayProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayProbeTests.swift; sourceTree = "<group>"; };
 		F10000000000000000000020 /* AppLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLinks.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 				F1000000000000000000001A /* HTTPProbeTests.swift */,
 				F1000000000000000000001F /* GatewayProbeTests.swift */,
 				F1000000000000000000001D /* OutageRecordTests.swift */,
+				F100000000000000000000AD /* LaunchAtLoginServiceTests.swift */,
 				F10000000000000000000029 /* AppUpdateModelsTests.swift */,
 			);
 			path = FoghornTests;
@@ -441,6 +444,7 @@
 				B10000000000000000000018 /* HTTPProbeTests.swift in Sources */,
 				B1000000000000000000001C /* GatewayProbeTests.swift in Sources */,
 				B1000000000000000000001A /* OutageRecordTests.swift in Sources */,
+				B1000000000000000000009A /* LaunchAtLoginServiceTests.swift in Sources */,
 				B10000000000000000000025 /* AppUpdateModelsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -506,7 +510,7 @@
 				CODE_SIGN_ENTITLEMENTS = Foghorn/Foghorn.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 95;
+				CURRENT_PROJECT_VERSION = 96;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
@@ -519,7 +523,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -534,7 +538,7 @@
 				CODE_SIGN_ENTITLEMENTS = Foghorn/Foghorn.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 95;
+				CURRENT_PROJECT_VERSION = 96;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
@@ -547,7 +551,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.6.0;
+				MARKETING_VERSION = 0.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

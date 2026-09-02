@@ -145,6 +145,32 @@ struct SettingsSecondaryButtonStyle: ButtonStyle {
     }
 }
 
+/// Shown when the user wants launch at login but macOS is holding the item for
+/// approval — the toggle records intent, so the gap needs saying out loud (#101).
+struct SettingsLoginApprovalNotice: View {
+    let palette: DesignPalette
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .center, spacing: 8) {
+                SettingsStatusChip(text: "Needs approval", palette: palette)
+                Button("Open Login Items") {
+                    LaunchAtLoginService.openSystemLoginItemsSettings()
+                }
+                .buttonStyle(SettingsSecondaryButtonStyle(palette: palette))
+                .accessibilityIdentifier("settings.openLoginItems")
+                Spacer(minLength: 0)
+            }
+
+            SettingsHelperText(
+                text: "macOS is holding the login item until you allow Foghorn under "
+                    + "System Settings → General → Login Items.",
+                palette: palette
+            )
+        }
+    }
+}
+
 struct SettingsStatusChip: View {
     let text: String
     let palette: DesignPalette

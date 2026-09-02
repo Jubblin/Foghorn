@@ -14,6 +14,7 @@ struct SettingsView: View {
     @State private var launchError: String?
     @State private var customHostsExpanded = UITestConfiguration.isActive
     @State private var paneHeights: [SettingsTab: CGFloat] = [:]
+    @State private var launchStatus: LaunchAtLoginService.Status = .unsupported
     @State private var tabStripHeight: CGFloat = 30
 
     private var palette: DesignPalette {
@@ -49,6 +50,7 @@ struct SettingsView: View {
                 SettingsRemembersSection(
                     settings: settings,
                     launchError: $launchError,
+                    launchStatus: $launchStatus,
                     palette: palette
                 )
             }
@@ -72,7 +74,11 @@ struct SettingsView: View {
         .foregroundStyle(palette.fogText)
         .modifier(SettingsWindowBackgroundModifier(color: palette.graphite))
         .onAppear {
-            settings.launchAtLogin = LaunchAtLoginService.isEnabled
+            // Never assign LaunchAtLoginService status into settings.launchAtLogin:
+            // the toggle is the user's intent, and its didSet persists it, so doing
+            // so overwrote the preference whenever macOS had dropped the login item
+            // (#101). Restoring the registration is AppCoordinator's job.
+            launchStatus = LaunchAtLoginService.restoreIfNeeded(intent: settings.launchAtLogin)
             customHostsExpanded = !settings.customHosts.isEmpty || UITestConfiguration.isActive
             applySettingsWindowChrome()
             Task { await alertService.refreshAuthorizationStatus() }
@@ -401,6 +407,7 @@ private struct SettingsRemembersSection: View {
     @ObservedObject var settings: AppSettings
     @ObservedObject private var updateService = AppUpdateService.shared
     @Binding var launchError: String?
+    @Binding var launchStatus: LaunchAtLoginService.Status
     let palette: DesignPalette
     @State private var isCheckingForUpdates = false
 
@@ -416,14 +423,20 @@ private struct SettingsRemembersSection: View {
                                 launchError = nil
                             } catch {
                                 launchError = error.localizedDescription
-                                settings.launchAtLogin = LaunchAtLoginService.isEnabled
                             }
+                            launchStatus = LaunchAtLoginService.status
                         }
 
                     if let launchError {
                         Text(launchError)
                             .font(.caption)
                             .foregroundStyle(DesignTokens.outageRed)
+                    }
+
+                    // The toggle shows intent; say so when macOS is not honouring it,
+                    // rather than silently reading the difference back as "off" (#101).
+                    if settings.launchAtLogin, launchStatus == .requiresApproval {
+                        SettingsLoginApprovalNotice(palette: palette)
                     }
                 }
 
