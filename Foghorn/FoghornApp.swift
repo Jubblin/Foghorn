@@ -40,6 +40,11 @@ final class AppLifecycleDelegate: NSObject, NSApplicationDelegate {
         }
 
         if UITestConfiguration.shouldInstallMenuBar || !UITestConfiguration.isXCTestProcess {
+            if UITestConfiguration.shouldInstallMenuBar {
+                // Never let a persisted "hidden" preference decide whether the
+                // route under test exists.
+                AppSettings.shared.showInMenuBar = true
+            }
             AppNavigation.closeAutoRestoredWindows()
             coordinator.start()
             StatusItemController.shared.install(coordinator: coordinator)
