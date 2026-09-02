@@ -13,6 +13,11 @@ struct MenuBarView: View {
         DesignPalette.palette(colorScheme: colorScheme)
     }
 
+    /// How long a recovered outage stays in the popover. The outage log window keeps the
+    /// history; this block is here to explain a recent blip, and stops earning its place
+    /// once the blip is not recent (#105).
+    private static let lastOutageWindow: TimeInterval = 60 * 60
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             statusSection
@@ -21,7 +26,7 @@ struct MenuBarView: View {
                 probeSection
             }
             paletteDivider
-            if let last = outageLog.lastRecord {
+            if let last = outageLog.lastRecord, last.isRecent(within: Self.lastOutageWindow) {
                 outageSection(last)
                 paletteDivider
             }
