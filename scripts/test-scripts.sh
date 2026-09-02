@@ -86,6 +86,7 @@ write_changelog() { # path
 
 - Older still
 EOF
+  return 0
 }
 
 write_empty_unreleased_changelog() { # path
@@ -105,6 +106,7 @@ write_empty_unreleased_changelog() { # path
 
 - The previous release
 EOF
+  return 0
 }
 
 # Just the two keys the version scripts read, in the shape Xcode writes them.
@@ -129,6 +131,7 @@ write_pbxproj() { # path marketing_version build_number
 	};
 }
 EOF
+  return 0
 }
 
 echo "changelog-has-version-section.sh"
