@@ -82,8 +82,8 @@ final class SettingsSmokeTests: XCTestCase {
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         toggle.click()
 
-        XCTAssertTrue(app.buttons["settings.viewOutageLog"].waitForExistence(timeout: 5))
-        XCTAssertTrue(element(identifier: "settings.outageLogPath").exists)
+        // Updates share the tab with launch-at-login: both are standing behaviour (#96).
+        XCTAssertTrue(element(identifier: "settings.automaticUpdates").exists)
     }
 
     // MARK: - T3
@@ -174,6 +174,10 @@ final class SettingsSmokeTests: XCTestCase {
         XCTAssertTrue(app.buttons["settings.link.docs"].exists)
         XCTAssertTrue(app.buttons["settings.link.support"].exists)
         XCTAssertTrue(app.buttons["settings.link.report"].exists)
+
+        // The outage log is evidence, and now sits beside version/build (#97).
+        XCTAssertTrue(app.buttons["settings.viewOutageLog"].exists)
+        XCTAssertTrue(element(identifier: "settings.outageLogPath").exists)
     }
 
     // MARK: - T9
