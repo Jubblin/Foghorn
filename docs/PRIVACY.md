@@ -1,6 +1,6 @@
 # Privacy Policy — Foghorn
 
-**Last updated:** 2026-08-04
+**Last updated:** 2026-09-02
 
 Foghorn is a native macOS menu bar utility. This policy describes what the app does with your data.
 
@@ -13,7 +13,8 @@ Foghorn does **not** collect, transmit, or sell personal data. Connectivity prob
 - **Settings** — poll interval, custom hosts, appearance, menu bar preferences, and whether automatic update checks are enabled (UserDefaults).
 - **Outage log** — JSON file at `~/Library/Application Support/Foghorn/outages.json` with timestamps, failure reasons, and probe summaries.
 
-You can view, copy, or delete outage records from the app.
+You can view and copy outage records in the app, and reveal `outages.json` in Finder to
+delete it yourself. The app does not delete records for you.
 
 ## Network activity
 
@@ -21,10 +22,10 @@ Foghorn performs connectivity checks (path monitor, gateway, DNS, HTTP HEAD, opt
 
 When automatic updates are enabled (default), or when you choose **Check for Updates…**:
 
-- **GitHub / Developer ID builds** use [Sparkle](https://sparkle-project.org/) to fetch a public signed appcast hosted on this repository’s Releases, then download and install the matching update archive when you approve. By default only the official channel is considered; you can opt in to the prerelease channel in Settings → Help.
+- **GitHub / Developer ID builds** use [Sparkle](https://sparkle-project.org/) to fetch a public signed appcast hosted on this repository’s Releases, then download and install the matching update archive when you approve. By default only the official channel is considered; you can opt in to the prerelease channel in Settings → Remembers.
 - **Mac App Store builds** do not install updates in-app (the store owns updates). They may still check the public [GitHub Releases](https://github.com/Jubblin/Foghorn/releases) API to notify you that a newer build exists.
 
-Those requests send a standard User-Agent including the installed app version. No account, analytics, or personal profile data is sent. You can turn automatic checks off in Settings → Help.
+Those requests send a standard User-Agent including the installed app version. No account, analytics, or personal profile data is sent. You can turn automatic checks off in Settings → Remembers.
 
 ## Notifications
 

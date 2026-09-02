@@ -73,7 +73,14 @@ Each new commit on the PR increments the build number automatically.
 
 ### CI
 
-PRs run [CI](.github/workflows/ci.yml) on `macos-26`: SwiftLint + ShellCheck (`quality` job), unit tests, UI smoke tests, then a Release build.
+PRs run [CI](.github/workflows/ci.yml) in two jobs:
+
+- **Quality** on `ubuntu-latest` — SwiftLint (in a container pinned to the version Homebrew
+  installs), ShellCheck, `scripts/test-scripts.sh`, and the docs-site sync check.
+- **Test** on `macos-26` — one build, then unit tests and UI smoke tests as separate steps.
+
+`Build Release` runs on `main` only. macOS runners are capped at five concurrent jobs per
+account, so keep new work in the existing jobs rather than adding a third macOS one.
 
 Semgrep in Actions is **advisory** (`continue-on-error` + `semgrep ci || true`) and must not gate merge. If the Semgrep GitHub App check (`semgrep-cloud-platform/scan`) is enabled, keep **Fail Open** on in Semgrep Managed Scans and leave that check **non-required** in branch protection so a stuck/failed App scan cannot block the PR.
 
@@ -95,7 +102,8 @@ Foghorn/           App target
   Views/          SwiftUI menu bar and settings
 FoghornTests/      Unit tests
 FoghornUITests/    UI smoke tests (XCUITest)
-scripts/          build-dmg.sh, bump-version.sh, extract-changelog-section.sh, health.sh
+scripts/          build-dmg.sh, bump-version.sh, extract-changelog-section.sh, health.sh,
+                  test-scripts.sh (covers the pure-logic release scripts)
 .github/          Workflows, issue/PR templates
 ```
 
