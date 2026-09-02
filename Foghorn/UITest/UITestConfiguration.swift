@@ -11,6 +11,7 @@ enum UITestConfiguration {
     static let openSettingsFlag = "-ui_testing_open_settings"
     static let openOutageLogFlag = "-ui_testing_open_outage_log"
     static let notificationStatusFlag = "-ui_testing_notifications"
+    static let menuBarFlag = "-ui_testing_menu_bar"
 
     static var isActive: Bool {
         ProcessInfo.processInfo.arguments.contains(uiTestingFlag)
@@ -23,6 +24,12 @@ enum UITestConfiguration {
 
     static var shouldUseRegularActivationPolicy: Bool {
         isActive || isXCTestProcess
+    }
+
+    /// Runs the real launch path (coordinator + status item + SwiftUI `Settings`
+    /// scene) so tests can exercise the popover routes rather than a stand-in window.
+    static var shouldInstallMenuBar: Bool {
+        ProcessInfo.processInfo.arguments.contains(menuBarFlag)
     }
 
     static var shouldOpenSettings: Bool {

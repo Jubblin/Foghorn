@@ -34,12 +34,12 @@ final class AppLifecycleDelegate: NSObject, NSApplicationDelegate {
 
         AppSettings.applyAppKitAppearance(AppSettings.shared.appearancePreference)
 
-        if UITestConfiguration.isActive {
+        if UITestConfiguration.isActive, !UITestConfiguration.shouldInstallMenuBar {
             UITestConfiguration.presentInitialWindowsIfNeeded()
             return
         }
 
-        if !UITestConfiguration.isXCTestProcess {
+        if UITestConfiguration.shouldInstallMenuBar || !UITestConfiguration.isXCTestProcess {
             AppNavigation.closeAutoRestoredWindows()
             coordinator.start()
             StatusItemController.shared.install(coordinator: coordinator)
@@ -62,10 +62,11 @@ struct FoghornApp: App {
 
     var body: some Scene {
         Settings {
-            if UITestConfiguration.isActive {
+            if UITestConfiguration.isActive, !UITestConfiguration.shouldInstallMenuBar {
                 // UI tests host Settings in an explicit NSWindow (UITestConfiguration).
                 // Avoid a second SettingsView in the SwiftUI Settings scene or XCTest
-                // sees duplicate accessibility identifiers.
+                // sees duplicate accessibility identifiers. Menu-bar mode is the
+                // exception: it drives the real route, so the real scene must render.
                 Color.clear
                     .frame(width: 1, height: 1)
                     .accessibilityHidden(true)
