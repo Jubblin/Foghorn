@@ -239,6 +239,8 @@ enum AppNavigation {
 
     @MainActor
     private static var outageLogWindow: NSWindow?
+    /// Matches the `Window("Outage Log", id: "outage-log")` scene title in FoghornApp.
+    private static let outageLogWindowTitle = "Outage Log"
 
     @MainActor
     private static var settingsCloseObserver: NSObjectProtocol?
@@ -276,24 +278,61 @@ enum AppNavigation {
     @MainActor
     static func openOutageLog() {
         StatusItemController.shared.dismissPopover()
-        NotificationCenter.default.post(name: openOutageLogNotification, object: nil)
 
-        if let existing = outageLogWindow, existing.isVisible {
+        if let existing = openOutageLogWindow() {
             bringToFront(existing)
             return
         }
 
-        // Imperative fallback — SwiftUI openWindow only works after Settings/Window scenes load.
+        // DESIGN.md specs the declarative route, so ask for it first and only build
+        // a window if nothing answers. Posting and building in one pass opened two
+        // windows whenever the bridge was mounted, i.e. from Settings (#95).
+        NotificationCenter.default.post(name: openOutageLogNotification, object: nil)
+        showOutageLogScene(remainingAttempts: 3)
+    }
+
+    /// Waits for `OutageLogWindowBridge` to answer the notification, and builds the
+    /// window itself only if nothing does — `openWindow` is a no-op when no scene
+    /// hosting the bridge is loaded.
+    @MainActor
+    private static func showOutageLogScene(remainingAttempts: Int) {
+        if let existing = openOutageLogWindow() {
+            bringToFront(existing)
+            return
+        }
+
+        guard remainingAttempts > 1 else {
+            presentOutageLogWindow()
+            return
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            showOutageLogScene(remainingAttempts: remainingAttempts - 1)
+        }
+    }
+
+    /// Any Outage Log window, whoever built it. The old guard only knew about the
+    /// imperative window it had created itself, so it never saw the scene's (#95).
+    @MainActor
+    private static func openOutageLogWindow() -> NSWindow? {
+        NSApp.windows.first { window in
+            window.styleMask.contains(.titled) && window.title == outageLogWindowTitle
+        }
+    }
+
+    @MainActor
+    private static func presentOutageLogWindow() {
         let root = OutageLogView()
             .preferredColorScheme(AppSettings.shared.appearancePreference.colorScheme)
         let hosting = NSHostingController(rootView: root)
         let window = NSWindow(contentViewController: hosting)
-        window.title = "Outage Log"
+        window.title = outageLogWindowTitle
         window.setContentSize(NSSize(width: 800, height: 440))
         window.center()
         window.isReleasedWhenClosed = false
         window.isRestorable = false
         bringToFront(window)
+        // Retained here because `isReleasedWhenClosed` is false.
         outageLogWindow = window
     }
 
