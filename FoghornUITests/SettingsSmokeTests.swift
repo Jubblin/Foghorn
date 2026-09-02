@@ -220,7 +220,8 @@ final class SettingsSmokeTests: XCTestCase {
             "Settings scene did not take focus in this environment"
         )
 
-        selectTab("Remembers")
+        // The outage log lives in Help since #97.
+        selectTab("Help")
         let viewLog = settings.descendants(matching: .any)["settings.viewOutageLog"]
         XCTAssertTrue(viewLog.waitForExistence(timeout: 5), "No View outage log… button")
         viewLog.click()
