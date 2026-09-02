@@ -56,7 +56,7 @@
 ## Layout
 
 - **Approach:** Grid-disciplined for app surfaces, black-box-recorder style for outage history.
-- **Popover:** Lead with a sentence-level status, then show probe rows. Avoid making the popover a mini analytics dashboard.
+- **Popover:** Lead with a sentence-level status, then show probe rows. Avoid making the popover a mini analytics dashboard. Evidence is conditional: probe rows retire five minutes after the connection settles and a recovered outage drops off an hour after it ends, both returning immediately when something fails.
 - **Settings:** Group by user promises:
   - When to interrupt me
   - What Foghorn checks
@@ -214,6 +214,7 @@ Split into two bands with a divider:
 | 2026-08-04 | Healthy menu bar opacity 0.55 | 0.25 read as “missing” on Tahoe transparent menu bars; still dim vs alerts. |
 | 2026-08-04 | AppKit NSStatusItem replaces MenuBarExtra | macOS 26/27 Control Center / MenuBarExtra breakage; alerts worked while icon vanished. |
 | 2026-08-04 | Settings chrome: fixed title + graphite fill | TabView was renaming the window and leaving system white below the card. |
+| 2026-09-02 | Popover evidence expires while healthy | Probe rows and the last outage restated a healthy headline indefinitely. Both now retire on their own clocks and return the instant something fails, keeping the quiet popover to one sentence. |
 | 2026-09-02 | Remembers holds standing behaviour, Help holds evidence | Update settings sat behind a question-mark icon while the outage log sat under "remembers" without changing behaviour. Swapping them puts the two set-and-forget toggles together and the inspect-and-diagnose affordances beside version/build. |
 | 2026-08-04 | Settings tabs use SF Symbol + label | Icon above text for Interrupt / Checks / Remembers / Help. |
 | 2026-08-03 | Settings Remembers opens log window + shows path | Design review: Remembers promised history control but only revealed Finder; align UI with evidence posture. |

@@ -28,7 +28,8 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 - **Menu bar visibility** — hide the icon in Settings; monitoring and alerts continue
 - **Battery-aware** — longer poll intervals on battery power
 - **Launch at login** — via `SMAppService`
-- **Native Swift/SwiftUI** — macOS 14+, no Electron, no dependencies
+- **Automatic updates** — signed Sparkle appcast, with an optional pre-release channel
+- **Native Swift/SwiftUI** — macOS 14+, no Electron, one dependency (Sparkle, for updates)
 
 ## Screenshots
 
@@ -50,7 +51,7 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 2. Open the DMG and drag **Foghorn** onto **Applications**
 3. Launch Foghorn and grant notification permission when prompted
 
-**Signing status:** When Developer ID + notarization secrets are configured, DMGs open normally. If CI falls back to an **unsigned** build (adhoc), Apple Silicon Gatekeeper may show:
+**Signing status:** Released DMGs are Developer ID signed and notarized, and open normally. Builds you make yourself with `build-dmg.sh` are unsigned, and Apple Silicon Gatekeeper may show:
 > "Foghorn" is damaged and can't be opened. You should move it to the Bin.
 
 Right-click → Open does **not** fix that for unsigned downloads. Clear quarantine after install (local workaround only):
@@ -59,7 +60,7 @@ Right-click → Open does **not** fix that for unsigned downloads. Clear quarant
 xattr -cr /Applications/Foghorn.app
 ```
 
-Then launch Foghorn again. Proper fix: restore signing/notarization ([issue #39](https://github.com/Jubblin/Foghorn/issues/39)). Details: [docs/RELEASE.md](docs/RELEASE.md#unsigned-dmgs-and-gatekeeper).
+Then launch Foghorn again, or build with `build-signed-dmg.sh` if you have a Developer ID certificate. Details: [docs/RELEASE.md](docs/RELEASE.md#unsigned-dmgs-and-gatekeeper).
 
 ### Build from source
 
@@ -85,13 +86,24 @@ chmod +x scripts/build-dmg.sh
 ## Usage
 
 1. **Foghorn** appears in the menu bar (subtle when healthy)
-2. Click the icon to see current status, last probe time, and the most recent outage
-3. Open **Settings** to configure:
-   - **Show in menu bar** — hide the icon while keeping probes running (re-open Settings from the app menu if hidden)
-   - **Polling interval** — 2s, 5s, 10s, or 30s (doubles on battery, capped at 8s)
-   - **Custom hosts** — hostnames probed via HTTPS HEAD (e.g. work VPN endpoint)
-   - **Launch at login**
-4. **View outage log…** from the menu or Settings for full history in a table
+2. Click the icon for the current status and last probe time. The popover stays quiet when
+   nothing is wrong: probe rows retire five minutes after the connection settles, and a
+   recovered outage drops off an hour after it ends. Both come straight back when something
+   fails.
+3. Open **Settings** from the popover to configure:
+   - **Interrupt** — show in menu bar, appearance, notification permission status
+   - **Checks** — poll interval (2s, 5s, 10s, 30s; doubles on battery, capped at 8s) and custom
+     hosts probed via HTTPS HEAD
+   - **Remembers** — launch at login, and update behaviour including the pre-release channel
+   - **Help** — privacy and support links, version and build, and the outage log
+4. **View outage log…** in Settings → Help for the full history in a table
+
+If you hide the menu bar icon, Settings is no longer reachable from it — Foghorn runs as an
+accessory app with no app menu. Reopen it with:
+
+```
+open -a Foghorn --args -open-settings
+```
 
 Notifications fire on **confirmed outage** and when connectivity **restores**.
 
@@ -111,19 +123,21 @@ ConnectivityStateMachine
   └── States: Healthy → Degraded → Outage → Recovering
 
 Outputs
-  ├── MenuBarExtra UI (alert-first)
+  ├── NSStatusItem popover (alert-first)
   ├── UserNotifications
   └── OutageLog (JSON on disk)
 ```
 
 ### Connectivity states
 
-| State      | Menu bar         | Alerts       |
-| ---------- | ---------------- | ------------ |
-| Healthy    | Subtle green dot | None         |
-| Degraded   | Warning icon     | None         |
-| Outage     | Wi‑Fi slash      | Notification |
-| Recovering | Spinner          | None         |
+The menu bar icon is always a filled dot; the colour carries the meaning.
+
+| State      | Menu bar   | Alerts       |
+| ---------- | ---------- | ------------ |
+| Healthy    | Green dot  | None         |
+| Degraded   | Amber dot  | None         |
+| Outage     | Red dot    | Notification |
+| Recovering | Gray dot   | None         |
 
 ## Development
 
@@ -151,18 +165,21 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for PR workflow, version labels, and code
 Foghorn/
   Probes/     PathProbe, GatewayProbe, DNSProbe, HTTPProbe, ProbeEngine
   State/      ConnectivityStateMachine
-  Services/   AlertService, OutageLog, WakeObserver, LaunchAtLoginService
-  Models/     ProbeResult, ConnectivityState, AppSettings
-  Views/      MenuBarView, SettingsView
-FoghornTests/  State machine, snapshot, HTTP mock tests
-scripts/      build-dmg.sh, build-signed-dmg.sh, resolve-release-arch.sh, bump-version.sh, health.sh
+  Services/   AlertService, OutageLog, WakeObserver, LaunchAtLoginService,
+              StatusItemController (menu bar + popover), AppUpdateService (Sparkle)
+  Models/     ProbeResult, ConnectivityState, OutageRecord, AppSettings
+  Views/      MenuBarView, SettingsView, SettingsChrome, OutageLogView
+FoghornTests/   State machine, outage record, snapshot, HTTP mock tests
+FoghornUITests/ Settings and popover smoke tests
+scripts/      build-dmg.sh, build-signed-dmg.sh, resolve-release-arch.sh, bump-version.sh,
+              health.sh, test-scripts.sh (tests the release scripts)
 ```
 
 ## CI / Release
 
 | Workflow          | Trigger             | What it does                          |
 | ------------------ | -------------------- | -------------------------------------- |
-| [CI](.github/workflows/ci.yml)                             | Push to `main`, PRs | Test + build Release artifact         |
+| [CI](.github/workflows/ci.yml)                             | Push to `main`, PRs | Lint, script tests, docs sync, unit + UI tests; Release build on `main` |
 | [Release dispatch](.github/workflows/release-dispatch.yml) | Manual              | Finalize CHANGELOG + tag `v*`         |
 | [Release](.github/workflows/release.yml)                   | Tag `v*`            | Signed/notarized DMG → GitHub Release |
 | [Release Store](.github/workflows/release-store.yml)       | Tag `v*` or manual  | Upload to TestFlight                  |
