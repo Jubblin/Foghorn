@@ -25,11 +25,13 @@ jobs:
 
       - name: Run SwiftLint
         # Pinned to the version Homebrew installs locally (0.65.1) so CI and
-        # developer machines flag the same violations.
+        # developer machines flag the same violations. The image's entrypoint is
+        # already swiftlint, so the args start at the subcommand — passing
+        # "swiftlint lint" makes it treat "swiftlint" as a path to lint.
         run: |
           docker run --rm -v "$PWD:/work" -w /work \
             ghcr.io/realm/swiftlint@sha256:f47e083201e47a136cda5ae847595bfe00226c444ca226fa74fa5dc648a9b057 \
-            swiftlint lint --quiet
+            lint --quiet
 
       - name: Run ShellCheck
         run: shellcheck scripts/*.sh
