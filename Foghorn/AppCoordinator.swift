@@ -38,6 +38,11 @@ final class AppCoordinator: ObservableObject {
 
         AppUpdateService.shared.startAutomaticChecksIfNeeded()
 
+        // An in-place update replaces the bundle and can drop the login-item
+        // registration; restore it here rather than waiting for someone to open
+        // Settings and see an unticked box (#101).
+        LaunchAtLoginService.restoreIfNeeded(intent: AppSettings.shared.launchAtLogin)
+
         stateMachine.onOutageStarted = { [weak self] record in
             Task { @MainActor in
                 await self?.alertService.requestAuthorizationIfNeeded()
