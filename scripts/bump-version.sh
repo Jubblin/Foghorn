@@ -4,7 +4,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PBXPROJ="$ROOT/Foghorn.xcodeproj/project.pbxproj"
+# Overridable so tests can run against a fixture instead of the real project (#82).
+PBXPROJ="${PBXPROJ:-$ROOT/Foghorn.xcodeproj/project.pbxproj}"
 
 if [[ $# -lt 1 ]]; then
   echo "usage: bump-version.sh <patch|minor|major|build>" >&2
