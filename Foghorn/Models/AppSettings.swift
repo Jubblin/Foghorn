@@ -19,25 +19,25 @@ final class AppSettings: ObservableObject {
     }
 
     @Published var customHosts: [String] {
-        didSet { UserDefaults.standard.set(customHosts, forKey: Keys.customHosts) }
+        didSet { UITestConfiguration.defaults.set(customHosts, forKey: Keys.customHosts) }
     }
 
     @Published var launchAtLogin: Bool {
-        didSet { UserDefaults.standard.set(launchAtLogin, forKey: Keys.launchAtLogin) }
+        didSet { UITestConfiguration.defaults.set(launchAtLogin, forKey: Keys.launchAtLogin) }
     }
 
     @Published var basePollInterval: TimeInterval {
-        didSet { UserDefaults.standard.set(basePollInterval, forKey: Keys.pollInterval) }
+        didSet { UITestConfiguration.defaults.set(basePollInterval, forKey: Keys.pollInterval) }
     }
 
     /// When false, the menu bar icon is hidden but probes and notifications keep running.
     @Published var showInMenuBar: Bool {
-        didSet { UserDefaults.standard.set(showInMenuBar, forKey: Keys.showInMenuBar) }
+        didSet { UITestConfiguration.defaults.set(showInMenuBar, forKey: Keys.showInMenuBar) }
     }
 
     @Published var appearancePreference: AppearancePreference {
         didSet {
-            UserDefaults.standard.set(appearancePreference.rawValue, forKey: Keys.appearancePreference)
+            UITestConfiguration.defaults.set(appearancePreference.rawValue, forKey: Keys.appearancePreference)
             guard !isRestoringDefaults else { return }
             Self.applyAppKitAppearance(appearancePreference)
         }
@@ -46,7 +46,7 @@ final class AppSettings: ObservableObject {
     /// When true, Foghorn checks for updates about once per day (Sparkle on Developer ID builds).
     @Published var automaticUpdatesEnabled: Bool {
         didSet {
-            UserDefaults.standard.set(automaticUpdatesEnabled, forKey: Keys.automaticUpdatesEnabled)
+            UITestConfiguration.defaults.set(automaticUpdatesEnabled, forKey: Keys.automaticUpdatesEnabled)
             guard !isRestoringDefaults else { return }
             if automaticUpdatesEnabled {
                 AppUpdateService.shared.startAutomaticChecksIfNeeded()
@@ -59,7 +59,7 @@ final class AppSettings: ObservableObject {
     /// When true, update checks also consider the Sparkle `prerelease` channel (and GitHub fallback).
     @Published var includePrereleaseUpdates: Bool {
         didSet {
-            UserDefaults.standard.set(includePrereleaseUpdates, forKey: Keys.includePrereleaseUpdates)
+            UITestConfiguration.defaults.set(includePrereleaseUpdates, forKey: Keys.includePrereleaseUpdates)
             guard !isRestoringDefaults else { return }
             AppUpdateService.shared.applyChannelPreferences()
         }
@@ -68,30 +68,30 @@ final class AppSettings: ObservableObject {
     private var isRestoringDefaults = true
 
     private init() {
-        customHosts = UserDefaults.standard.stringArray(forKey: Keys.customHosts) ?? []
-        launchAtLogin = UserDefaults.standard.bool(forKey: Keys.launchAtLogin)
-        let stored = UserDefaults.standard.double(forKey: Keys.pollInterval)
+        customHosts = UITestConfiguration.defaults.stringArray(forKey: Keys.customHosts) ?? []
+        launchAtLogin = UITestConfiguration.defaults.bool(forKey: Keys.launchAtLogin)
+        let stored = UITestConfiguration.defaults.double(forKey: Keys.pollInterval)
         basePollInterval = stored > 0 ? stored : 2.0
-        if UserDefaults.standard.object(forKey: Keys.showInMenuBar) == nil {
+        if UITestConfiguration.defaults.object(forKey: Keys.showInMenuBar) == nil {
             showInMenuBar = true
         } else {
-            showInMenuBar = UserDefaults.standard.bool(forKey: Keys.showInMenuBar)
+            showInMenuBar = UITestConfiguration.defaults.bool(forKey: Keys.showInMenuBar)
         }
 
-        if let raw = UserDefaults.standard.string(forKey: Keys.appearancePreference),
+        if let raw = UITestConfiguration.defaults.string(forKey: Keys.appearancePreference),
            let stored = AppearancePreference(rawValue: raw) {
             appearancePreference = stored
         } else {
             appearancePreference = .system
         }
 
-        if UserDefaults.standard.object(forKey: Keys.automaticUpdatesEnabled) == nil {
+        if UITestConfiguration.defaults.object(forKey: Keys.automaticUpdatesEnabled) == nil {
             automaticUpdatesEnabled = true
         } else {
-            automaticUpdatesEnabled = UserDefaults.standard.bool(forKey: Keys.automaticUpdatesEnabled)
+            automaticUpdatesEnabled = UITestConfiguration.defaults.bool(forKey: Keys.automaticUpdatesEnabled)
         }
 
-        includePrereleaseUpdates = UserDefaults.standard.bool(forKey: Keys.includePrereleaseUpdates)
+        includePrereleaseUpdates = UITestConfiguration.defaults.bool(forKey: Keys.includePrereleaseUpdates)
         isRestoringDefaults = false
         // Do not touch NSApp.appearance here — XCTest host bootstrap crashes if we
         // mutate appearance before the application finishes launching.

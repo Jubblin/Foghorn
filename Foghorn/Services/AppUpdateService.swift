@@ -273,7 +273,7 @@ extension AppUpdateService: SPUUpdaterDelegate {
         _ = updater
         // Default channel is always included by Sparkle; only add extras here.
         // Read UserDefaults directly so this stays safe off the main actor.
-        if UserDefaults.standard.bool(forKey: "includePrereleaseUpdates") {
+        if UITestConfiguration.defaults.bool(forKey: "includePrereleaseUpdates") {
             return [Self.prereleaseChannel]
         }
         return []

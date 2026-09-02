@@ -22,6 +22,36 @@ enum UITestConfiguration {
         ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
     }
 
+    /// True when this process must not touch the developer's real Foghorn state:
+    /// UI-test launches and the unit-test host.
+    static var usesScratchStorage: Bool {
+        isActive || isXCTestProcess
+    }
+
+    /// Preferences for this process. Test runs get a scratch suite, wiped at launch,
+    /// so a run neither inherits nor leaves behind real settings (#87).
+    static let defaults: UserDefaults = {
+        let suiteName = "com.online.menu.uitests"
+        guard usesScratchStorage, let suite = UserDefaults(suiteName: suiteName) else {
+            return .standard
+        }
+        suite.removePersistentDomain(forName: suiteName)
+        return suite
+    }()
+
+    /// Scratch directory for the outage log during test runs; `nil` in normal use,
+    /// where the log belongs in Application Support.
+    static let stateDirectory: URL? = {
+        guard usesScratchStorage else { return nil }
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "FoghornTestState-\(ProcessInfo.processInfo.processIdentifier)",
+                isDirectory: true
+            )
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        return directory
+    }()
+
     static var shouldUseRegularActivationPolicy: Bool {
         isActive || isXCTestProcess
     }

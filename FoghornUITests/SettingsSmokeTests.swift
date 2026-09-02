@@ -128,6 +128,17 @@ final class SettingsSmokeTests: XCTestCase {
 
         element(identifier: "settings.customHostAdd").click()
         XCTAssertTrue(waitFor(identifier: "settings.customHost.uitest.example.com", timeout: 5))
+
+        // The test is named AddRemove and used to stop at Add, which left the host in
+        // the developer's real settings and never covered removeHost (#87).
+        let remove = app.buttons["Remove uitest.example.com"]
+        XCTAssertTrue(remove.waitForExistence(timeout: 5), "No remove control for the added host")
+        remove.click()
+
+        XCTAssertFalse(
+            waitFor(identifier: "settings.customHost.uitest.example.com", timeout: 3),
+            "Host survived removal"
+        )
     }
 
     // MARK: - T8
