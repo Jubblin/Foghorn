@@ -11,21 +11,28 @@ SCRIPTS="$ROOT/scripts"
 PASSED=0
 FAILED=0
 
-pass() { PASSED=$((PASSED + 1)); }
+pass() {
+  PASSED=$((PASSED + 1))
+  return 0
+}
 
 fail() {
+  local message="$1"
   FAILED=$((FAILED + 1))
-  echo "  FAIL  $1" >&2
+  echo "  FAIL  $message" >&2
+  return 0
 }
 
 assert_eq() { # expected actual message
-  if [[ "$1" == "$2" ]]; then
+  local expected="$1" actual="$2" message="$3"
+  if [[ "$expected" == "$actual" ]]; then
     pass
   else
-    fail "$3
-        expected: $1
-        actual:   $2"
+    fail "$message
+        expected: $expected
+        actual:   $actual"
   fi
+  return 0
 }
 
 assert_exit() { # expected_status message command...
@@ -33,16 +40,19 @@ assert_exit() { # expected_status message command...
   shift 2
   "$@" >/dev/null 2>&1
   assert_eq "$expected" "$?" "$message"
+  return 0
 }
 
 assert_contains() { # haystack needle message
-  if [[ "$1" == *"$2"* ]]; then
+  local haystack="$1" needle="$2" message="$3"
+  if [[ "$haystack" == *"$needle"* ]]; then
     pass
   else
-    fail "$3
-        missing: $2
-        in:      $1"
+    fail "$message
+        missing: $needle
+        in:      $haystack"
   fi
+  return 0
 }
 
 TMP="$(mktemp -d)"
@@ -50,7 +60,8 @@ trap 'rm -rf "$TMP"' EXIT
 
 # A changelog with bullets under [Unreleased] and one released section.
 write_changelog() { # path
-  cat > "$1" <<'EOF'
+  local path="$1"
+  cat > "$path" <<'EOF'
 # Changelog
 
 ## [Unreleased]
@@ -78,7 +89,8 @@ EOF
 }
 
 write_empty_unreleased_changelog() { # path
-  cat > "$1" <<'EOF'
+  local path="$1"
+  cat > "$path" <<'EOF'
 # Changelog
 
 ## [Unreleased]
@@ -97,20 +109,21 @@ EOF
 
 # Just the two keys the version scripts read, in the shape Xcode writes them.
 write_pbxproj() { # path marketing_version build_number
-  cat > "$1" <<EOF
+  local path="$1" marketing="$2" build="$3"
+  cat > "$path" <<EOF
 // !\$*UTF8*\$!
 {
 	objects = {
 		A1 /* Debug */ = {
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = $3;
-				MARKETING_VERSION = $2;
+				CURRENT_PROJECT_VERSION = $build;
+				MARKETING_VERSION = $marketing;
 			};
 		};
 		A2 /* Release */ = {
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = $3;
-				MARKETING_VERSION = $2;
+				CURRENT_PROJECT_VERSION = $build;
+				MARKETING_VERSION = $marketing;
 			};
 		};
 	};
@@ -186,7 +199,9 @@ assert_exit 1 "refuses to finalize with nothing unreleased" \
 echo "resolve-release-arch.sh"
 # A sourced helper, so run each case in its own shell.
 arch_labels() { # input -> "ARCH_LABEL XCODE_ARCH"
-  bash -c "source '$SCRIPTS/resolve-release-arch.sh'; resolve_release_arch '$1' && echo \"\$ARCH_LABEL \$XCODE_ARCH\""
+  local input="$1"
+  bash -c "source '$SCRIPTS/resolve-release-arch.sh'; resolve_release_arch '$input' && echo \"\$ARCH_LABEL \$XCODE_ARCH\""
+  return 0
 }
 assert_eq "arm64 arm64" "$(arch_labels arm64)" "arm64 resolves"
 assert_eq "arm64 arm64" "$(arch_labels aarch64)" "aarch64 is an alias for arm64"
@@ -204,9 +219,11 @@ assert_eq "42" "$(PBXPROJ="$PROJECT" "$SCRIPTS/read-build-number.sh")" "reads th
 
 echo "bump-version.sh"
 bump() { # marketing build type -> "version build"
-  write_pbxproj "$PROJECT" "$1" "$2"
-  PBXPROJ="$PROJECT" "$SCRIPTS/bump-version.sh" "$3" >/dev/null || return 1
+  local marketing="$1" build="$2" bump_type="$3"
+  write_pbxproj "$PROJECT" "$marketing" "$build"
+  PBXPROJ="$PROJECT" "$SCRIPTS/bump-version.sh" "$bump_type" >/dev/null || return 1
   echo "$(PBXPROJ="$PROJECT" "$SCRIPTS/read-marketing-version.sh") $(PBXPROJ="$PROJECT" "$SCRIPTS/read-build-number.sh")"
+  return 0
 }
 assert_eq "1.2.4 43" "$(bump 1.2.3 42 patch)" "patch bumps the last component"
 assert_eq "1.3.0 43" "$(bump 1.2.3 42 minor)" "minor resets the patch"
