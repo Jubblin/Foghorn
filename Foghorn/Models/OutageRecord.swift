@@ -43,6 +43,16 @@ struct OutageRecord: Codable, Identifiable, Equatable {
         endedAt == nil
     }
 
+    /// Whether this outage still explains what you are looking at right now.
+    ///
+    /// Measured from `endedAt`, not `startedAt`, so a long outage that just recovered
+    /// stays visible instead of expiring the moment it ends. An ongoing outage never
+    /// expires — it is the current state, not history (#105).
+    func isRecent(within window: TimeInterval, now: Date = Date()) -> Bool {
+        guard let endedAt else { return true }
+        return now.timeIntervalSince(endedAt) < window
+    }
+
     static func probeSummary(from snapshot: ProbeSnapshot) -> String {
         snapshot.results
             .map { result in
