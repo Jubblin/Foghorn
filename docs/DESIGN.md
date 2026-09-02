@@ -103,8 +103,8 @@ Use four promise-based **tabs** in this order (short tab labels; full titles rem
 |-----------|-------------|--------------|----------|
 | **Interrupt** | When to interrupt me | I control visibility and alerts | Menu bar toggle, appearance segmented control, notification permission status |
 | **Checks** | What Foghorn checks | I control probe cadence and targets | Base interval picker, custom hosts list + add field |
-| **Remembers** | What Foghorn remembers | I control persistence and history | Launch at login, View outage log, Reveal in Finder, log path |
-| **Help** | Help & privacy | I can get help and understand data use | Privacy / Support / Report; version/build; update checks |
+| **Remembers** | What Foghorn remembers | I control standing app behaviour | Launch at login, update checks |
+| **Help** | Help & privacy | I can get help, inspect evidence, and understand data use | Privacy / Support / Report; version/build; View outage log, Reveal in Finder, log path |
 
 About content stays under **Help** (no fifth tab). Do not add tabs for features that do not exist. Keep the sentinel posture: every row earns its place.
 
@@ -145,10 +145,17 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; layout an
 
 **What Foghorn remembers**
 
+Two bands with a divider: what the app does on its own, without being asked.
+
+**Launch**
 - **Launch at login:** Toggle with error caption on failure (red, one line).
-- **View outage log…** — primary action; opens the outage log window (`openWindow(id: "outage-log")`); does not dismiss Settings.
-- **Show in Finder** — secondary link-styled caption; selects `outages.json` in Finder for backup or inspection.
-- **Log path:** Monospace (`DesignTokens.dataFont`), muted, selectable evidence caption under the actions.
+
+**Updates**
+- **Check for updates automatically** — Toggle (default on).
+- **Include pre-release updates** — Toggle (default off).
+- Short helper (official vs prerelease channel).
+- **Check for Updates…** / **Install Update…** — Sparkle presents install UI for Developer ID builds; App Store builds notify and open Releases.
+- Update status summary as caption.
 
 **Help & privacy** (required for Mac App Store metadata alignment; includes About in v1)
 
@@ -158,12 +165,10 @@ Split into two bands with a divider:
 - One-line privacy helper + Privacy · Support · Report links.
 - Version / Built as muted captions (`AppInfo`).
 
-**Updates**
-- **Check for updates automatically** — Toggle (default on).
-- **Include pre-release updates** — Toggle (default off).
-- Short helper (official vs prerelease channel).
-- **Check for Updates…** / **Install Update…** — Sparkle presents install UI for Developer ID builds; App Store builds notify and open Releases.
-- Update status summary as caption.
+**Evidence**
+- **View outage log…** — primary action; opens the outage log window (`openWindow(id: "outage-log")`); does not dismiss Settings.
+- **Show in Finder** — secondary link-styled caption; selects `outages.json` in Finder for backup or inspection.
+- **Log path:** Monospace (`DesignTokens.dataFont`), muted, selectable evidence caption under the actions — the thing you copy into a bug report next to the version string.
 
 **About**
 
@@ -209,6 +214,7 @@ Split into two bands with a divider:
 | 2026-08-04 | Healthy menu bar opacity 0.55 | 0.25 read as “missing” on Tahoe transparent menu bars; still dim vs alerts. |
 | 2026-08-04 | AppKit NSStatusItem replaces MenuBarExtra | macOS 26/27 Control Center / MenuBarExtra breakage; alerts worked while icon vanished. |
 | 2026-08-04 | Settings chrome: fixed title + graphite fill | TabView was renaming the window and leaving system white below the card. |
+| 2026-09-02 | Remembers holds standing behaviour, Help holds evidence | Update settings sat behind a question-mark icon while the outage log sat under "remembers" without changing behaviour. Swapping them puts the two set-and-forget toggles together and the inspect-and-diagnose affordances beside version/build. |
 | 2026-08-04 | Settings tabs use SF Symbol + label | Icon above text for Interrupt / Checks / Remembers / Help. |
 | 2026-08-03 | Settings Remembers opens log window + shows path | Design review: Remembers promised history control but only revealed Finder; align UI with evidence posture. |
 | 2026-08-03 | Battery helper is max 8s (not 8×) | ProbeEngine caps interval at 8 seconds; DESIGN.md was wrong. |

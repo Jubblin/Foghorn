@@ -399,8 +399,10 @@ private struct SettingsChecksSection: View {
 
 private struct SettingsRemembersSection: View {
     @ObservedObject var settings: AppSettings
+    @ObservedObject private var updateService = AppUpdateService.shared
     @Binding var launchError: String?
     let palette: DesignPalette
+    @State private var isCheckingForUpdates = false
 
     var body: some View {
         SettingsSectionCard(tab: .remembers, palette: palette) {
@@ -422,66 +424,6 @@ private struct SettingsRemembersSection: View {
                         Text(launchError)
                             .font(.caption)
                             .foregroundStyle(DesignTokens.outageRed)
-                    }
-                }
-
-                SettingsBandDivider(palette: palette)
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Button("View outage log…") {
-                        AppNavigation.openOutageLog()
-                    }
-                    .accessibilityIdentifier("settings.viewOutageLog")
-
-                    Button("Show in Finder") {
-                        OutageLog.shared.revealInFinder()
-                    }
-                    .buttonStyle(SettingsSecondaryButtonStyle(palette: palette))
-                    .accessibilityIdentifier("settings.revealOutageLog")
-
-                    Text(OutageLog.shared.filePath)
-                        .font(DesignTokens.dataFont)
-                        .foregroundStyle(palette.mutedLichen)
-                        .textSelection(.enabled)
-                        .accessibilityIdentifier("settings.outageLogPath")
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Help & privacy (+ about)
-
-private struct SettingsHelpPrivacySection: View {
-    @ObservedObject private var settings = AppSettings.shared
-    @ObservedObject private var updateService = AppUpdateService.shared
-    let palette: DesignPalette
-    @State private var isCheckingForUpdates = false
-
-    var body: some View {
-        SettingsSectionCard(tab: .help, palette: palette) {
-            VStack(alignment: .leading, spacing: 12) {
-                VStack(alignment: .leading, spacing: 8) {
-                    SettingsHelperText(
-                        text: "Foghorn monitors connectivity locally — no personal data collected. "
-                            + "Updates use a signed appcast over HTTPS.",
-                        palette: palette
-                    )
-
-                    HStack(spacing: 6) {
-                        linkButton("Privacy", url: AppLinks.privacyPolicy, identifier: "settings.link.privacy")
-                        linkSeparator
-                        linkButton("Docs", url: AppLinks.documentation, identifier: "settings.link.docs")
-                        linkSeparator
-                        linkButton("Support", url: AppLinks.support, identifier: "settings.link.support")
-                        linkSeparator
-                        linkButton("Report", url: AppLinks.reportIssue, identifier: "settings.link.report")
-                        Spacer(minLength: 0)
-                    }
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        evidenceRow(label: "Version", value: AppInfo.versionString)
-                        evidenceRow(label: "Built", value: AppInfo.buildDateString)
                     }
                 }
 
@@ -522,6 +464,63 @@ private struct SettingsHelpPrivacySection: View {
                     }
 
                     SettingsHelperText(text: updateService.statusSummary, palette: palette)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Help & privacy (+ about)
+
+private struct SettingsHelpPrivacySection: View {
+    let palette: DesignPalette
+
+    var body: some View {
+        SettingsSectionCard(tab: .help, palette: palette) {
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 8) {
+                    SettingsHelperText(
+                        text: "Foghorn monitors connectivity locally — no personal data collected. "
+                            + "Updates use a signed appcast over HTTPS.",
+                        palette: palette
+                    )
+
+                    HStack(spacing: 6) {
+                        linkButton("Privacy", url: AppLinks.privacyPolicy, identifier: "settings.link.privacy")
+                        linkSeparator
+                        linkButton("Docs", url: AppLinks.documentation, identifier: "settings.link.docs")
+                        linkSeparator
+                        linkButton("Support", url: AppLinks.support, identifier: "settings.link.support")
+                        linkSeparator
+                        linkButton("Report", url: AppLinks.reportIssue, identifier: "settings.link.report")
+                        Spacer(minLength: 0)
+                    }
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        evidenceRow(label: "Version", value: AppInfo.versionString)
+                        evidenceRow(label: "Built", value: AppInfo.buildDateString)
+                    }
+                }
+
+                SettingsBandDivider(palette: palette)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Button("View outage log…") {
+                        AppNavigation.openOutageLog()
+                    }
+                    .accessibilityIdentifier("settings.viewOutageLog")
+
+                    Button("Show in Finder") {
+                        OutageLog.shared.revealInFinder()
+                    }
+                    .buttonStyle(SettingsSecondaryButtonStyle(palette: palette))
+                    .accessibilityIdentifier("settings.revealOutageLog")
+
+                    Text(OutageLog.shared.filePath)
+                        .font(DesignTokens.dataFont)
+                        .foregroundStyle(palette.mutedLichen)
+                        .textSelection(.enabled)
+                        .accessibilityIdentifier("settings.outageLogPath")
                 }
             }
         }
