@@ -13,10 +13,15 @@ struct MenuBarView: View {
         DesignPalette.palette(colorScheme: colorScheme)
     }
 
+    /// How long the probe rows stay up after the connection settles. Long enough to watch
+    /// a recovery land, short enough that a healthy popover is one sentence (#106).
+    private static let probeRowsQuietAfter: TimeInterval = 5 * 60
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             statusSection
-            if !status.probeRows.isEmpty {
+            if !status.probeRows.isEmpty,
+               status.showsProbeEvidence(quietAfter: Self.probeRowsQuietAfter) {
                 paletteDivider
                 probeSection
             }

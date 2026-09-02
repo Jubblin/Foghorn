@@ -53,6 +53,12 @@ final class ConnectivityStateMachine: ObservableObject {
             handlePartialFailure(snapshot: snapshot)
         }
 
+        // Every transition funnels through here, so the healthy clock is kept in one
+        // place rather than in each handler. Entering healthy starts it; leaving clears it.
+        status.healthySince = status.state == .healthy
+            ? (status.healthySince ?? snapshot.timestamp)
+            : nil
+
         onStateChanged?(status)
     }
 
