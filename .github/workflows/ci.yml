@@ -147,7 +147,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     container:
-      image: semgrep/semgrep@sha256:f1f7b71861c7b28b6e0f661225a2c4f58a484f5d0f182465c6d6b3b22f972ade
+      image: semgrep/semgrep@sha256:51c9f53a4fce0d55e9abd08d7b96968654248a4b1122e77f20e0a49c0072446c
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
