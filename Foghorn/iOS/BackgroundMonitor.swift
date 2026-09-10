@@ -24,6 +24,8 @@ final class BackgroundMonitor {
     private let pathProbe = PathProbe()
     private var lastDeepProbeHealthy: Bool?
 
+    // Singleton with no construction-time setup — registerBackgroundTask() and
+    // start() do all the work, at their own required call sites/timing.
     private init() {}
 
     /// Must run before the app finishes launching — `BGTaskScheduler` requires
