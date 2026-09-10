@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0D9B7BAB5A715C25E730354F /* LaunchAtLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000011 /* LaunchAtLoginService.swift */; };
 		0F24ECBBCB484F24616CA013 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000002 /* AppCoordinator.swift */; };
+		2B2F579F4D25B4C8BF9D3E6C /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = A39EB2AE4E7A151C23C6CDEF /* Fonts */; };
 		33718B5A12B0FB229AE843C5 /* ConnectivityStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000D /* ConnectivityStateMachine.swift */; };
 		36535375EC59E1EEB091123E /* HTTPProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000008 /* HTTPProbe.swift */; };
 		3FB37B24855FD57FED73F9E2 /* IOSHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9DB272366818FAB8B90A09A /* IOSHomeView.swift */; };
@@ -97,6 +98,7 @@
 		40805C33D40F734EBFE0B320 /* BackgroundMonitoringSupportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundMonitoringSupportTests.swift; sourceTree = "<group>"; };
 		68C215AA95B43AF8B75AF86A /* FoghorniOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoghorniOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A6A7F760E5A6509880217CA /* BackgroundMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundMonitor.swift; sourceTree = "<group>"; };
+		A39EB2AE4E7A151C23C6CDEF /* Fonts */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		B773109C9DB378E226FF12E8 /* BackgroundMonitoringSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundMonitoringSupport.swift; sourceTree = "<group>"; };
 		B9DB272366818FAB8B90A09A /* IOSHomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IOSHomeView.swift; sourceTree = "<group>"; };
 		F10000000000000000000001 /* FoghornApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoghornApp.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				F10000000000000000000015 /* Foghorn.entitlements */,
 				F10000000000000000000025 /* PrivacyInfo.xcprivacy */,
 				26EF38DC8438E6DCF4BC79A7 /* iOS */,
+				A39EB2AE4E7A151C23C6CDEF /* Fonts */,
 			);
 			path = Foghorn;
 			sourceTree = "<group>";
@@ -472,6 +475,7 @@
 			files = (
 				B10000000000000000000014 /* Assets.xcassets in Resources */,
 				B10000000000000000000021 /* PrivacyInfo.xcprivacy in Resources */,
+				2B2F579F4D25B4C8BF9D3E6C /* Fonts in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
