@@ -102,6 +102,23 @@ jobs:
         env:
           NSUnbufferedIO: YES
 
+      # Build only, not test-run: the iOS target has no phone UI or test suite yet
+      # (#108), this just catches the shared logic breaking on iOS. Generic
+      # destination avoids depending on which simulator runtimes the runner has.
+      - name: Build iOS target
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Foghorn.xcodeproj \
+            -scheme FoghorniOS \
+            -configuration Debug \
+            -derivedDataPath build-ios \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGN_IDENTITY=- \
+            CODE_SIGNING_ALLOWED=NO
+        env:
+          NSUnbufferedIO: YES
+
   build:
     name: Build Release
     runs-on: macos-26

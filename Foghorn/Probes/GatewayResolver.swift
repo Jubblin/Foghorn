@@ -1,5 +1,8 @@
 import Foundation
+
+#if os(macOS)
 import SystemConfiguration
+#endif
 
 enum GatewayResolver {
     private static let lock = NSLock()
@@ -29,6 +32,17 @@ enum GatewayResolver {
 
 enum SCDynamicStoreGatewayResolver {
     static func defaultGatewayAddress() -> String? {
+        #if os(macOS)
+        return macOSGatewayAddress()
+        #else
+        // SCDynamicStore's gateway lookup is unavailable on iOS; GatewayProbe already
+        // treats a nil gateway as an unknown result rather than a failure.
+        return nil
+        #endif
+    }
+
+    #if os(macOS)
+    private static func macOSGatewayAddress() -> String? {
         let store = SCDynamicStoreCreate(nil, "com.online.menu.gateway" as CFString, nil, nil)
         guard let store else { return nil }
 
@@ -68,4 +82,5 @@ enum SCDynamicStoreGatewayResolver {
 
         return nil
     }
+    #endif
 }
