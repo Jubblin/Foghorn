@@ -92,7 +92,24 @@ enum DesignTokens {
     static let probeBlue = Color(red: 0.36, green: 0.72, blue: 0.91)
     static let recoveringGray = Color(red: 0.55, green: 0.55, blue: 0.55)
 
-    static let dataFont = Font.system(.caption, design: .monospaced)
+    /// JetBrains Mono, bundled per DESIGN.md (#79) — probe rows and log paths
+    /// read as evidence, not prose. Falls back to the system monospace face
+    /// if the bundled font is ever missing, rather than failing silently.
+    static let dataFont = Font.custom(
+        "JetBrainsMono-Regular",
+        size: 12,
+        relativeTo: .caption
+    )
+
+    /// Instrument Sans SemiBold at the "popover status line" scale entry in
+    /// DESIGN.md (lg: 18px) — the one line of text the product is built
+    /// around, so it's the one place a bundled-vs-system-fallback mismatch
+    /// would be most visible.
+    static let statusFont = Font.custom(
+        "InstrumentSans-SemiBold",
+        size: 18,
+        relativeTo: .headline
+    )
 
     // Legacy aliases used outside the popover.
     static let mutedLichen = Color(red: 0.50, green: 0.57, blue: 0.54)

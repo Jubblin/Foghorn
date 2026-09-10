@@ -54,7 +54,7 @@ struct MenuBarView: View {
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(coordinator.iconColor)
                 Text(status.statusSentence)
-                    .font(.headline)
+                    .font(DesignTokens.statusFont)
                     .fixedSize(horizontal: false, vertical: true)
             }
 
