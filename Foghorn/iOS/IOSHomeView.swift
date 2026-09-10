@@ -5,6 +5,7 @@ struct IOSHomeView: View {
     @Environment(\.colorScheme) private var colorScheme
 
     @ObservedObject private var outageLog = OutageLog.shared
+    @State private var showPausedBanner = false
 
     private var palette: DesignPalette {
         DesignPalette.palette(colorScheme: colorScheme)
@@ -14,6 +15,9 @@ struct IOSHomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
+                    if showPausedBanner {
+                        pausedBanner
+                    }
                     header
                     checkNowButton
                     if !coordinator.status.probeRows.isEmpty {
@@ -30,8 +34,36 @@ struct IOSHomeView: View {
         .onAppear {
             Task { @MainActor in
                 coordinator.start()
+                showPausedBanner = BackgroundMonitor.shared.consumePausedState()
             }
         }
+    }
+
+    /// Shown when the previous run ended without a confirmed background probe
+    /// or a clean foreground close — most likely force-quit, which iOS gives no
+    /// way to keep monitoring through (#114). Honest rather than silent (#115).
+    private var pausedBanner: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(DesignTokens.warningAmber)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Monitoring paused")
+                    .font(.subheadline.weight(.semibold))
+                Text("Foghorn wasn't running in the background. Now that it's open, monitoring has resumed.")
+                    .font(.caption)
+                    .foregroundStyle(palette.mutedLichen)
+            }
+            Spacer()
+            Button {
+                showPausedBanner = false
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundStyle(palette.mutedLichen)
+            }
+        }
+        .padding(12)
+        .background(palette.signalGlass)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
     private var header: some View {

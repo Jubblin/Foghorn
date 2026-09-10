@@ -7,8 +7,14 @@ final class PathProbe: @unchecked Sendable {
     private let queue = DispatchQueue(label: "online.path-probe")
     private var currentPath: NWPath?
     private var lastInterfaceSignature: String?
+    private var lastSatisfied: Bool?
     private let lock = NSLock()
     private let logger = Logger(subsystem: "com.online.menu", category: "path")
+
+    /// Fires on the monitor's own queue whenever satisfied/unsatisfied flips —
+    /// the push signal the iOS background monitor (#115) alerts on directly,
+    /// since it keeps running briefly in the background for free.
+    var onStatusChange: ((Bool) -> Void)?
 
     init() {
         monitor.pathUpdateHandler = { [weak self] path in
@@ -16,14 +22,21 @@ final class PathProbe: @unchecked Sendable {
             self?.lock.lock()
             self?.currentPath = path
             let signature = Self.interfaceSignature(for: path)
-            let previous = self?.lastInterfaceSignature
+            let previousSignature = self?.lastInterfaceSignature
             self?.lastInterfaceSignature = signature
+            let satisfied = path.status == .satisfied
+            let previousSatisfied = self?.lastSatisfied
+            self?.lastSatisfied = satisfied
             self?.lock.unlock()
 
-            if let previous, previous != signature {
+            if let previousSignature, previousSignature != signature {
                 self?.logger.info(
-                    "Network path interfaces changed: \(previous, privacy: .public) → \(signature, privacy: .public)"
+                    "Network path interfaces changed: \(previousSignature, privacy: .public) → \(signature, privacy: .public)"
                 )
+            }
+
+            if let previousSatisfied, previousSatisfied != satisfied {
+                self?.onStatusChange?(satisfied)
             }
         }
         monitor.start(queue: queue)
