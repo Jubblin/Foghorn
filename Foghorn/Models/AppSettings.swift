@@ -48,11 +48,13 @@ final class AppSettings: ObservableObject {
         didSet {
             UITestConfiguration.defaults.set(automaticUpdatesEnabled, forKey: Keys.automaticUpdatesEnabled)
             guard !isRestoringDefaults else { return }
+            #if canImport(AppKit)
             if automaticUpdatesEnabled {
                 AppUpdateService.shared.startAutomaticChecksIfNeeded()
             } else {
                 AppUpdateService.shared.stopAutomaticChecks()
             }
+            #endif
         }
     }
 
@@ -61,7 +63,9 @@ final class AppSettings: ObservableObject {
         didSet {
             UITestConfiguration.defaults.set(includePrereleaseUpdates, forKey: Keys.includePrereleaseUpdates)
             guard !isRestoringDefaults else { return }
+            #if canImport(AppKit)
             AppUpdateService.shared.applyChannelPreferences()
+            #endif
         }
     }
 

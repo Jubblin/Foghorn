@@ -36,7 +36,9 @@ final class AppCoordinator: ObservableObject {
             updatePresentation()
         }
 
+        #if canImport(AppKit)
         AppUpdateService.shared.startAutomaticChecksIfNeeded()
+        #endif
 
         // An in-place update replaces the bundle and can drop the login-item
         // registration; restore it here rather than waiting for someone to open
@@ -78,7 +80,9 @@ final class AppCoordinator: ObservableObject {
     func stop() {
         probeEngine.stop()
         wakeObserver.stop()
+        #if canImport(AppKit)
         AppUpdateService.shared.stopAutomaticChecks()
+        #endif
     }
 
     func refreshNow() {
