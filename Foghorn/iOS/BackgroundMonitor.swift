@@ -24,9 +24,10 @@ final class BackgroundMonitor {
     private let pathProbe = PathProbe()
     private var lastDeepProbeHealthy: Bool?
 
-    // Singleton with no construction-time setup — registerBackgroundTask() and
-    // start() do all the work, at their own required call sites/timing.
-    private init() {}
+    private init() {
+        // Singleton with no construction-time setup — registerBackgroundTask()
+        // and start() do all the work, at their own required call sites/timing.
+    }
 
     /// Must run before the app finishes launching — `BGTaskScheduler` requires
     /// registration at that point, so `FoghorniOSApp.init()` is the call site.
