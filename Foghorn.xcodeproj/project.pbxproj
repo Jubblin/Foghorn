@@ -16,6 +16,7 @@
 		56B075AAD52A09C2A013BF4C /* ProbeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000003 /* ProbeResult.swift */; };
 		58673B240BF1F3573DB7A29E /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001E /* DesignTokens.swift */; };
 		5B82190EEDD7DE4D79267481 /* OutageLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000F /* OutageLog.swift */; };
+		5C116A7BDD56CA084A80811F /* BackgroundMonitoringSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B773109C9DB378E226FF12E8 /* BackgroundMonitoringSupport.swift */; };
 		61843DF9B7315877765CBE33 /* ProbeEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000C /* ProbeEngine.swift */; };
 		64395E30E2024789D758627F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4E03210D07456ADD6BC04DC /* Foundation.framework */; };
 		6BD8B00A66D4CE5E4C4F9EC4 /* FoghorniOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3801878267271D66F10B49F3 /* FoghorniOSApp.swift */; };
@@ -24,6 +25,7 @@
 		8D64F54809D3DEC75AC7887C /* GatewayResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000017 /* GatewayResolver.swift */; };
 		8DAA644F3C0820CB8DD1F8DD /* ConnectivityState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000004 /* ConnectivityState.swift */; };
 		9B1962879EBFDB599B0A3FCE /* CustomHostProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000B /* CustomHostProbe.swift */; };
+		9DEE754D2A75488D05D14FCB /* BackgroundMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A6A7F760E5A6509880217CA /* BackgroundMonitor.swift */; };
 		ABC5CBFF6D055C739FE5F8E9 /* PathProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000007 /* PathProbe.swift */; };
 		B10000000000000000000001 /* FoghornApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000001 /* FoghornApp.swift */; };
 		B10000000000000000000002 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000002 /* AppCoordinator.swift */; };
@@ -68,7 +70,9 @@
 		D5C196BAEEC1F622BCEFC922 /* UITestConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000023 /* UITestConfiguration.swift */; };
 		D819CAEDFA21ED6A4BA53CD2 /* AppLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000020 /* AppLinks.swift */; };
 		F30F707A85A877BB1621FB61 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000006 /* AppSettings.swift */; };
+		F33E89845B378CD4AB2682FA /* BackgroundMonitoringSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B773109C9DB378E226FF12E8 /* BackgroundMonitoringSupport.swift */; };
 		F42BF5BA6413542EB6F32980 /* WakeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000010 /* WakeObserver.swift */; };
+		FFFF4D1A0097084CA9057D91 /* BackgroundMonitoringSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40805C33D40F734EBFE0B320 /* BackgroundMonitoringSupportTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,7 +94,10 @@
 
 /* Begin PBXFileReference section */
 		3801878267271D66F10B49F3 /* FoghorniOSApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FoghorniOSApp.swift; sourceTree = "<group>"; };
+		40805C33D40F734EBFE0B320 /* BackgroundMonitoringSupportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundMonitoringSupportTests.swift; sourceTree = "<group>"; };
 		68C215AA95B43AF8B75AF86A /* FoghorniOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoghorniOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A6A7F760E5A6509880217CA /* BackgroundMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundMonitor.swift; sourceTree = "<group>"; };
+		B773109C9DB378E226FF12E8 /* BackgroundMonitoringSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundMonitoringSupport.swift; sourceTree = "<group>"; };
 		B9DB272366818FAB8B90A09A /* IOSHomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IOSHomeView.swift; sourceTree = "<group>"; };
 		F10000000000000000000001 /* FoghornApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoghornApp.swift; sourceTree = "<group>"; };
 		F10000000000000000000002 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
@@ -136,6 +143,7 @@
 		F1000000000000000000002B /* StatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemController.swift; sourceTree = "<group>"; };
 		F100000000000000000000AD /* LaunchAtLoginServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginServiceTests.swift; sourceTree = "<group>"; };
 		F4E03210D07456ADD6BC04DC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		FB5FEDB71BF1AABF6FD250C3 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +184,9 @@
 			children = (
 				3801878267271D66F10B49F3 /* FoghorniOSApp.swift */,
 				B9DB272366818FAB8B90A09A /* IOSHomeView.swift */,
+				B773109C9DB378E226FF12E8 /* BackgroundMonitoringSupport.swift */,
+				8A6A7F760E5A6509880217CA /* BackgroundMonitor.swift */,
+				FB5FEDB71BF1AABF6FD250C3 /* Info.plist */,
 			);
 			name = iOS;
 			path = iOS;
@@ -309,6 +320,7 @@
 				F1000000000000000000001D /* OutageRecordTests.swift */,
 				F100000000000000000000AD /* LaunchAtLoginServiceTests.swift */,
 				F10000000000000000000029 /* AppUpdateModelsTests.swift */,
+				40805C33D40F734EBFE0B320 /* BackgroundMonitoringSupportTests.swift */,
 			);
 			path = FoghornTests;
 			sourceTree = "<group>";
@@ -514,6 +526,8 @@
 				6BD8B00A66D4CE5E4C4F9EC4 /* FoghorniOSApp.swift in Sources */,
 				3FB37B24855FD57FED73F9E2 /* IOSHomeView.swift in Sources */,
 				D5C196BAEEC1F622BCEFC922 /* UITestConfiguration.swift in Sources */,
+				F33E89845B378CD4AB2682FA /* BackgroundMonitoringSupport.swift in Sources */,
+				9DEE754D2A75488D05D14FCB /* BackgroundMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -550,6 +564,7 @@
 				B10000000000000000000022 /* AppUpdateModels.swift in Sources */,
 				B10000000000000000000023 /* GitHubReleaseClient.swift in Sources */,
 				B10000000000000000000024 /* AppUpdateService.swift in Sources */,
+				5C116A7BDD56CA084A80811F /* BackgroundMonitoringSupport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -564,6 +579,7 @@
 				B1000000000000000000001A /* OutageRecordTests.swift in Sources */,
 				B1000000000000000000009A /* LaunchAtLoginServiceTests.swift in Sources */,
 				B10000000000000000000025 /* AppUpdateModelsTests.swift in Sources */,
+				FFFF4D1A0097084CA9057D91 /* BackgroundMonitoringSupportTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,9 +614,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 106;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Foghorn/iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Foghorn;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -608,7 +625,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.3;
+				MARKETING_VERSION = 0.7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -626,9 +643,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 106;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Foghorn/iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Foghorn;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -636,7 +654,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.3;
+				MARKETING_VERSION = 0.7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -683,7 +701,7 @@
 				CODE_SIGN_ENTITLEMENTS = Foghorn/Foghorn.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 106;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
@@ -696,7 +714,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.7.3;
+				MARKETING_VERSION = 0.7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -711,7 +729,7 @@
 				CODE_SIGN_ENTITLEMENTS = Foghorn/Foghorn.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 106;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
@@ -724,7 +742,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.7.3;
+				MARKETING_VERSION = 0.7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

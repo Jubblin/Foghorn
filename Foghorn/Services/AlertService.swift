@@ -123,6 +123,44 @@ final class AlertService: NSObject, ObservableObject {
         UNUserNotificationCenter.current().add(request)
     }
 
+    /// Link-level or background-probe-detected loss, distinct from `notifyOutage`:
+    /// no `OutageRecord` exists yet at this point, since the background monitor (#115)
+    /// alerts directly off `PathProbe`/a probe-suite run rather than the full
+    /// `ConnectivityStateMachine` pipeline the foreground app uses.
+    func notifyBackgroundConnectivityLost(reason: String) {
+        guard isAuthorized else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = "Connection lost"
+        content.body = reason
+        content.sound = .default
+
+        let request = UNNotificationRequest(
+            identifier: "background-lost-\(UUID().uuidString)",
+            content: content,
+            trigger: nil
+        )
+
+        UNUserNotificationCenter.current().add(request)
+    }
+
+    func notifyBackgroundConnectivityRestored() {
+        guard isAuthorized else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = "Back online"
+        content.body = "Connection restored"
+        content.sound = .default
+
+        let request = UNNotificationRequest(
+            identifier: "background-restored-\(UUID().uuidString)",
+            content: content,
+            trigger: nil
+        )
+
+        UNUserNotificationCenter.current().add(request)
+    }
+
     func notifyRestored(duration: TimeInterval) {
         guard isAuthorized else { return }
 
