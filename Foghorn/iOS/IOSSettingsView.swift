@@ -8,17 +8,20 @@ import SwiftUI
 /// — a full-screen sheet with a native tab bar replaces them).
 ///
 /// Checks tab (#130) reuses `SettingsChecksSection` unmodified — it has no
-/// AppKit dependency. Interrupt/Help (#132/#133) still show the "Coming
-/// soon" placeholder. Remembers is dropped entirely (#131): its only two
-/// features are launch-at-login (SMAppService, no iOS concept of it) and
-/// in-app update checking (Sparkle, macOS-only — iOS updates via the App
-/// Store). Nothing in that section has an iOS equivalent, so there's no
-/// screen to build; it would just be permanently empty.
+/// AppKit dependency. Interrupt tab (#132) reuses `SettingsInterruptSection`
+/// with its menu-bar toggle `#if os(macOS)`-guarded out (no menu bar on
+/// iOS). Help (#133) still shows the "Coming soon" placeholder. Remembers
+/// is dropped entirely (#131): its only two features are launch-at-login
+/// (SMAppService, no iOS concept of it) and in-app update checking
+/// (Sparkle, macOS-only — iOS updates via the App Store). Nothing in that
+/// section has an iOS equivalent, so there's no screen to build; it would
+/// just be permanently empty.
 struct IOSSettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
     @State private var selectedTab: SettingsTab = .checks
     @ObservedObject private var settings = AppSettings.shared
+    @ObservedObject private var alertService = AlertService.shared
     @State private var newHost = ""
     @State private var customHostsExpanded = false
 
@@ -53,6 +56,7 @@ struct IOSSettingsView: View {
             }
             .onAppear {
                 customHostsExpanded = !settings.customHosts.isEmpty
+                Task { await alertService.refreshAuthorizationStatus() }
             }
         }
     }
@@ -60,7 +64,8 @@ struct IOSSettingsView: View {
     @ViewBuilder
     private func tabPane(_ tab: SettingsTab) -> some View {
         ScrollView {
-            if tab == .checks {
+            switch tab {
+            case .checks:
                 SettingsChecksSection(
                     settings: settings,
                     newHost: $newHost,
@@ -68,7 +73,10 @@ struct IOSSettingsView: View {
                     palette: palette
                 )
                 .padding(12)
-            } else {
+            case .interrupt:
+                SettingsInterruptSection(settings: settings, alertService: alertService, palette: palette)
+                    .padding(12)
+            default:
                 SettingsSectionCard(tab: tab, palette: palette) {
                     placeholderContent(for: tab)
                 }
