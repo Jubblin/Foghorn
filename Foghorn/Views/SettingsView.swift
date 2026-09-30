@@ -285,7 +285,7 @@ private struct SettingsInterruptSection: View {
 
 // MARK: - Checks
 
-private struct SettingsChecksSection: View {
+struct SettingsChecksSection: View {
     @ObservedObject var settings: AppSettings
     @Binding var newHost: String
     @Binding var customHostsExpanded: Bool

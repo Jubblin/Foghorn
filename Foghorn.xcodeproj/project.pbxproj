@@ -14,6 +14,7 @@
 		36535375EC59E1EEB091123E /* HTTPProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000008 /* HTTPProbe.swift */; };
 		3FB37B24855FD57FED73F9E2 /* IOSHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9DB272366818FAB8B90A09A /* IOSHomeView.swift */; };
 		AB0000000000000000000015 /* IOSSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000016 /* IOSSettingsView.swift */; };
+		AB0000000000000000000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000013 /* SettingsView.swift */; };
 		AB0000000000000000000017 /* SettingsChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000002A /* SettingsChrome.swift */; };
 		4462C7E51D724D988DCEA8E8 /* DNSProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000A /* DNSProbe.swift */; };
 		56B075AAD52A09C2A013BF4C /* ProbeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000003 /* ProbeResult.swift */; };
@@ -536,6 +537,7 @@
 				6BD8B00A66D4CE5E4C4F9EC4 /* FoghorniOSApp.swift in Sources */,
 				3FB37B24855FD57FED73F9E2 /* IOSHomeView.swift in Sources */,
 				AB0000000000000000000015 /* IOSSettingsView.swift in Sources */,
+				AB0000000000000000000018 /* SettingsView.swift in Sources */,
 				AB0000000000000000000017 /* SettingsChrome.swift in Sources */,
 				D5C196BAEEC1F622BCEFC922 /* UITestConfiguration.swift in Sources */,
 				F33E89845B378CD4AB2682FA /* BackgroundMonitoringSupport.swift in Sources */,
