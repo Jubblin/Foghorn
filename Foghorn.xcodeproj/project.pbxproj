@@ -13,6 +13,8 @@
 		33718B5A12B0FB229AE843C5 /* ConnectivityStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000D /* ConnectivityStateMachine.swift */; };
 		36535375EC59E1EEB091123E /* HTTPProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000008 /* HTTPProbe.swift */; };
 		3FB37B24855FD57FED73F9E2 /* IOSHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9DB272366818FAB8B90A09A /* IOSHomeView.swift */; };
+		AB0000000000000000000015 /* IOSSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000016 /* IOSSettingsView.swift */; };
+		AB0000000000000000000017 /* SettingsChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000002A /* SettingsChrome.swift */; };
 		4462C7E51D724D988DCEA8E8 /* DNSProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000A /* DNSProbe.swift */; };
 		56B075AAD52A09C2A013BF4C /* ProbeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000003 /* ProbeResult.swift */; };
 		58673B240BF1F3573DB7A29E /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001E /* DesignTokens.swift */; };
@@ -102,6 +104,7 @@
 		A39EB2AE4E7A151C23C6CDEF /* Fonts */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		B773109C9DB378E226FF12E8 /* BackgroundMonitoringSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackgroundMonitoringSupport.swift; sourceTree = "<group>"; };
 		B9DB272366818FAB8B90A09A /* IOSHomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IOSHomeView.swift; sourceTree = "<group>"; };
+		AB0000000000000000000016 /* IOSSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IOSSettingsView.swift; sourceTree = "<group>"; };
 		F10000000000000000000001 /* FoghornApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoghornApp.swift; sourceTree = "<group>"; };
 		F10000000000000000000002 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		F10000000000000000000003 /* ProbeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeResult.swift; sourceTree = "<group>"; };
@@ -187,6 +190,7 @@
 			children = (
 				3801878267271D66F10B49F3 /* FoghorniOSApp.swift */,
 				B9DB272366818FAB8B90A09A /* IOSHomeView.swift */,
+				AB0000000000000000000016 /* IOSSettingsView.swift */,
 				B773109C9DB378E226FF12E8 /* BackgroundMonitoringSupport.swift */,
 				8A6A7F760E5A6509880217CA /* BackgroundMonitor.swift */,
 				FB5FEDB71BF1AABF6FD250C3 /* Info.plist */,
@@ -531,6 +535,8 @@
 				33718B5A12B0FB229AE843C5 /* ConnectivityStateMachine.swift in Sources */,
 				6BD8B00A66D4CE5E4C4F9EC4 /* FoghorniOSApp.swift in Sources */,
 				3FB37B24855FD57FED73F9E2 /* IOSHomeView.swift in Sources */,
+				AB0000000000000000000015 /* IOSSettingsView.swift in Sources */,
+				AB0000000000000000000017 /* SettingsChrome.swift in Sources */,
 				D5C196BAEEC1F622BCEFC922 /* UITestConfiguration.swift in Sources */,
 				F33E89845B378CD4AB2682FA /* BackgroundMonitoringSupport.swift in Sources */,
 				9DEE754D2A75488D05D14FCB /* BackgroundMonitor.swift in Sources */,
