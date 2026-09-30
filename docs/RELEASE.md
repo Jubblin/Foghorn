@@ -219,6 +219,14 @@ On tag `v*`, both workflows run from the same commit:
 
 You can also trigger **Release Store** manually from Actions (useful for re-uploading a build without re-tagging).
 
+### iOS (FoghorniOS)
+
+`release-store.yml` runs a second job, `testflight-ios`, alongside the macOS `testflight` job on the same tag/dispatch trigger. It archives the `FoghorniOS` scheme (`generic/platform=iOS`, not `platform=macOS`) via `scripts/upload-testflight-ios.sh` and uploads via `xcrun altool --type ios`.
+
+It reuses the **same secrets** as the macOS TestFlight job (`DEVELOPMENT_TEAM`, `APP_STORE_CERTIFICATE_P12`/`APPLE_CERTIFICATE_P12`, `P12_PASSWORD`, `APP_STORE_CONNECT_API_KEY_*`) — `FoghorniOS` uses Automatic code signing with the same Development Team, so no separate certificate is needed as long as the team's account has an iOS distribution capability enabled. Same graceful skip: missing App Store Connect API credentials means the job exits 0 without uploading.
+
+**Not yet set up:** the actual iOS distribution certificate/profile provisioning on the Apple Developer account side. `CODE_SIGN_STYLE = Automatic` with `-allowProvisioningUpdates` should have Xcode generate what it needs at archive time, same as the macOS job — but this has not been exercised against a real App Store Connect API key with iOS distribution capability, since that requires account access this repo's CI doesn't have during development. First real run against `testflight-ios` is the actual verification.
+
 ## CI signing secrets
 
 Configure these in **Settings → Secrets and variables → Actions** (repo **Settings → Secrets and variables → Actions → New repository secret**).
@@ -228,15 +236,15 @@ Configure these in **Settings → Secrets and variables → Actions** (repo **Se
 | Secret | Used by | Required when |
 |--------|---------|---------------|
 | `VERSION_BUMP_TOKEN` | `version-bump.yml`, `release-dispatch.yml` | **Required** — human/app PAT so bump commits avoid the bot approval gate and release dispatch can push the changelog finalize to protected `main` |
-| `DEVELOPMENT_TEAM` | All signed builds | Any signing or TestFlight upload |
+| `DEVELOPMENT_TEAM` | All signed builds (macOS + iOS) | Any signing or TestFlight upload |
 | `DEVELOPER_ID_CERTIFICATE_P12` | `release.yml` (GitHub DMG) | Signed + notarized DMG |
-| `APP_STORE_CERTIFICATE_P12` | `release-store.yml` (TestFlight) | App Store upload |
+| `APP_STORE_CERTIFICATE_P12` | `release-store.yml` (`testflight` + `testflight-ios`) | App Store upload, either platform |
 | `APPLE_CERTIFICATE_P12` | Either workflow | Fallback if you only export one `.p12` |
 | `P12_PASSWORD` | Both signing workflows | Whenever a `.p12` secret is set |
-| `APP_STORE_CONNECT_API_KEY_ID` | Notarization + TestFlight | Notarized DMG or TestFlight upload |
-| `APP_STORE_CONNECT_ISSUER_ID` | Notarization + TestFlight | Same as above |
-| `APP_STORE_CONNECT_API_KEY` | Notarization + TestFlight | Same as above |
-| `SPARKLE_PRIVATE_KEY` | `release.yml` (Sparkle appcast) | In-app updates for Developer ID builds |
+| `APP_STORE_CONNECT_API_KEY_ID` | Notarization + TestFlight (macOS + iOS) | Notarized DMG or TestFlight upload |
+| `APP_STORE_CONNECT_ISSUER_ID` | Notarization + TestFlight (macOS + iOS) | Same as above |
+| `APP_STORE_CONNECT_API_KEY` | Notarization + TestFlight (macOS + iOS) | Same as above |
+| `SPARKLE_PRIVATE_KEY` | `release.yml` (Sparkle appcast) | In-app updates for Developer ID builds — macOS only, iOS has no Sparkle |
 
 Without signing secrets (or when `.p12` import fails), `release.yml` still publishes an **unsigned** DMG. `release-store.yml` exits successfully without uploading.
 
