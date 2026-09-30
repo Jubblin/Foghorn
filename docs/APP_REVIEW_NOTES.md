@@ -31,3 +31,18 @@ Foghorn is a local network connectivity monitor for macOS. It runs in the menu b
 **Privacy Policy URL:** https://jubblin.github.io/Foghorn/privacy.html
 
 **Export compliance:** App uses only standard HTTPS/TLS provided by macOS; `ITSAppUsesNonExemptEncryption` = NO.
+
+## iOS (FoghorniOS)
+
+The iPhone build shares the same probing logic and data handling as the Mac app above (no accounts, no analytics, no data transmitted to the developer). Differences:
+
+**Permissions**
+- **Local Network** — requested the first time the gateway probe runs; used only to check whether the router at the local gateway address is reachable, to tell a router problem apart from an upstream/ISP outage. The app does not scan the network or identify other devices (see `NSLocalNetworkUsageDescription` in `Foghorn/iOS/Info.plist`).
+- **Notifications** — same behavior as macOS: requested on first confirmed outage, not at launch.
+- **Background App Refresh** — used via `BGAppRefreshTask` to run periodic connectivity checks while backgrounded; interval is best-effort and scheduled by iOS, not a fixed cadence.
+
+**Background behavior to note for review**
+- Link-level changes (Wi-Fi/cellular drop or restore) can trigger a notification immediately via `NWPathMonitor`'s push callback, even in the background.
+- Deeper checks (gateway/DNS/HTTP) run opportunistically via `BGAppRefreshTask` — there is no guaranteed floor on interval, per Apple's background execution model.
+- If the app is force-quit by the user, monitoring cannot continue (iOS provides no way around this). On next launch the app shows "Monitoring paused — reopen Foghorn to resume" rather than stale or silent status.
+
