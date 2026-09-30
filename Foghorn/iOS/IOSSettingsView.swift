@@ -10,12 +10,15 @@ import SwiftUI
 /// Checks tab (#130) reuses `SettingsChecksSection` unmodified — it has no
 /// AppKit dependency. Interrupt tab (#132) reuses `SettingsInterruptSection`
 /// with its menu-bar toggle `#if os(macOS)`-guarded out (no menu bar on
-/// iOS). Help (#133) still shows the "Coming soon" placeholder. Remembers
-/// is dropped entirely (#131): its only two features are launch-at-login
-/// (SMAppService, no iOS concept of it) and in-app update checking
-/// (Sparkle, macOS-only — iOS updates via the App Store). Nothing in that
-/// section has an iOS equivalent, so there's no screen to build; it would
-/// just be permanently empty.
+/// iOS). Help tab (#133) reuses `SettingsHelpPrivacySection`, with "Show in
+/// Finder" guarded out and "View outage log…" presenting `OutageLogView`
+/// (#134, already had an iOS branch, just wasn't in the FoghorniOS target)
+/// as a sheet instead of `AppNavigation.openOutageLog()`'s NSWindow.
+/// Remembers is dropped entirely (#131): its only two features are
+/// launch-at-login (SMAppService, no iOS concept of it) and in-app update
+/// checking (Sparkle, macOS-only — iOS updates via the App Store). Nothing
+/// in that section has an iOS equivalent, so there's no screen to build;
+/// it would just be permanently empty.
 struct IOSSettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
@@ -24,6 +27,7 @@ struct IOSSettingsView: View {
     @ObservedObject private var alertService = AlertService.shared
     @State private var newHost = ""
     @State private var customHostsExpanded = false
+    @State private var showOutageLog = false
 
     private var palette: DesignPalette {
         DesignPalette.palette(colorScheme: colorScheme)
@@ -58,6 +62,9 @@ struct IOSSettingsView: View {
                 customHostsExpanded = !settings.customHosts.isEmpty
                 Task { await alertService.refreshAuthorizationStatus() }
             }
+            .sheet(isPresented: $showOutageLog) {
+                OutageLogView()
+            }
         }
     }
 
@@ -76,6 +83,11 @@ struct IOSSettingsView: View {
             case .interrupt:
                 SettingsInterruptSection(settings: settings, alertService: alertService, palette: palette)
                     .padding(12)
+            case .help:
+                SettingsHelpPrivacySection(palette: palette) {
+                    showOutageLog = true
+                }
+                .padding(12)
             default:
                 SettingsSectionCard(tab: tab, palette: palette) {
                     placeholderContent(for: tab)
@@ -86,8 +98,7 @@ struct IOSSettingsView: View {
         .background(palette.graphite)
     }
 
-    /// Filled in by #131/#132/#133; this shell only needs somewhere
-    /// truthful to point while those land.
+    /// Only .remembers has no iOS screen — see the type doc comment.
     @ViewBuilder
     private func placeholderContent(for tab: SettingsTab) -> some View {
         SettingsHelperText(text: "Coming soon.", palette: palette)
