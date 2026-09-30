@@ -33,3 +33,27 @@ jobs:
         run: |
           chmod +x scripts/upload-testflight.sh
           ./scripts/upload-testflight.sh Release
+
+  testflight-ios:
+    name: Upload iOS to TestFlight
+    if: ${{ !contains(github.ref_name, '-build.') }}
+    runs-on: macos-26
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Xcode
+        uses: ./.github/actions/setup-xcode
+
+      - name: Upload iOS TestFlight build
+        env:
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+          APP_STORE_CERTIFICATE_P12: ${{ secrets.APP_STORE_CERTIFICATE_P12 }}
+          APPLE_CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+        run: |
+          chmod +x scripts/upload-testflight-ios.sh
+          ./scripts/upload-testflight-ios.sh Release
