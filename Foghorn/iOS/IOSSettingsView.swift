@@ -8,8 +8,12 @@ import SwiftUI
 /// — a full-screen sheet with a native tab bar replaces them).
 ///
 /// Checks tab (#130) reuses `SettingsChecksSection` unmodified — it has no
-/// AppKit dependency. Remembers/Interrupt/Help (#131/#132/#133) still show
-/// the "Coming soon" placeholder.
+/// AppKit dependency. Interrupt/Help (#132/#133) still show the "Coming
+/// soon" placeholder. Remembers is dropped entirely (#131): its only two
+/// features are launch-at-login (SMAppService, no iOS concept of it) and
+/// in-app update checking (Sparkle, macOS-only — iOS updates via the App
+/// Store). Nothing in that section has an iOS equivalent, so there's no
+/// screen to build; it would just be permanently empty.
 struct IOSSettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
@@ -22,10 +26,14 @@ struct IOSSettingsView: View {
         DesignPalette.palette(colorScheme: colorScheme)
     }
 
+    private var iOSTabs: [SettingsTab] {
+        SettingsTab.allCases.filter { $0 != .remembers }
+    }
+
     var body: some View {
         NavigationStack {
             TabView(selection: $selectedTab) {
-                ForEach(SettingsTab.allCases) { tab in
+                ForEach(iOSTabs) { tab in
                     tabPane(tab)
                         .tabItem {
                             Label(tab.title, systemImage: tab.symbolName)
