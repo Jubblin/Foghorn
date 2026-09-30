@@ -50,3 +50,23 @@ Run on a **Release** build before tagging a GitHub release or uploading to TestF
 - [ ] Screenshots 1280×800 captured
 - [ ] App Privacy questionnaire completed in App Store Connect
 - [ ] Reviewer notes describe network probing and no data collection
+
+## FoghorniOS (manual, real device required — see #121)
+
+CI only builds the `FoghorniOS` scheme (`xcodebuild build`, no test run) — there is no
+automated unit/UI test target for it yet. Simulator does not reliably reproduce the Local
+Network permission prompt or background execution timing, so these need a real iPhone:
+
+- [ ] Fresh install — Local Network permission prompt appears the first time the gateway
+      probe runs (not at launch); denying it does not crash the app or freeze the status
+      (`GatewayProbe` falls back to `NWPath.gateways` — see #120)
+- [ ] Background link-loss — disable Wi‑Fi/cellular while backgrounded; a notification
+      fires promptly via the `NWPathMonitor` push path (`BackgroundMonitor`, #115)
+- [ ] Background deep-probe — leave the app backgrounded for the `BGAppRefreshTask`
+      window (no fixed interval — best effort); confirm a captive-portal or DNS-only
+      outage is still detected and notified while backgrounded
+- [ ] Force-quit recovery — force-quit the app while monitoring, then relaunch; the
+      "Monitoring paused — reopen Foghorn to resume" banner appears (not silent/stale
+      status)
+- [ ] iPhone app icon renders correctly on the home screen and in Settings (#119)
+
