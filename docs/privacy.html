@@ -26,29 +26,29 @@
   <h1>Privacy Policy — Foghorn</h1>
   <p><strong>Last updated:</strong> 2026-08-04</p>
 
-  <p>Foghorn is a native macOS menu bar utility. This policy describes what the app does with your data.</p>
+  <p>Foghorn is a native connectivity monitor for macOS and iOS. This policy describes what the app does with your data on either platform.</p>
 
   <h2>Summary</h2>
-  <p>Foghorn does <strong>not</strong> collect, transmit, or sell personal data. Connectivity probes and outage history stay on your Mac. Optional update checks fetch a public signed appcast (and, for App Store builds, GitHub Releases metadata) over HTTPS.</p>
+  <p>Foghorn does <strong>not</strong> collect, transmit, or sell personal data. Connectivity probes and outage history stay on your device. Optional update checks (macOS only) fetch a public signed appcast or GitHub Releases metadata over HTTPS.</p>
 
   <h2>Data stored on your device</h2>
   <ul>
-    <li><strong>Settings</strong> — poll interval, custom hosts, appearance, menu bar preferences, and whether automatic update checks are enabled (UserDefaults).</li>
-    <li><strong>Outage log</strong> — JSON file at <code>~/Library/Application Support/Foghorn/outages.json</code> with timestamps, failure reasons, and probe summaries.</li>
+    <li><strong>Settings</strong> — poll interval, custom hosts, appearance, menu bar preferences, and whether automatic update checks are enabled (UserDefaults). On iOS, the equivalent app-level preferences are stored the same way; there is no menu bar.</li>
+    <li><strong>Outage log</strong> — JSON file at <code>Application Support/Foghorn/outages.json</code> inside the app's own sandboxed container, with timestamps, failure reasons, and probe summaries, on both macOS and iOS.</li>
   </ul>
   <p>You can view, copy, or delete outage records from the app.</p>
 
   <h2>Network activity</h2>
-  <p>Foghorn performs connectivity checks (path monitor, gateway, DNS, HTTP HEAD, optional custom hosts) to determine whether your internet connection is working. Those requests go to your network and configured endpoints only.</p>
-  <p>When automatic updates are enabled (default), or when you choose <strong>Check for Updates…</strong>:</p>
+  <p>Foghorn performs connectivity checks (path monitor, gateway, DNS, HTTP HEAD, optional custom hosts) to determine whether your internet connection is working. Those requests go to your network and configured endpoints only. On iOS, the gateway check may prompt for the Local Network permission the first time it checks your router's address — used only for that check, never to scan or identify other devices on your network.</p>
+  <p>Automatic update checks apply to macOS only — iOS updates come from the App Store, with no update-check network calls made on that platform. When automatic updates are enabled on macOS (default), or when you choose <strong>Check for Updates…</strong>:</p>
   <ul>
     <li><strong>GitHub / Developer ID builds</strong> use <a href="https://sparkle-project.org/">Sparkle</a> to fetch a public signed appcast hosted on this repository’s Releases, then download and install the matching update archive when you approve. By default only the official channel is considered; you can opt in to the prerelease channel in Settings → Help.</li>
     <li><strong>Mac App Store builds</strong> do not install updates in-app (the store owns updates). They may still check the public <a href="https://github.com/Jubblin/Foghorn/releases">GitHub Releases</a> API to notify you that a newer build exists.</li>
   </ul>
-  <p>Those requests send a standard User-Agent including the installed app version. No account, analytics, or personal profile data is sent. You can turn automatic checks off in Settings → Help.</p>
+  <p>Those requests send a standard User-Agent including the installed app version. No account, analytics, or personal profile data is sent. You can turn automatic checks off in Settings → Help (macOS).</p>
 
   <h2>Notifications</h2>
-  <p>If you grant permission, macOS delivers local alerts when Foghorn detects a confirmed outage or recovery, and optionally when a newer official release is available. Notification content is generated on device.</p>
+  <p>If you grant permission, the app delivers local alerts when Foghorn detects a confirmed outage or recovery — on iOS, both while open and, best-effort, while backgrounded. On macOS, a newer-release notice may also appear. Notification content is generated entirely on device.</p>
 
   <h2>Analytics and tracking</h2>
   <p>Foghorn includes no analytics SDKs, advertising, or third-party tracking.</p>
