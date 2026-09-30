@@ -48,6 +48,7 @@
 		B10000000000000000000012 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000012 /* MenuBarView.swift */; };
 		B10000000000000000000013 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000013 /* SettingsView.swift */; };
 		B10000000000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000014 /* Assets.xcassets */; };
+		AB0000000000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000014 /* Assets.xcassets */; };
 		B10000000000000000000015 /* GatewayResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000017 /* GatewayResolver.swift */; };
 		B10000000000000000000016 /* ProbeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000018 /* ProbeSnapshotTests.swift */; };
 		B10000000000000000000017 /* ConnectivityStateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000019 /* ConnectivityStateMachineTests.swift */; };
@@ -466,6 +467,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB0000000000000000000014 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
