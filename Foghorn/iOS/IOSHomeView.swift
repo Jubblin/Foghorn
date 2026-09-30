@@ -6,6 +6,7 @@ struct IOSHomeView: View {
 
     @ObservedObject private var outageLog = OutageLog.shared
     @State private var showPausedBanner = false
+    @State private var showSettings = false
 
     private var palette: DesignPalette {
         DesignPalette.palette(colorScheme: colorScheme)
@@ -30,6 +31,19 @@ struct IOSHomeView: View {
                 .padding(16)
             }
             .navigationTitle("Foghorn")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                    .accessibilityIdentifier("home.openSettings")
+                }
+            }
+            .sheet(isPresented: $showSettings) {
+                IOSSettingsView()
+            }
         }
         .onAppear {
             Task { @MainActor in
