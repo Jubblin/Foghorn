@@ -7,14 +7,16 @@ import SwiftUI
 /// `paneHeight`, etc. are AppKit/NSWindow-specific and have no iOS equivalent
 /// — a full-screen sheet with a native tab bar replaces them).
 ///
-/// This is the shell only (#135): each tab's real content lands in #130
-/// (Checks), #131 (Remembers), #132 (Interrupt), #133 (Help). Until then each
-/// pane shows its `SettingsSectionCard` promise caption with a "Coming soon"
-/// placeholder so the shell is a working, mergeable unit on its own.
+/// Checks tab (#130) reuses `SettingsChecksSection` unmodified — it has no
+/// AppKit dependency. Remembers/Interrupt/Help (#131/#132/#133) still show
+/// the "Coming soon" placeholder.
 struct IOSSettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
-    @State private var selectedTab: SettingsTab = .interrupt
+    @State private var selectedTab: SettingsTab = .checks
+    @ObservedObject private var settings = AppSettings.shared
+    @State private var newHost = ""
+    @State private var customHostsExpanded = false
 
     private var palette: DesignPalette {
         DesignPalette.palette(colorScheme: colorScheme)
@@ -41,20 +43,34 @@ struct IOSSettingsView: View {
                     Button("Done") { dismiss() }
                 }
             }
+            .onAppear {
+                customHostsExpanded = !settings.customHosts.isEmpty
+            }
         }
     }
 
+    @ViewBuilder
     private func tabPane(_ tab: SettingsTab) -> some View {
         ScrollView {
-            SettingsSectionCard(tab: tab, palette: palette) {
-                placeholderContent(for: tab)
+            if tab == .checks {
+                SettingsChecksSection(
+                    settings: settings,
+                    newHost: $newHost,
+                    customHostsExpanded: $customHostsExpanded,
+                    palette: palette
+                )
+                .padding(12)
+            } else {
+                SettingsSectionCard(tab: tab, palette: palette) {
+                    placeholderContent(for: tab)
+                }
+                .padding(12)
             }
-            .padding(12)
         }
         .background(palette.graphite)
     }
 
-    /// Filled in by #130/#131/#132/#133; this shell only needs somewhere
+    /// Filled in by #131/#132/#133; this shell only needs somewhere
     /// truthful to point while those land.
     @ViewBuilder
     private func placeholderContent(for tab: SettingsTab) -> some View {
