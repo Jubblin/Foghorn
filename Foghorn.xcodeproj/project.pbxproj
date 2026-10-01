@@ -84,6 +84,12 @@
 		F33E89845B378CD4AB2682FA /* BackgroundMonitoringSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B773109C9DB378E226FF12E8 /* BackgroundMonitoringSupport.swift */; };
 		F42BF5BA6413542EB6F32980 /* WakeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000010 /* WakeObserver.swift */; };
 		FFFF4D1A0097084CA9057D91 /* BackgroundMonitoringSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40805C33D40F734EBFE0B320 /* BackgroundMonitoringSupportTests.swift */; };
+		AB0000000000000000000041 /* ProbeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000031 /* ProbeSnapshotTests.swift */; };
+		AB0000000000000000000042 /* ConnectivityStateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000032 /* ConnectivityStateMachineTests.swift */; };
+		AB0000000000000000000043 /* HTTPProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000033 /* HTTPProbeTests.swift */; };
+		AB0000000000000000000044 /* GatewayProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000034 /* GatewayProbeTests.swift */; };
+		AB0000000000000000000045 /* OutageRecordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000035 /* OutageRecordTests.swift */; };
+		AB0000000000000000000046 /* BackgroundMonitoringSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000036 /* BackgroundMonitoringSupportTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +106,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = T10000000000000000000001;
 			remoteInfo = Foghorn;
+		};
+		AB000000000000000000003E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PR1000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DB17B89D8A1EBE69A6CF4B69;
+			remoteInfo = FoghorniOS;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -142,6 +155,13 @@
 		F10000000000000000000019 /* ConnectivityStateMachineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityStateMachineTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001A /* HTTPProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPProbeTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001B /* FoghornTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FoghornTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB0000000000000000000030 /* FoghorniOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FoghorniOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB0000000000000000000031 /* ProbeSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeSnapshotTests.swift; sourceTree = "<group>"; };
+		AB0000000000000000000032 /* ConnectivityStateMachineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityStateMachineTests.swift; sourceTree = "<group>"; };
+		AB0000000000000000000033 /* HTTPProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPProbeTests.swift; sourceTree = "<group>"; };
+		AB0000000000000000000034 /* GatewayProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayProbeTests.swift; sourceTree = "<group>"; };
+		AB0000000000000000000035 /* OutageRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageRecordTests.swift; sourceTree = "<group>"; };
+		AB0000000000000000000036 /* BackgroundMonitoringSupportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMonitoringSupportTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001C /* OutageLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageLogView.swift; sourceTree = "<group>"; };
 		F1000000000000000000001D /* OutageRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageRecordTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001E /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
@@ -192,6 +212,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AB000000000000000000003A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -231,6 +258,7 @@
 				G10000000000000000000002 /* Foghorn */,
 				G10000000000000000000009 /* FoghornTests */,
 				G1000000000000000000000B /* FoghornUITests */,
+				AB0000000000000000000037 /* FoghorniOSTests */,
 				G10000000000000000000003 /* Products */,
 				C4AC57244C2A74762671D2A8 /* Frameworks */,
 			);
@@ -264,6 +292,7 @@
 				F1000000000000000000001B /* FoghornTests.xctest */,
 				F10000000000000000000021 /* FoghornUITests.xctest */,
 				68C215AA95B43AF8B75AF86A /* FoghorniOS.app */,
+				AB0000000000000000000030 /* FoghorniOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -344,6 +373,19 @@
 				40805C33D40F734EBFE0B320 /* BackgroundMonitoringSupportTests.swift */,
 			);
 			path = FoghornTests;
+			sourceTree = "<group>";
+		};
+		AB0000000000000000000037 /* FoghorniOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				AB0000000000000000000031 /* ProbeSnapshotTests.swift */,
+				AB0000000000000000000032 /* ConnectivityStateMachineTests.swift */,
+				AB0000000000000000000033 /* HTTPProbeTests.swift */,
+				AB0000000000000000000034 /* GatewayProbeTests.swift */,
+				AB0000000000000000000035 /* OutageRecordTests.swift */,
+				AB0000000000000000000036 /* BackgroundMonitoringSupportTests.swift */,
+			);
+			path = FoghorniOSTests;
 			sourceTree = "<group>";
 		};
 		G1000000000000000000000A /* Design */ = {
@@ -445,6 +487,23 @@
 			productReference = F10000000000000000000021 /* FoghornUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		AB0000000000000000000038 /* FoghorniOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB000000000000000000003B /* Build configuration list for PBXNativeTarget "FoghorniOSTests" */;
+			buildPhases = (
+				AB0000000000000000000039 /* Sources */,
+				AB000000000000000000003A /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB000000000000000000003F /* PBXTargetDependency */,
+			);
+			name = FoghorniOSTests;
+			productName = FoghorniOSTests;
+			productReference = AB0000000000000000000030 /* FoghorniOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -475,6 +534,7 @@
 				T10000000000000000000002 /* FoghornTests */,
 				T10000000000000000000003 /* FoghornUITests */,
 				DB17B89D8A1EBE69A6CF4B69 /* FoghorniOS */,
+				AB0000000000000000000038 /* FoghorniOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -623,6 +683,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AB0000000000000000000039 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB0000000000000000000041 /* ProbeSnapshotTests.swift in Sources */,
+				AB0000000000000000000042 /* ConnectivityStateMachineTests.swift in Sources */,
+				AB0000000000000000000043 /* HTTPProbeTests.swift in Sources */,
+				AB0000000000000000000044 /* GatewayProbeTests.swift in Sources */,
+				AB0000000000000000000045 /* OutageRecordTests.swift in Sources */,
+				AB0000000000000000000046 /* BackgroundMonitoringSupportTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -630,6 +703,11 @@
 			isa = PBXTargetDependency;
 			target = T10000000000000000000001 /* Foghorn */;
 			targetProxy = CP100000000000000000001 /* PBXContainerItemProxy */;
+		};
+		AB000000000000000000003F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DB17B89D8A1EBE69A6CF4B69 /* FoghorniOS */;
+			targetProxy = AB000000000000000000003E /* PBXContainerItemProxy */;
 		};
 		D10000000000000000000002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -856,6 +934,48 @@
 			};
 			name = Release;
 		};
+		AB000000000000000000003C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.ios.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FoghorniOS.app/FoghorniOS";
+			};
+			name = Debug;
+		};
+		AB000000000000000000003D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.ios.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FoghorniOS.app/FoghorniOS";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -900,6 +1020,15 @@
 			buildConfigurations = (
 				65EB60F914BCD9525F43ABFD /* Release */,
 				B12499DB476B631743F0869E /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB000000000000000000003B /* Build configuration list for PBXNativeTarget "FoghorniOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB000000000000000000003C /* Debug */,
+				AB000000000000000000003D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
