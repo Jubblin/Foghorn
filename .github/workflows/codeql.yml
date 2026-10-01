@@ -26,13 +26,15 @@ concurrency:
 
 permissions:
   contents: read
-  security-events: write
-  actions: read
 
 jobs:
   analyze-actions:
     name: Analyze (actions)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -50,6 +52,9 @@ jobs:
   analyze-swift:
     name: Analyze (swift)
     runs-on: macos-26
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
