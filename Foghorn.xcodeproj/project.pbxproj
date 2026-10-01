@@ -16,6 +16,8 @@
 		AB0000000000000000000015 /* IOSSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000016 /* IOSSettingsView.swift */; };
 		AB0000000000000000000021 /* SettingsChecksSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000019 /* SettingsChecksSection.swift */; };
 		AB0000000000000000000024 /* SettingsInterruptSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000022 /* SettingsInterruptSection.swift */; };
+		AB0000000000000000000028 /* SettingsHelpPrivacySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000026 /* SettingsHelpPrivacySection.swift */; };
+		AB0000000000000000000025 /* OutageLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001C /* OutageLogView.swift */; };
 		AB0000000000000000000017 /* SettingsChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000002A /* SettingsChrome.swift */; };
 		4462C7E51D724D988DCEA8E8 /* DNSProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000A /* DNSProbe.swift */; };
 		56B075AAD52A09C2A013BF4C /* ProbeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000003 /* ProbeResult.swift */; };
@@ -53,6 +55,7 @@
 		B10000000000000000000013 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000013 /* SettingsView.swift */; };
 		AB0000000000000000000020 /* SettingsChecksSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000019 /* SettingsChecksSection.swift */; };
 		AB0000000000000000000023 /* SettingsInterruptSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000022 /* SettingsInterruptSection.swift */; };
+		AB0000000000000000000027 /* SettingsHelpPrivacySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000026 /* SettingsHelpPrivacySection.swift */; };
 		B10000000000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000014 /* Assets.xcassets */; };
 		AB0000000000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000014 /* Assets.xcassets */; };
 		B10000000000000000000015 /* GatewayResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000017 /* GatewayResolver.swift */; };
@@ -130,6 +133,7 @@
 		F10000000000000000000013 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AB0000000000000000000019 /* SettingsChecksSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsChecksSection.swift; sourceTree = "<group>"; };
 		AB0000000000000000000022 /* SettingsInterruptSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsInterruptSection.swift; sourceTree = "<group>"; };
+		AB0000000000000000000026 /* SettingsHelpPrivacySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsHelpPrivacySection.swift; sourceTree = "<group>"; };
 		F10000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F10000000000000000000015 /* Foghorn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Foghorn.entitlements; sourceTree = "<group>"; };
 		F10000000000000000000016 /* Foghorn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Foghorn.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -320,6 +324,7 @@
 				F10000000000000000000013 /* SettingsView.swift */,
 				AB0000000000000000000019 /* SettingsChecksSection.swift */,
 				AB0000000000000000000022 /* SettingsInterruptSection.swift */,
+				AB0000000000000000000026 /* SettingsHelpPrivacySection.swift */,
 				F1000000000000000000002A /* SettingsChrome.swift */,
 				F1000000000000000000001C /* OutageLogView.swift */,
 			);
@@ -546,6 +551,8 @@
 				AB0000000000000000000015 /* IOSSettingsView.swift in Sources */,
 				AB0000000000000000000021 /* SettingsChecksSection.swift in Sources */,
 				AB0000000000000000000024 /* SettingsInterruptSection.swift in Sources */,
+				AB0000000000000000000028 /* SettingsHelpPrivacySection.swift in Sources */,
+				AB0000000000000000000025 /* OutageLogView.swift in Sources */,
 				AB0000000000000000000017 /* SettingsChrome.swift in Sources */,
 				D5C196BAEEC1F622BCEFC922 /* UITestConfiguration.swift in Sources */,
 				F33E89845B378CD4AB2682FA /* BackgroundMonitoringSupport.swift in Sources */,
@@ -578,6 +585,7 @@
 				B10000000000000000000013 /* SettingsView.swift in Sources */,
 				AB0000000000000000000020 /* SettingsChecksSection.swift in Sources */,
 				AB0000000000000000000023 /* SettingsInterruptSection.swift in Sources */,
+				AB0000000000000000000027 /* SettingsHelpPrivacySection.swift in Sources */,
 				B1000000000000000000002A /* SettingsChrome.swift in Sources */,
 				B1000000000000000000002B /* StatusItemController.swift in Sources */,
 				B10000000000000000000019 /* OutageLogView.swift in Sources */,
@@ -638,7 +646,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 118;
+				CURRENT_PROJECT_VERSION = 120;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Foghorn/iOS/Info.plist;
@@ -649,7 +657,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.10;
+				MARKETING_VERSION = 0.7.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -667,7 +675,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 118;
+				CURRENT_PROJECT_VERSION = 120;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Foghorn/iOS/Info.plist;
@@ -678,7 +686,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.10;
+				MARKETING_VERSION = 0.7.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -725,7 +733,7 @@
 				CODE_SIGN_ENTITLEMENTS = Foghorn/Foghorn.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 118;
+				CURRENT_PROJECT_VERSION = 120;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
@@ -738,7 +746,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.7.10;
+				MARKETING_VERSION = 0.7.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -753,7 +761,7 @@
 				CODE_SIGN_ENTITLEMENTS = Foghorn/Foghorn.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 118;
+				CURRENT_PROJECT_VERSION = 120;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
@@ -766,7 +774,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.7.10;
+				MARKETING_VERSION = 0.7.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.online.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
