@@ -37,14 +37,7 @@ struct SettingsHelpPrivacySection: View {
 
                 VStack(alignment: .leading, spacing: 6) {
                     Button("View outage log…") {
-                        if let showOutageLog {
-                            showOutageLog()
-                        }
-#if os(macOS)
-                        else {
-                            AppNavigation.openOutageLog()
-                        }
-#endif
+                        showOutageLog?()
                     }
                     .accessibilityIdentifier("settings.viewOutageLog")
 

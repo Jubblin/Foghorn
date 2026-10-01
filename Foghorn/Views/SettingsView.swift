@@ -61,7 +61,9 @@ struct SettingsView: View {
             .accessibilityIdentifier(SettingsTab.remembers.tabAccessibilityIdentifier)
 
             tabPane(.help) {
-                SettingsHelpPrivacySection(palette: palette)
+                SettingsHelpPrivacySection(palette: palette) {
+                    AppNavigation.openOutageLog()
+                }
             }
             .tabItem {
                 Label(SettingsTab.help.title, systemImage: SettingsTab.help.symbolName)
