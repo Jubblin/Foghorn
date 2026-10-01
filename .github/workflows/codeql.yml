@@ -1,10 +1,13 @@
 name: CodeQL
 
-# Advanced setup (checked-in workflow), swift only — #111. Default setup has no
-# hook to cache SPM dependencies before autobuild runs, so Sparkle was
-# recompiled from source on every PR (~15 of the job's ~29 minutes). The
-# "actions" language analysis stays on default setup; it's cheap (no
-# autobuild) and unaffected by this.
+# Advanced setup (checked-in workflow) for both languages — #111. GitHub
+# rejects advanced-setup SARIF uploads outright while default setup is still
+# "configured" for a repo, even if its language list is narrowed — so both
+# languages moved here, not just swift.
+#
+# The real reason for the move: default setup has no hook to cache SPM
+# dependencies before autobuild runs, so Sparkle was recompiled from source
+# on every PR (~15 of the swift job's ~29 minutes).
 #
 # Owner for keeping actions/query packs current: @Jubblin (single-maintainer
 # repo).
@@ -24,9 +27,27 @@ concurrency:
 permissions:
   contents: read
   security-events: write
+  actions: read
 
 jobs:
-  analyze:
+  analyze-actions:
+    name: Analyze (actions)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@87ef0dc97def48aa960fbf026a2563ee9dbdb470 # v3
+        with:
+          languages: actions
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@87ef0dc97def48aa960fbf026a2563ee9dbdb470 # v3
+        with:
+          category: "/language:actions"
+
+  analyze-swift:
     name: Analyze (swift)
     runs-on: macos-26
     steps:
