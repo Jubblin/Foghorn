@@ -1,6 +1,6 @@
 # Foghorn
 
-[![CI](https://github.com/Jubblin/Foghorn/actions/workflows/ci.yml/badge.svg)](https://github.com/Jubblin/Foghorn/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![macOS](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/) [![Swift](https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white)](https://swift.org)
+[![CI](https://github.com/Jubblin/Foghorn/actions/workflows/ci.yml/badge.svg)](https://github.com/Jubblin/Foghorn/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![macOS](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/) [![iOS](https://img.shields.io/badge/iOS-17%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/ios/) [![Swift](https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white)](https://swift.org)
 
 **The truth about your connection.**
 
