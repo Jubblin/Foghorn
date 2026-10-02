@@ -51,11 +51,13 @@ Run on a **Release** build before tagging a GitHub release or uploading to TestF
 - [ ] App Privacy questionnaire completed in App Store Connect
 - [ ] Reviewer notes describe network probing and no data collection
 
-## FoghorniOS (manual, real device required — see #121)
+## FoghorniOS (manual, real device required — see #121, #137)
 
-CI only builds the `FoghorniOS` scheme (`xcodebuild build`, no test run) — there is no
-automated unit/UI test target for it yet. Simulator does not reliably reproduce the Local
-Network permission prompt or background execution timing, so these need a real iPhone:
+CI builds `FoghorniOS` and runs `FoghorniOSTests` (shared logic: state machine,
+probes, outage log, background-monitoring lifecycle) on the simulator — see #137.
+There is still no UI test target, and the simulator does not reliably reproduce the
+Local Network permission prompt or background execution timing, so these need a real
+iPhone:
 
 - [ ] Fresh install — Local Network permission prompt appears the first time the gateway
       probe runs (not at launch); denying it does not crash the app or freeze the status
