@@ -127,4 +127,3 @@ struct SettingsChecksSection: View {
         settings.removeCustomHost(at: IndexSet(integer: index))
     }
 }
-

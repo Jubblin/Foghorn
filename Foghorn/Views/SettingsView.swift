@@ -282,4 +282,3 @@ private struct SettingsRemembersSection: View {
         }
     }
 }
-
