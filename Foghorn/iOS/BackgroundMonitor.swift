@@ -74,7 +74,7 @@ final class BackgroundMonitor {
         if satisfied {
             AlertService.shared.notifyBackgroundConnectivityRestored()
         } else {
-            AlertService.shared.notifyBackgroundConnectivityLost(reason: "Network link dropped")
+            AlertService.shared.notifyBackgroundConnectivityLost(reason: .noInterface)
         }
     }
 
@@ -106,10 +106,17 @@ final class BackgroundMonitor {
         let dnsResult = await dns
         let httpResult = await http
         let healthy = gatewayResult.success && dnsResult.success && httpResult.success
+        // Same attribution as the foreground pipeline, so the alert names the failing layer.
+        let reason = ProbeSnapshot(timestamp: Date(), results: [
+            pathProbe.evaluate(),
+            gatewayResult,
+            dnsResult,
+            httpResult
+        ]).failureReason()
 
         switch LinkTransition.decide(previous: lastDeepProbeHealthy, current: healthy) {
         case .lost:
-            await AlertService.shared.notifyBackgroundConnectivityLost(reason: "Internet check failed")
+            await AlertService.shared.notifyBackgroundConnectivityLost(reason: reason)
         case .restored:
             await AlertService.shared.notifyBackgroundConnectivityRestored()
         case nil:

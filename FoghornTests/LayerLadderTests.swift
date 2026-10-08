@@ -66,20 +66,33 @@ final class LayerLadderTests: XCTestCase {
     }
 
     func testEachFailureLightsItsLayerAndLeavesLaterRungsUnreached() {
-        let cases: [(FailureReason, ProbeSnapshot, [State], String)] = [
-            (.noInterface, snapshot(path: false, gateway: false, dns: false, http: false),
+        struct Case {
+            let reason: FailureReason
+            let snapshot: ProbeSnapshot
+            let expected: [State]
+            let detail: String
+            init(_ reason: FailureReason, _ snapshot: ProbeSnapshot, _ expected: [State], _ detail: String) {
+                self.reason = reason
+                self.snapshot = snapshot
+                self.expected = expected
+                self.detail = detail
+            }
+        }
+        let cases: [Case] = [
+            Case(.noInterface, snapshot(path: false, gateway: false, dns: false, http: false),
              [.failed, .notReached, .notReached, .notReached], "no network"),
-            (.routerUnreachable, snapshot(gateway: false, dns: false, http: false),
+            Case(.routerUnreachable, snapshot(gateway: false, dns: false, http: false),
              [.passed, .failed, .notReached, .notReached], "no answer"),
-            (.dnsFailure, snapshot(dns: false, http: false),
+            Case(.dnsFailure, snapshot(dns: false, http: false),
              [.passed, .passed, .failed, .notReached], "no answer"),
-            (.ispOutage, snapshot(http: false),
+            Case(.ispOutage, snapshot(http: false),
              [.passed, .passed, .passed, .failed], "unreachable"),
-            (.captivePortalLikely, snapshot(http: false, httpDetail: "redirect HTTP 302 — captive possible"),
+            Case(.captivePortalLikely, snapshot(http: false, httpDetail: "redirect HTTP 302 — captive possible"),
              [.passed, .passed, .passed, .failed], "captive portal")
         ]
-        for (reason, snap, expected, detail) in cases {
-            let ladder = LayerLadder(status: status(.outage, snap, reason: reason))
+        for testCase in cases {
+            let (reason, expected, detail) = (testCase.reason, testCase.expected, testCase.detail)
+            let ladder = LayerLadder(status: status(.outage, testCase.snapshot, reason: reason))
             XCTAssertEqual(states(ladder), expected, "\(reason)")
             XCTAssertEqual(ladder.litLayer, LayerLadder.layer(for: reason), "\(reason)")
             XCTAssertEqual(ladder.rungs.first { $0.layer == ladder.litLayer }?.detail, detail, "\(reason)")
@@ -122,5 +135,33 @@ final class LayerLadderTests: XCTestCase {
     func testRecoveringWithCleanSnapshotLightsNothing() {
         let ladder = LayerLadder(status: status(.recovering, snapshot()))
         XCTAssertEqual(states(ladder), [.passed, .passed, .passed, .passed])
+    }
+}
+
+@MainActor
+final class OutageNotificationTextTests: XCTestCase {
+    func testTitleNamesTheFailingLayer() {
+        let cases: [(FailureReason, String)] = [
+            (.noInterface, "No network interface is up"),
+            (.routerUnreachable, "Router isn't responding"),
+            (.dnsFailure, "DNS is failing"),
+            (.ispOutage, "Internet connection is down"),
+            (.captivePortalLikely, "Captive portal may be blocking access"),
+            (.customHostDown, "Custom host down: vpn.example.com")
+        ]
+        for (reason, title) in cases {
+            let text = AlertService.outageText(reason: reason, host: "vpn.example.com")
+            XCTAssertEqual(text.title, title, "\(reason)")
+            XCTAssertFalse(text.body.isEmpty, "\(reason)")
+            XCTAssertNotEqual(text.body, text.title, "\(reason)")
+        }
+    }
+
+    func testRecordedTitleWins() {
+        XCTAssertEqual(AlertService.outageText(reason: .dnsFailure, title: "DNS is failing").title, "DNS is failing")
+    }
+
+    func testMissingReasonFallsBackToConnectionLost() {
+        XCTAssertEqual(AlertService.outageText(reason: nil).title, "Connection lost")
     }
 }

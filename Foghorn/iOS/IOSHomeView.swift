@@ -406,7 +406,9 @@ private struct IOSHomeContent: View {
     private static func time(_ date: Date) -> String {
         date.formatted(date: .omitted, time: .standard)
     }
+}
 
+extension IOSHomeContent {
     // MARK: UI-testing mock states
 
     /// Canned statuses for `-ui_testing_mock_status`, so every state can be
