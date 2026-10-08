@@ -175,7 +175,7 @@ Native macOS controls (Toggle, Picker, TextField, Button) stay native; layout an
 
 **What Foghorn checks**
 
-- **Base interval:** Segmented picker with 2s / 5s / 10s / 30s. Helper: "Doubles on battery (max 8s)."
+- **Base interval:** Segmented picker with 2s / 5s / 10s / 30s. Helper: "On battery: 2s→4s, 5s→7.5s, 10s and 30s→8s." (the real `ProbeEngine.effectiveInterval` mapping)
 - **Custom hosts:** Empty state: "No custom hosts configured." (muted). List with quiet row dividers + remove control. Add row: placeholder `vpn.company.com`, **Add** disabled when empty.
 - Host rows: monospace hostname, no decorative icons.
 
@@ -317,3 +317,4 @@ No stacked floating cards: the verdict is the one surface; Evidence and Last out
 | 2026-10-08 | iPhone follows system appearance | Phone use scenes range from bright daylight to dark rooms; light tokens become first-class there. |
 | 2026-10-08 | iPhone Settings is a grouped list, not tabs | A tab bar inside a sheet fights iOS conventions; promise wording survives as section headers. |
 | 2026-10-08 | iPhone last outage stays 24 hours | Phone sessions are sparse; the Mac's 1-hour window would hide most background outages. |
+| 2026-10-08 | Battery helper states the real mapping | The old helper promised doubling, but 10s and 30s run at 8s on battery. Kept the behaviour and fixed the words (#155). |
