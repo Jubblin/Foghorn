@@ -1,5 +1,9 @@
 import XCTest
+#if os(iOS)
+@testable import FoghorniOS
+#else
 @testable import Foghorn
+#endif
 
 final class OutageRecordTests: XCTestCase {
     // MARK: - Popover recency (#105)
