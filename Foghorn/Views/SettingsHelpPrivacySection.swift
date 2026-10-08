@@ -6,13 +6,25 @@ struct SettingsHelpPrivacySection: View {
     let palette: DesignPalette
     var showOutageLog: (() -> Void)?
 
+    /// Only the Developer ID Mac build updates through Sparkle's appcast (#163).
+    /// iOS updates come from the App Store like every other iPhone app, so it says nothing.
+    private static var updateSentence: String {
+        #if os(iOS)
+        ""
+        #elseif APP_STORE
+        " Updates come through the App Store."
+        #else
+        " Updates use a signed appcast over HTTPS."
+        #endif
+    }
+
     var body: some View {
         SettingsSectionCard(tab: .help, palette: palette) {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
                     SettingsHelperText(
-                        text: "Foghorn monitors connectivity locally — no personal data collected. "
-                            + "Updates use a signed appcast over HTTPS.",
+                        text: "Foghorn monitors connectivity locally — no personal data collected."
+                            + Self.updateSentence,
                         palette: palette
                     )
 
