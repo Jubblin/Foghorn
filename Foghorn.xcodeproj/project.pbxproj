@@ -86,12 +86,12 @@
 		F33E89845B378CD4AB2682FA /* BackgroundMonitoringSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B773109C9DB378E226FF12E8 /* BackgroundMonitoringSupport.swift */; };
 		F42BF5BA6413542EB6F32980 /* WakeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000010 /* WakeObserver.swift */; };
 		FFFF4D1A0097084CA9057D91 /* BackgroundMonitoringSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40805C33D40F734EBFE0B320 /* BackgroundMonitoringSupportTests.swift */; };
-		AB0000000000000000000041 /* ProbeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000031 /* ProbeSnapshotTests.swift */; };
-		AB0000000000000000000042 /* ConnectivityStateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000032 /* ConnectivityStateMachineTests.swift */; };
-		AB0000000000000000000043 /* HTTPProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000033 /* HTTPProbeTests.swift */; };
-		AB0000000000000000000044 /* GatewayProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000034 /* GatewayProbeTests.swift */; };
-		AB0000000000000000000045 /* OutageRecordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000035 /* OutageRecordTests.swift */; };
-		AB0000000000000000000046 /* BackgroundMonitoringSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000036 /* BackgroundMonitoringSupportTests.swift */; };
+		AB0000000000000000000041 /* ProbeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000018 /* ProbeSnapshotTests.swift */; };
+		AB0000000000000000000042 /* ConnectivityStateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000019 /* ConnectivityStateMachineTests.swift */; };
+		AB0000000000000000000043 /* HTTPProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001A /* HTTPProbeTests.swift */; };
+		AB0000000000000000000044 /* GatewayProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001F /* GatewayProbeTests.swift */; };
+		AB0000000000000000000045 /* OutageRecordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000001D /* OutageRecordTests.swift */; };
+		AB0000000000000000000046 /* BackgroundMonitoringSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40805C33D40F734EBFE0B320 /* BackgroundMonitoringSupportTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -158,12 +158,6 @@
 		F1000000000000000000001A /* HTTPProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPProbeTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001B /* FoghornTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FoghornTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB0000000000000000000030 /* FoghorniOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FoghorniOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AB0000000000000000000031 /* ProbeSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeSnapshotTests.swift; sourceTree = "<group>"; };
-		AB0000000000000000000032 /* ConnectivityStateMachineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityStateMachineTests.swift; sourceTree = "<group>"; };
-		AB0000000000000000000033 /* HTTPProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPProbeTests.swift; sourceTree = "<group>"; };
-		AB0000000000000000000034 /* GatewayProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GatewayProbeTests.swift; sourceTree = "<group>"; };
-		AB0000000000000000000035 /* OutageRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageRecordTests.swift; sourceTree = "<group>"; };
-		AB0000000000000000000036 /* BackgroundMonitoringSupportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMonitoringSupportTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001C /* OutageLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageLogView.swift; sourceTree = "<group>"; };
 		F1000000000000000000001D /* OutageRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutageRecordTests.swift; sourceTree = "<group>"; };
 		F1000000000000000000001E /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
@@ -260,7 +254,6 @@
 				G10000000000000000000002 /* Foghorn */,
 				G10000000000000000000009 /* FoghornTests */,
 				G1000000000000000000000B /* FoghornUITests */,
-				AB0000000000000000000037 /* FoghorniOSTests */,
 				G10000000000000000000003 /* Products */,
 				C4AC57244C2A74762671D2A8 /* Frameworks */,
 			);
@@ -375,19 +368,6 @@
 				40805C33D40F734EBFE0B320 /* BackgroundMonitoringSupportTests.swift */,
 			);
 			path = FoghornTests;
-			sourceTree = "<group>";
-		};
-		AB0000000000000000000037 /* FoghorniOSTests */ = {
-			isa = PBXGroup;
-			children = (
-				AB0000000000000000000031 /* ProbeSnapshotTests.swift */,
-				AB0000000000000000000032 /* ConnectivityStateMachineTests.swift */,
-				AB0000000000000000000033 /* HTTPProbeTests.swift */,
-				AB0000000000000000000034 /* GatewayProbeTests.swift */,
-				AB0000000000000000000035 /* OutageRecordTests.swift */,
-				AB0000000000000000000036 /* BackgroundMonitoringSupportTests.swift */,
-			);
-			path = FoghorniOSTests;
 			sourceTree = "<group>";
 		};
 		G1000000000000000000000A /* Design */ = {
