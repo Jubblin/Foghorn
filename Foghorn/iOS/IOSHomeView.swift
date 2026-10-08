@@ -101,6 +101,7 @@ private struct IOSHomeContent: View {
                     coordinator.start()
                 }
                 showPausedBanner = BackgroundMonitor.shared.consumePausedState()
+                showSettings = UITestConfiguration.shouldOpenSettings
             }
         }
     }
