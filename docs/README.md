@@ -21,15 +21,16 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 
 ## Features
 
-- **Layered Sentinel probes** — `NWPathMonitor`, gateway via `NWPath.gateways` (TCP fallback), DNS lookup, HTTP HEAD (`captive.apple.com` + `cloudflare.com`), optional custom hosts
+- **Layered Sentinel probes** — `NWPathMonitor`, gateway via `NWPath.gateways` (TCP fallback), DNS lookup, HTTPS HEAD (`captive.apple.com/hotspot-detect.html` + `cloudflare.com`), optional custom hosts
 - **Smart debouncing** — 15s evaluation window, 15s wake-from-sleep grace, 2-tick recovery confirmation, 3-tick rapid outage detection
 - **Failure attribution** — know whether it's your router, DNS, ISP, captive portal, or a custom endpoint
 - **Outage log viewer** — sortable in-app table; copy JSON or open file in Finder
 - **Menu bar visibility** — hide the icon in Settings; monitoring and alerts continue
-- **Battery-aware** — longer poll intervals on battery power
+- **Battery-aware** — on battery the poll interval is adjusted and capped at 8s (2s→4s, 5s→7.5s, 10s/30s→8s)
 - **Launch at login** — via `SMAppService`
 - **Automatic updates** — signed Sparkle appcast, with an optional pre-release channel
-- **Native Swift/SwiftUI** — macOS 14+, no Electron, one dependency (Sparkle, for updates)
+- **iPhone app** — the same probes on iOS 17+, with background monitoring (see [iPhone](#iphone))
+- **Native Swift/SwiftUI** — macOS 14+ / iOS 17+, no Electron, one dependency (Sparkle, for macOS updates)
 
 ## Screenshots
 
@@ -37,7 +38,7 @@ macOS can show Wi‑Fi as connected while pages fail to load — router issues, 
 
 ![Foghorn menu bar popover showing healthy status](screenshots/menu-bar-healthy.png)
 
-**Traffic-light states** — green (online), yellow (degraded), red (offline), gray (recovering)
+**Traffic-light states** — green (online), amber (degraded), red (offline), gray (recovering)
 
 ![Traffic-light menu bar icons for all connectivity states](screenshots/traffic-lights.png)
 
@@ -64,7 +65,7 @@ Then launch Foghorn again, or build with `build-signed-dmg.sh` if you have a Dev
 
 ### Build from source
 
-**Requirements:** macOS 14 Sonoma or later, Xcode 15+
+**Requirements:** macOS 14 Sonoma or later, Xcode 15+ (the `FoghorniOS` scheme builds the iPhone app)
 
 ```
 git clone https://github.com/Jubblin/Foghorn.git
@@ -92,10 +93,10 @@ chmod +x scripts/build-dmg.sh
    fails.
 3. Open **Settings** from the popover to configure:
    - **Interrupt** — show in menu bar, appearance, notification permission status
-   - **Checks** — poll interval (2s, 5s, 10s, 30s; doubles on battery, capped at 8s) and custom
-     hosts probed via HTTPS HEAD
+   - **Checks** — poll interval (2s, 5s, 10s, 30s; on battery 2s→4s, 5s→7.5s, and 10s/30s→8s)
+     and custom hosts probed via HTTPS HEAD
    - **Remembers** — launch at login, and update behaviour including the pre-release channel
-   - **Help** — privacy and support links, version and build, and the outage log
+   - **Help** — Privacy, Docs, Support and Report links, version and build, and the outage log
 4. **View outage log…** in Settings → Help for the full history in a table
 
 If you hide the menu bar icon, Settings is no longer reachable from it — Foghorn runs as an
@@ -107,14 +108,28 @@ open -a Foghorn --args -open-settings
 
 Notifications fire on **confirmed outage** and when connectivity **restores**.
 
+### iPhone
+
+The `FoghorniOS` target runs the same probes and state machine on iOS 17+. Builds are uploaded
+to TestFlight by the [Release Store](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-store.yml) workflow; it is not on
+the App Store yet.
+
+- **Home** — current status, last check, probe rows, last outage, and **Check now**
+- **Settings** — Checks, Interrupt, and Help tabs (no Remembers tab; launch at login and updates
+  are macOS-only)
+- **Background monitoring** — iOS suspends the foreground probe loop, so Foghorn alerts on
+  link-level changes via `NWPathMonitor` and requests a `BGAppRefreshTask` deep probe
+  (gateway/DNS/HTTP) about every 15 minutes. iOS decides when that actually runs. If the app
+  wasn't running in the background, the home screen says monitoring was paused.
+
 ## How it works
 
 ```
-ProbeEngine (2s tick, battery backoff)
+ProbeEngine (2s default tick, 8s cap on battery)
   ├── PathProbe        NWPathMonitor — interface up?
   ├── GatewayProbe     SCDynamicStore + NWPath.gateways (TCP fallback)
   ├── DNSProbe         Resolve cloudflare.com
-  ├── HTTPProbe        HEAD captive.apple.com + cloudflare.com
+  ├── HTTPProbe        HEAD captive.apple.com/hotspot-detect.html + cloudflare.com
   └── CustomHostProbe  User-defined hosts
 
 ConnectivityStateMachine
@@ -123,7 +138,8 @@ ConnectivityStateMachine
   └── States: Healthy → Degraded → Outage → Recovering
 
 Outputs
-  ├── NSStatusItem popover (alert-first)
+  ├── NSStatusItem popover (alert-first; macOS)
+  ├── IOSHomeView + BackgroundMonitor (iOS)
   ├── UserNotifications
   └── OutageLog (JSON on disk)
 ```
@@ -153,6 +169,14 @@ xcodebuild test \
   -configuration Debug \
   -destination 'platform=macOS'
 
+# iOS unit tests (simulator)
+xcodebuild test \
+  -project Foghorn.xcodeproj \
+  -scheme FoghorniOS \
+  -configuration Debug \
+  -destination 'platform=iOS Simulator,name=iPhone 17' \
+  -only-testing:FoghorniOSTests
+
 # Bump version locally (CI does this on PRs)
 ./scripts/bump-version.sh patch
 ```
@@ -163,27 +187,39 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for PR workflow, version labels, and code
 
 ```
 Foghorn/
-  Probes/     PathProbe, GatewayProbe, DNSProbe, HTTPProbe, ProbeEngine
+  FoghornApp.swift, AppCoordinator.swift   macOS entry point; shared probe → state wiring
+  Probes/     PathProbe, GatewayProbe, GatewayResolver, DNSProbe, HTTPProbe,
+              CustomHostProbe, ProbeEngine
   State/      ConnectivityStateMachine
   Services/   AlertService, OutageLog, WakeObserver, LaunchAtLoginService,
-              StatusItemController (menu bar + popover), AppUpdateService (Sparkle)
-  Models/     ProbeResult, ConnectivityState, OutageRecord, AppSettings
-  Views/      MenuBarView, SettingsView, SettingsChrome, OutageLogView
-FoghornTests/   State machine, outage record, snapshot, HTTP mock tests
-FoghornUITests/ Settings and popover smoke tests
-scripts/      build-dmg.sh, build-signed-dmg.sh, resolve-release-arch.sh, bump-version.sh,
-              health.sh, test-scripts.sh (tests the release scripts)
+              StatusItemController (menu bar + popover), AppUpdateService (Sparkle),
+              AppUpdateModels, GitHubReleaseClient
+  Models/     ProbeResult, ConnectivityState, OutageRecord, AppSettings, AppLinks
+  Views/      MenuBarView, SettingsView, SettingsChrome, Settings{Checks,Interrupt,HelpPrivacy}Section,
+              OutageLogView
+  Design/     DesignTokens (colours, fonts per DESIGN.md)
+  Fonts/      Instrument Sans, JetBrains Mono
+  iOS/        FoghorniOSApp, IOSHomeView, IOSSettingsView, BackgroundMonitor(+Support)
+  UITest/     UITestConfiguration
+FoghornTests/    macOS unit tests (state machine, probes, outage record, updates, launch at login)
+FoghornUITests/  Settings and popover smoke tests
+FoghorniOSTests/ iOS unit tests (shared logic + background monitoring)
+scripts/      build-dmg.sh, build-signed-dmg.sh, package-dmg.sh, resolve-release-arch.sh,
+              bump-version.sh, health.sh, sync-docs-site.sh, changelog helpers,
+              Sparkle feed + TestFlight upload helpers, test-scripts.sh (tests the release scripts)
 ```
 
 ## CI / Release
 
 | Workflow          | Trigger             | What it does                          |
 | ------------------ | -------------------- | -------------------------------------- |
-| [CI](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/ci.yml)                             | Push to `main`, PRs | Lint, script tests, docs sync, unit + UI tests; Release build on `main` |
+| [CI](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/ci.yml)                             | Push to `main`, PRs | Lint, script tests, docs sync, macOS unit + UI tests, iOS unit tests, Semgrep; Release build on `main` |
+| [Release on main](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-on-main.yml)   | CI success on `main` | Tag `v<version>-build.<n>` and dispatch a pre-release build |
 | [Release dispatch](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-dispatch.yml) | Manual              | Finalize CHANGELOG + tag `v*`         |
-| [Release](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release.yml)                   | Tag `v*`            | Signed/notarized DMG → GitHub Release |
-| [Release Store](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-store.yml)       | Tag `v*` or manual  | Upload to TestFlight                  |
+| [Release](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release.yml)                   | Tag `v*` or manual  | Signed/notarized DMGs → GitHub Release + Sparkle appcast (`-build.` tags are pre-releases) |
+| [Release Store](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/release-store.yml)       | Tag `v*` or manual  | Upload macOS + iOS to TestFlight (skips `-build.` tags) |
 | [Version bump](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/version-bump.yml)         | PR to `main`        | Auto-bump semver + build number       |
+| [CodeQL](https://github.com/Jubblin/Foghorn/blob/main/.github/workflows/codeql.yml)                     | Push/PR to `main`, weekly | Actions + Swift code scanning   |
 
 **Cut a release:** Actions → **Release dispatch** on `main`, or see [docs/RELEASE.md](RELEASE.md).
 
