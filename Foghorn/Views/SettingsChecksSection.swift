@@ -8,13 +8,13 @@ struct SettingsChecksSection: View {
     @Binding var customHostsExpanded: Bool
     let palette: DesignPalette
 
-    /// macOS backs off on battery (#155 tracks the wording); iOS can't keep a
+    /// macOS states the real battery mapping from `ProbeEngine.effectiveInterval` (#155); iOS can't keep a
     /// foreground cadence in the background at all, so say what actually happens (#156).
     private static var intervalHelper: String {
         #if os(iOS)
         "While Foghorn is open. In the background, iOS runs checks about every 15 minutes and decides exactly when."
         #else
-        "Doubles on battery (max 8s)."
+        "On battery: 2s→4s, 5s→7.5s, 10s and 30s→8s."
         #endif
     }
 
