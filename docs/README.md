@@ -201,9 +201,9 @@ Foghorn/
   Fonts/      Instrument Sans, JetBrains Mono
   iOS/        FoghorniOSApp, IOSHomeView, IOSSettingsView, BackgroundMonitor(+Support)
   UITest/     UITestConfiguration
-FoghornTests/    macOS unit tests (state machine, probes, outage record, updates, launch at login)
+FoghornTests/    Unit tests (state machine, probes, outage record, updates, launch at login);
+                 the shared-logic suites also build into the FoghorniOSTests target
 FoghornUITests/  Settings and popover smoke tests
-FoghorniOSTests/ iOS unit tests (shared logic + background monitoring)
 scripts/      build-dmg.sh, build-signed-dmg.sh, package-dmg.sh, resolve-release-arch.sh,
               bump-version.sh, health.sh, sync-docs-site.sh, changelog helpers,
               Sparkle feed + TestFlight upload helpers, test-scripts.sh (tests the release scripts)
