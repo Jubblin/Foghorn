@@ -58,6 +58,8 @@
 		AB0000000000000000000027 /* SettingsHelpPrivacySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000026 /* SettingsHelpPrivacySection.swift */; };
 		B10000000000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000014 /* Assets.xcassets */; };
 		AB0000000000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000014 /* Assets.xcassets */; };
+		AB00000000000000000000A0 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = A39EB2AE4E7A151C23C6CDEF /* Fonts */; };
+		AB00000000000000000000A1 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000025 /* PrivacyInfo.xcprivacy */; };
 		B10000000000000000000015 /* GatewayResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000017 /* GatewayResolver.swift */; };
 		B10000000000000000000016 /* ProbeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000018 /* ProbeSnapshotTests.swift */; };
 		B10000000000000000000017 /* ConnectivityStateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000019 /* ConnectivityStateMachineTests.swift */; };
@@ -525,6 +527,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB0000000000000000000014 /* Assets.xcassets in Resources */,
+				AB00000000000000000000A1 /* PrivacyInfo.xcprivacy in Resources */,
+				AB00000000000000000000A0 /* Fonts in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
