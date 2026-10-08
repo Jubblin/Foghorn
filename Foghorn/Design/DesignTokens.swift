@@ -104,12 +104,14 @@ enum DesignTokens {
     /// Instrument Sans SemiBold at the "popover status line" scale entry in
     /// DESIGN.md (lg: 18px) — the one line of text the product is built
     /// around, so it's the one place a bundled-vs-system-fallback mismatch
-    /// would be most visible.
+    /// would be most visible. The bundled face is variable: load its default
+    /// instance and set the weight, because iOS can't open the named
+    /// "InstrumentSans-SemiBold" instance by name (#153). Renders identically on macOS.
     static let statusFont = Font.custom(
-        "InstrumentSans-SemiBold",
+        "InstrumentSans-Regular",
         size: 18,
         relativeTo: .headline
-    )
+    ).weight(.semibold)
 
     // Legacy aliases used outside the popover.
     static let mutedLichen = Color(red: 0.50, green: 0.57, blue: 0.54)
