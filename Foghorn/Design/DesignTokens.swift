@@ -113,6 +113,14 @@ enum DesignTokens {
         relativeTo: .headline
     ).weight(.semibold)
 
+    /// The iPhone home screen's verdict: the same face and weight as `statusFont`,
+    /// scaled relative to `.title2` because the phone is read at arm's length (#156).
+    static let verdictFont = Font.custom(
+        "InstrumentSans-Regular",
+        size: 22,
+        relativeTo: .title2
+    ).weight(.semibold)
+
     // Legacy aliases used outside the popover.
     static let mutedLichen = Color(red: 0.50, green: 0.57, blue: 0.54)
 }
