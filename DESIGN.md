@@ -1,18 +1,71 @@
+---
+# gstack: design-md-format=spec
+name: Foghorn
+description: A quiet field instrument on graphite glass that only shows colour when the network lies.
+typography:
+  body:
+    fontFamily: Instrument Sans
+  mono:
+    fontFamily: JetBrains Mono
+    fontFeature: tnum
+colors:
+  primary: "#050708"
+  secondary: "#0E1415"
+  surface: "#1C2828"
+  text: "#D7E2DA"
+  muted: "#7F918A"
+  success: "#62D26F"
+  warning: "#F2C94C"
+  error: "#FF4D3D"
+  info: "#5CB7E8"
+  surface-light: "#EEF3EF"
+  text-light: "#17201E"
+rounded:
+  sm: 4px
+  md: 8px
+  lg: 12px
+  xl: 18px
+  full: 9999px
+spacing:
+  2xs: 2px
+  xs: 4px
+  sm: 8px
+  md: 16px
+  lg: 24px
+  xl: 32px
+  2xl: 48px
+  3xl: 64px
+---
+
 # Design System - Foghorn
 
-## Product Context
+## Overview
 
 - **What this is:** Foghorn is a native macOS menu bar utility that monitors real internet connectivity with layered probes. It stays quiet when the network is healthy and alerts only when a confirmed failure survives debounce checks.
 - **Who it's for:** Remote workers, developers, and Mac users who need to know whether the problem is their router, DNS, ISP, captive portal, or custom endpoint.
 - **Space/industry:** macOS menu bar utilities, lightweight network monitors, and local diagnostic tools. Relevant peers include iStat Menus, Little Snitch Mini, Pulse, Me Or Them, Yifi, and native macOS status utilities.
-- **Project type:** Native macOS SwiftUI app with a menu bar popover, Settings window, and outage log table.
-
-## Aesthetic Direction
+- **Project type:** Native SwiftUI apps sharing one system: the macOS menu bar app (popover, Settings window, outage log table) and the iPhone app (home screen, Settings sheet, outage log sheet, notifications). iPhone-specific rules live in [iPhone](#iphone).
 
 - **Direction:** Industrial minimal field instrument.
 - **Decoration level:** Intentional. Use subtle graphite/glass surfaces, thin dividers, small signal marks, and restrained glow only for live status.
 - **Mood:** Foghorn should feel like a quiet sentinel: invisible until the network lies. The product should feel calm, precise, and hard to fool, not like a dashboard trying to entertain the user.
 - **Reference sites:** Research included iStat Menus, Little Snitch Mini, Pulse, Me Or Them, Yifi, and macOS `MenuBarExtra` design patterns.
+
+## Colors
+
+- **Approach:** Restrained. Neutrals carry the interface; color appears only when it communicates network truth.
+- **Primary:** `#050708` Abyss, the dark base for the sentinel identity.
+- **Secondary:** `#0E1415` Graphite, the main surface color for popovers, cards, and dark-mode windows.
+- **Surface:** `#1C2828` Signal Glass, used for elevated panels and subtle status areas.
+- **Text:** `#D7E2DA` Fog Text, main text on dark surfaces.
+- **Muted:** `#7F918A` Muted Lichen, secondary text and timestamps.
+- **Semantic:**
+  - Success: `#62D26F` Truth Green
+  - Warning: `#F2C94C` Warning Amber
+  - Error: `#FF4D3D` Outage Red
+  - Info: `#5CB7E8` Probe Blue
+- **Dark mode:** Native default. Keep surfaces low-luminance and avoid pure black except for page or app chrome.
+- **Light mode:** Use cool off-white backgrounds (`#EEF3EF`), deep text (`#17201E`), and keep semantic colors slightly darker if contrast needs it.
 
 ## Typography
 
@@ -31,28 +84,6 @@
   - xl: 24px, section titles
   - 2xl: 36px, marketing or docs headings
 
-## Color
-
-- **Approach:** Restrained. Neutrals carry the interface; color appears only when it communicates network truth.
-- **Primary:** `#050708` Abyss, the dark base for the sentinel identity.
-- **Secondary:** `#0E1415` Graphite, the main surface color for popovers, cards, and dark-mode windows.
-- **Surface:** `#1C2828` Signal Glass, used for elevated panels and subtle status areas.
-- **Text:** `#D7E2DA` Fog Text, main text on dark surfaces.
-- **Muted:** `#7F918A` Muted Lichen, secondary text and timestamps.
-- **Semantic:**
-  - Success: `#62D26F` Truth Green
-  - Warning: `#F2C94C` Warning Amber
-  - Error: `#FF4D3D` Outage Red
-  - Info: `#5CB7E8` Probe Blue
-- **Dark mode:** Native default. Keep surfaces low-luminance and avoid pure black except for page or app chrome.
-- **Light mode:** Use cool off-white backgrounds (`#EEF3EF`), deep text (`#17201E`), and keep semantic colors slightly darker if contrast needs it.
-
-## Spacing
-
-- **Base unit:** 4px.
-- **Density:** Compact. This is a menu bar app; the UI should feel one-click and information-dense without becoming cramped.
-- **Scale:** 2xs 2px, xs 4px, sm 8px, md 16px, lg 24px, xl 32px, 2xl 48px, 3xl 64px.
-
 ## Layout
 
 - **Approach:** Grid-disciplined for app surfaces, black-box-recorder style for outage history.
@@ -67,6 +98,11 @@
 - **Grid:** Single-column in the popover, two-column only in wider Settings windows, table-first for logs.
 - **Max content width:** Popover around 280-360px. Settings around 460-560px. Log window around 800px minimum.
 - **Border radius:** sm 4px, md 8px, lg 12px, xl 18px, full 999px. Use larger radii only for popover containers and status pills.
+
+### Spacing
+- **Base unit:** 4px.
+- **Density:** Compact. This is a menu bar app; the UI should feel one-click and information-dense without becoming cramped.
+- **Scale:** 2xs 2px, xs 4px, sm 8px, md 16px, lg 24px, xl 32px, 2xl 48px, 3xl 64px.
 
 ## Motion
 
@@ -197,7 +233,60 @@ Split into two bands with a divider:
 
 - Prefer a single `SettingsView` composed of section subviews (`SettingsInterruptSection`, etc.) for testability.
 - `Help & privacy` link URLs should be constants (e.g. `AppLinks.privacyPolicy`, `AppLinks.support`) shared with App Store Connect copy.
-- Until fonts are bundled ([#79](https://github.com/Jubblin/Foghorn/issues/79)), use system fonts with `.headline` / `.caption` / `.monospaced` roles that map to the scale above.
+- Fonts are bundled in `Foghorn/Fonts` ([#79](https://github.com/Jubblin/Foghorn/issues/79)) and exposed as `DesignTokens.statusFont` / `DesignTokens.dataFont`. Every target that shows UI must bundle and register them; the iPhone target does not yet.
+
+## iPhone
+
+**Memorable thing:** one glance tells you whether it's the network or your phone.
+
+The Mac app is ignored until it interrupts. The iPhone app gets opened on purpose, usually on café, hotel or train Wi-Fi when something already feels wrong. So it answers first and shows evidence second, while keeping the same quiet posture in the background.
+
+### Appearance
+
+- **Light or dark:** Follow the system. The phone is read on sunny platforms and in dark bedrooms, so the light tokens (`surface-light`, `text-light`) are first-class on iPhone, not a fallback.
+- **Palette:** Unchanged. Colour appears only where something is wrong. Healthy probe details use Fog Text, probe labels use Muted Lichen, and blue means info or an action, never decoration.
+
+### Home screen
+
+Top to bottom, inside a `NavigationStack` with the large title "Foghorn" and a gear button that opens Settings:
+
+1. **Verdict block.** One Signal Glass surface (`rounded.lg`, 12pt padding). It holds a small state dot, the status sentence in `DesignTokens.statusFont` scaled relative to `.title2` (not system `.title3`), "Last check" or "Down 3m · checked 14:32:05" in Muted Lichen caption, and a small bordered **Check now** button. The healthy dot is Muted Lichen, not green.
+2. **Layer ladder.** Four rungs, each at least 44pt tall: **Phone** (path probe), **Router** (gateway), **DNS**, **Internet** (HTTP and custom hosts). Each rung has a mark, a name, and a monospace detail. Passing rungs are neutral. The first failing rung is the only coloured element on screen (Outage Red for failure, Warning Amber for degraded). Rungs after it dim to 45% with "not reached". The status sentence names the same layer as the lit rung.
+3. **Evidence.** An inset grouped section of the existing probe rows in JetBrains Mono (`PATH via en0/wifi`, `GATEWAY 192.168.1.1`). Collapsed into one disclosure row while healthy; expanded automatically whenever any rung fails.
+4. **Last outage.** Shown for 24 hours after it ends (the Mac popover uses 1 hour), because phone sessions are sparse and "did it drop while I wasn't looking?" is the question. After that it lives only in the outage log.
+5. **Monitoring paused banner.** Kept above the verdict when iOS stopped background monitoring: amber warning symbol, "Monitoring paused", one muted line, dismiss button. It is the only amber that can appear while the network is healthy.
+
+No stacked floating cards: the verdict is the one surface; Evidence and Last outage are grouped list sections. Pull-to-refresh runs the same check as **Check now**.
+
+### Settings sheet
+
+- One inset grouped `List` in a sheet with **Done**, not a tab bar inside a sheet. Section headers keep the promise wording, in this order: **What Foghorn checks**, **When to interrupt me**, **Help & privacy**. No Remembers section: launch at login and in-app updates don't exist on iOS.
+- Same controls and copy as the Mac sections (segmented interval and appearance pickers, monospace custom hosts, notification status chip with text). The Checks helper explains that background checks run about every 15 minutes and iOS decides exactly when.
+- **View outage log** opens `OutageLogView` as a sheet.
+
+### Notifications
+
+- **Outage title** names the failing layer ("DNS is failing"); the body gives the evidence in one line ("Wi-Fi and router are fine. cloudflare.com isn't answering.").
+- **Restore title** is "Back online"; the body carries the duration ("DNS recovered after 3m 12s.").
+- No notifications for degraded states or wake blips; the same debounce rules as the Mac apply.
+
+### Type and touch
+
+- Every face scales with Dynamic Type (`Font.custom(_:size:relativeTo:)`) up to the accessibility sizes. At accessibility sizes, probe rows stack the label above the detail, and nothing truncates.
+- Every tappable row and control is at least 44×44pt. Screen margins are `spacing.md` (16pt), section padding 12pt, and the gap between home blocks is 20pt.
+
+### Motion
+
+- **The one authored moment:** on Check now or pull-to-refresh, the ladder's rungs resolve top to bottom in a 60ms stagger, with the checking rung pulsing in Probe Blue. You watch Foghorn test each layer.
+- One `.warning` haptic when the state becomes Outage while the app is in the foreground. No other haptics, and no celebratory success animation.
+- Respect Reduce Motion: show the rungs resolve without the stagger or pulse.
+
+### iPhone don'ts
+
+- Don't use a full-width prominent blue button on the healthy screen; blue is info, not a call to action.
+- Don't colour healthy probe details green; colour is reserved for failure.
+- Don't nest cards or stack a card per block.
+- Don't add Home Screen widgets or Live Activities until there is a design for them; they aren't part of this system yet.
 
 ## Decisions Log
 
@@ -222,3 +311,9 @@ Split into two bands with a divider:
 | 2026-08-03 | Not-determined notifications use Enable alerts | Explicit recovery in Settings beats “wait for next outage” when users open Interrupt to fix alerts. |
 | 2026-08-02 | Settings sections become tabs | One job per tab; shorter window; same four promise panels without stacking. |
 | 2026-08-03 | PATH/GATEWAY rows show interface and router evidence | Users need to confirm which NIC the default path uses; OSLog records path flips. |
+| 2026-10-08 | iPhone guidance added; file converted to the open DESIGN.md format | `/design-consultation` update: one shared system for both apps, with iPhone rules in their own section. The conversion kept every section and saved a `.legacy.bak` backup. |
+| 2026-10-08 | iPhone memorable thing: one glance tells you whether it's the network or your phone | The iPhone app is opened on purpose when something feels wrong, so it answers first and shows evidence second. |
+| 2026-10-08 | iPhone layer ladder is the home screen hero | Phone, Router, DNS, Internet with only the first failing rung lit gives the network-or-phone answer at a glance. |
+| 2026-10-08 | iPhone follows system appearance | Phone use scenes range from bright daylight to dark rooms; light tokens become first-class there. |
+| 2026-10-08 | iPhone Settings is a grouped list, not tabs | A tab bar inside a sheet fights iOS conventions; promise wording survives as section headers. |
+| 2026-10-08 | iPhone last outage stays 24 hours | Phone sessions are sparse; the Mac's 1-hour window would hide most background outages. |
