@@ -8,6 +8,16 @@ struct SettingsChecksSection: View {
     @Binding var customHostsExpanded: Bool
     let palette: DesignPalette
 
+    /// macOS backs off on battery (#155 tracks the wording); iOS can't keep a
+    /// foreground cadence in the background at all, so say what actually happens (#156).
+    private static var intervalHelper: String {
+        #if os(iOS)
+        "While Foghorn is open. In the background, iOS runs checks about every 15 minutes and decides exactly when."
+        #else
+        "Doubles on battery (max 8s)."
+        #endif
+    }
+
     var body: some View {
         SettingsSectionCard(tab: .checks, palette: palette) {
             VStack(alignment: .leading, spacing: 12) {
@@ -15,7 +25,7 @@ struct SettingsChecksSection: View {
                     SettingsOptionRow(
                         label: "Base interval",
                         palette: palette,
-                        helper: "Doubles on battery (max 8s)."
+                        helper: Self.intervalHelper
                     ) {
                         Picker("Base interval", selection: $settings.basePollInterval) {
                             Text("2s").tag(2.0)

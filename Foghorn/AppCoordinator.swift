@@ -87,8 +87,14 @@ final class AppCoordinator: ObservableObject {
 
     func refreshNow() {
         Task {
-            await probeEngine.runTickNow()
+            await refresh()
         }
+    }
+
+    /// Runs one probe tick and returns when it finishes, for pull-to-refresh and the
+    /// iPhone home screen's checking state (#156).
+    func refresh() async {
+        await probeEngine.runTickNow()
     }
 
     func quit() {

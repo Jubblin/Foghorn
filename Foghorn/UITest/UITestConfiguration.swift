@@ -12,6 +12,9 @@ enum UITestConfiguration {
     static let openOutageLogFlag = "-ui_testing_open_outage_log"
     static let notificationStatusFlag = "-ui_testing_notifications"
     static let menuBarFlag = "-ui_testing_menu_bar"
+    /// iPhone home screen state to render instead of live probes (#156): `healthy`,
+    /// `paused`, `checking`, or a `FailureReason` raw value such as `dnsFailure`.
+    static let mockStatusFlag = "-ui_testing_mock_status"
 
     static var isActive: Bool {
         ProcessInfo.processInfo.arguments.contains(uiTestingFlag)
@@ -68,6 +71,15 @@ enum UITestConfiguration {
 
     static var shouldOpenOutageLog: Bool {
         ProcessInfo.processInfo.arguments.contains(openOutageLogFlag)
+    }
+
+    static var mockStatus: String? {
+        guard isActive,
+              let index = ProcessInfo.processInfo.arguments.firstIndex(of: mockStatusFlag),
+              index + 1 < ProcessInfo.processInfo.arguments.count else {
+            return nil
+        }
+        return ProcessInfo.processInfo.arguments[index + 1]
     }
 
     static var mockNotificationAuthorization: NotificationAuthorizationDisplay? {
