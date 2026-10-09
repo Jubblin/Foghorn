@@ -16,7 +16,7 @@ require_cmd() {
 
 echo "== SwiftLint =="
 require_cmd swiftlint swiftlint
-swiftlint lint --quiet
+swiftlint lint --strict --quiet
 
 echo "== ShellCheck =="
 require_cmd shellcheck shellcheck
@@ -36,7 +36,9 @@ xcodebuild \
   CODE_SIGNING_ALLOWED=NO \
   build
 
-echo "== Test (xcodebuild test) =="
+# UI tests need a signed runner; unsigned local builds kill it before it
+# connects, so they run in CI only (#167).
+echo "== Test (xcodebuild test, unit tests) =="
 xcodebuild \
   -project Foghorn.xcodeproj \
   -scheme Foghorn \
@@ -45,6 +47,7 @@ xcodebuild \
   -destination 'platform=macOS' \
   CODE_SIGN_IDENTITY=- \
   CODE_SIGNING_ALLOWED=NO \
+  -skip-testing:FoghornUITests \
   test
 
 echo "Health stack passed."
