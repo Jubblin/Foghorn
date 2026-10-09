@@ -8,6 +8,6 @@ In QA mode, flag any code that does not match `DESIGN.md`.
 ## Health Stack
 
 - typecheck: xcodebuild -project Foghorn.xcodeproj -scheme Foghorn -configuration Debug -derivedDataPath build-health -destination 'platform=macOS' CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=NO build
-- lint: swiftlint lint --quiet
-- test: xcodebuild -project Foghorn.xcodeproj -scheme Foghorn -configuration Debug -derivedDataPath build-health -destination 'platform=macOS' CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=NO test
+- lint: swiftlint lint --strict --quiet
+- test: xcodebuild -project Foghorn.xcodeproj -scheme Foghorn -configuration Debug -derivedDataPath build-health -destination 'platform=macOS' CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=NO -skip-testing:FoghornUITests test
 - shell: shellcheck scripts/*.sh
