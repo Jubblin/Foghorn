@@ -136,6 +136,26 @@ jobs:
         env:
           NSUnbufferedIO: YES
 
+      # Fails only on dead code that isn't already in .periphery_baseline.json,
+      # so existing findings don't block PRs while they're triaged (#169). Kept
+      # in this job rather than its own: macOS jobs are capped at 5 (#92).
+      - name: Dead code (Periphery)
+        env:
+          PERIPHERY_VERSION: 3.8.0
+          PERIPHERY_SHA256: 07d4e286e31dd79164df39097e0b59f533c94badbe18158464a455ea88a166d7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o "$RUNNER_TEMP/periphery.zip" \
+            "https://github.com/peripheryapp/periphery/releases/download/${PERIPHERY_VERSION}/periphery-${PERIPHERY_VERSION}.zip"
+          echo "${PERIPHERY_SHA256}  $RUNNER_TEMP/periphery.zip" | shasum -a 256 -c -
+          unzip -q "$RUNNER_TEMP/periphery.zip" -d "$RUNNER_TEMP/periphery"
+          "$RUNNER_TEMP/periphery/periphery" scan \
+            --config .periphery.yml \
+            --disable-update-check \
+            --quiet \
+            --strict \
+            --baseline .periphery_baseline.json
+
   build:
     name: Build Release
     runs-on: macos-26
