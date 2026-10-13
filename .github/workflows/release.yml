@@ -44,6 +44,13 @@ jobs:
           chmod +x scripts/build-dmg.sh scripts/build-signed-dmg.sh scripts/package-dmg.sh scripts/ci-setup-keychain.sh scripts/resolve-release-arch.sh
           RELEASE_VERSION="${RELEASE_TAG#v}"
           export RELEASE_VERSION
+          # One password for the whole step: build-signed-dmg.sh runs once per arch
+          # as a child process, and the second run must unlock the keychain the
+          # first created. A per-run password left amd64 unsigned and the Sparkle
+          # feed unpublished (#172).
+          KEYCHAIN_PASSWORD="$(openssl rand -base64 32)"
+          echo "::add-mask::${KEYCHAIN_PASSWORD}"
+          export KEYCHAIN_PASSWORD
           SIGNED=true
           HAS_CERT=false
           if [[ -n "${DEVELOPER_ID_CERTIFICATE_P12:-}" || -n "${APPLE_CERTIFICATE_P12:-}" ]]; then

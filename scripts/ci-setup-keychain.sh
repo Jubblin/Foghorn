@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Import a PKCS#12 signing certificate into a temporary CI keychain.
 # Requires: CERTIFICATE_P12 (base64), P12_PASSWORD
-# Safe to source more than once in the same job (reuses the keychain).
+# Can run more than once per job (e.g. once per arch) only if the caller exports
+# the same KEYCHAIN_PASSWORD to every run; release.yml does (#172).
 set -euo pipefail
 
 if [[ -z "${CERTIFICATE_P12:-}" ]]; then
@@ -15,6 +16,11 @@ KEYCHAIN_PATH="${RUNNER_TEMP:-/tmp}/app-signing.keychain-db"
 CERT_PATH="${RUNNER_TEMP:-/tmp}/signing-cert.p12"
 
 if [[ -z "${KEYCHAIN_PASSWORD:-}" ]]; then
+  if [[ -f "$KEYCHAIN_PATH" ]]; then
+    echo "error: $KEYCHAIN_PATH already exists but KEYCHAIN_PASSWORD wasn't inherited;" \
+      "export one password for every run in this job (#172)" >&2
+    exit 1
+  fi
   KEYCHAIN_PASSWORD="$(openssl rand -base64 32)"
   export KEYCHAIN_PASSWORD
 fi
