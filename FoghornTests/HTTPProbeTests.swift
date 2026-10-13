@@ -1,5 +1,9 @@
 import XCTest
+#if os(iOS)
+@testable import FoghorniOS
+#else
 @testable import Foghorn
+#endif
 
 class MockURLProtocol: URLProtocol {
     static var handler: ((URLRequest) throws -> (HTTPURLResponse, Data))?

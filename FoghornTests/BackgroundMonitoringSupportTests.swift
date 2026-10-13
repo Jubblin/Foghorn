@@ -1,5 +1,9 @@
 import XCTest
+#if os(iOS)
+@testable import FoghorniOS
+#else
 @testable import Foghorn
+#endif
 
 final class LinkTransitionTests: XCTestCase {
     func testNoPreviousValueIsNeverATransition() {

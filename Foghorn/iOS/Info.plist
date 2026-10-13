@@ -10,6 +10,11 @@
 	<array>
 		<string>com.online.menu.ios.refresh</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Fonts/InstrumentSans.ttf</string>
+		<string>Fonts/JetBrainsMono.ttf</string>
+	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Foghorn checks whether your router is reachable to tell a router problem apart from an internet outage. It does not scan your network or identify other devices.</string>
 </dict>

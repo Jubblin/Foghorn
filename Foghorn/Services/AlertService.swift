@@ -106,12 +106,37 @@ final class AlertService: NSObject, ObservableObject {
 #endif
     }
 
+    /// Outage alerts name the failing layer in the title and give one line of plain
+    /// evidence in the body, so the lock screen answers "network or my device?" (#156).
+    static func outageText(reason: FailureReason?, title: String? = nil, host: String? = nil) -> (title: String, body: String) {
+        guard let reason else {
+            return ("Connection lost", "Foghorn couldn't confirm which layer failed.")
+        }
+        let body: String
+        switch reason {
+        case .noInterface:
+            body = "This device has no Wi-Fi, Ethernet or cellular connection."
+        case .routerUnreachable:
+            body = "This device is connected, but the router isn't answering."
+        case .dnsFailure:
+            body = "The connection and router are fine, but names aren't resolving."
+        case .ispOutage:
+            body = "The router is fine, but the internet isn't reachable."
+        case .captivePortalLikely:
+            body = "This network may need you to sign in before it lets traffic through."
+        case .customHostDown:
+            body = "The internet is fine, but this host isn't answering."
+        }
+        return (title ?? reason.message(host: host), body)
+    }
+
     func notifyOutage(record: OutageRecord) {
         guard isAuthorized else { return }
 
+        let text = Self.outageText(reason: record.reason, title: record.reasonDetail)
         let content = UNMutableNotificationContent()
-        content.title = "Connection lost"
-        content.body = record.reasonDetail
+        content.title = text.title
+        content.body = text.body
         content.sound = .default
 
         let request = UNNotificationRequest(
@@ -127,12 +152,13 @@ final class AlertService: NSObject, ObservableObject {
     /// no `OutageRecord` exists yet at this point, since the background monitor (#115)
     /// alerts directly off `PathProbe`/a probe-suite run rather than the full
     /// `ConnectivityStateMachine` pipeline the foreground app uses.
-    func notifyBackgroundConnectivityLost(reason: String) {
+    func notifyBackgroundConnectivityLost(reason: FailureReason?) {
         guard isAuthorized else { return }
 
+        let text = Self.outageText(reason: reason)
         let content = UNMutableNotificationContent()
-        content.title = "Connection lost"
-        content.body = reason
+        content.title = text.title
+        content.body = text.body
         content.sound = .default
 
         let request = UNNotificationRequest(

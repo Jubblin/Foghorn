@@ -1,6 +1,10 @@
 import XCTest
 import Network
+#if os(iOS)
+@testable import FoghorniOS
+#else
 @testable import Foghorn
+#endif
 
 private struct StubGatewayResolver: GatewayResolving {
     let gateway: String?
