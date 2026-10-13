@@ -129,6 +129,15 @@ final class AutomaticInstallTests: XCTestCase {
     }
 }
 
+/// The launch option that forces a scheduled-style update check (#180).
+final class CheckUpdatesNowTests: XCTestCase {
+    func testLaunchOptionIsRecognised() {
+        XCTAssertTrue(AppUpdateService.shouldCheckAtLaunch(arguments: ["Foghorn", "-check-updates-now"]))
+        XCTAssertFalse(AppUpdateService.shouldCheckAtLaunch(arguments: ["Foghorn", "-open-settings"]))
+        XCTAssertFalse(AppUpdateService.shouldCheckAtLaunch(arguments: []))
+    }
+}
+
 /// "Update ready" announcements (#176): once per downloaded version.
 final class UpdateReadyTests: XCTestCase {
     func testAnnouncesEachDownloadedVersionOnce() {
