@@ -13,7 +13,6 @@ enum AppLinks {
     static let support = URL(string: "https://github.com/Jubblin/Foghorn/issues")!
     static let reportIssue = URL(string: "https://github.com/Jubblin/Foghorn/issues/new/choose")!
     static let releases = URL(string: "https://github.com/Jubblin/Foghorn/releases")!
-    static let appcast = URL(string: "https://github.com/Jubblin/Foghorn/releases/download/sparkle-appcast/appcast.xml")!
     static let documentation = URL(string: "https://jubblin.github.io/Foghorn/")!
 
     static func openInBrowser(_ url: URL) {

@@ -42,10 +42,12 @@ final class AppUpdateService: NSObject, ObservableObject {
 
     /// Legacy GitHub client retained for unit-testable selection helpers / APP_STORE stub.
     private let client: GitHubReleaseClient
+    // periphery:ignore - Mac App Store build only (no Sparkle there); the Debug scan doesn't compile that path (#170)
     private let architecture: AppArchitecture
     private var automaticCheckTask: Task<Void, Never>?
 
     private static let automaticCheckInterval: TimeInterval = 24 * 60 * 60
+    // periphery:ignore - Mac App Store build only (no Sparkle there); the Debug scan doesn't compile that path (#170)
     private static let updateNotificationID = "foghorn.app-update.available"
     nonisolated private static let prereleaseChannel = "prerelease"
 
@@ -274,6 +276,7 @@ final class AppUpdateService: NSObject, ObservableObject {
     }
 #endif
 
+    // periphery:ignore - Mac App Store build only (no Sparkle there); the Debug scan doesn't compile that path (#170)
     @discardableResult
     private func checkForUpdatesUsingGitHub(userInitiated: Bool) async -> AppUpdateStatus {
         status = .checking
@@ -300,6 +303,7 @@ final class AppUpdateService: NSObject, ObservableObject {
         return status
     }
 
+    // periphery:ignore - Mac App Store build only (no Sparkle there); the Debug scan doesn't compile that path (#170)
     private func postUpdateNotification(for release: AppRelease) async {
         let settings = await notificationCenter.notificationSettings()
         guard settings.authorizationStatus == .authorized

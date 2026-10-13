@@ -136,9 +136,9 @@ jobs:
         env:
           NSUnbufferedIO: YES
 
-      # Fails only on dead code that isn't already in .periphery_baseline.json,
-      # so existing findings don't block PRs while they're triaged (#169). Kept
-      # in this job rather than its own: macOS jobs are capped at 5 (#92).
+      # Any unused code fails. False positives are annotated in source with
+      # `// periphery:ignore - <reason>` (#169, #170). Kept in this job rather than
+      # its own: macOS jobs are capped at 5 (#92).
       - name: Dead code (Periphery)
         env:
           PERIPHERY_VERSION: 3.8.0
@@ -153,8 +153,7 @@ jobs:
             --config .periphery.yml \
             --disable-update-check \
             --quiet \
-            --strict \
-            --baseline .periphery_baseline.json
+            --strict
 
   build:
     name: Build Release

@@ -8,35 +8,23 @@ import IOKit.ps
 @MainActor
 final class ProbeEngine: ObservableObject {
     @Published private(set) var latestSnapshot: ProbeSnapshot?
-    @Published private(set) var isRunning = false
 
     private let pathProbe = PathProbe()
     private var tickTask: Task<Void, Never>?
     private var onTick: ((ProbeSnapshot) -> Void)?
 
-    private var currentInterval: TimeInterval = 2.0
-
     func start(onTick: @escaping (ProbeSnapshot) -> Void) {
         guard tickTask == nil else { return }
         self.onTick = onTick
-        isRunning = true
-        currentInterval = AppSettings.shared.basePollInterval
 
         tickTask = Task { [weak self] in
             while !Task.isCancelled {
                 guard let self else { return }
                 await self.runTick()
                 let interval = await self.effectiveInterval()
-                self.currentInterval = interval
                 try? await Task.sleep(nanoseconds: UInt64(interval * 1_000_000_000))
             }
         }
-    }
-
-    func stop() {
-        tickTask?.cancel()
-        tickTask = nil
-        isRunning = false
     }
 
     func runTickNow() async {

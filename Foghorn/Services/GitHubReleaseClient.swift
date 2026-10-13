@@ -1,5 +1,6 @@
 import Foundation
 
+// periphery:ignore - Mac App Store build only (no Sparkle there); the Debug scan doesn't compile that path (#170)
 enum AppReleaseFetchError: Error, Equatable {
     case invalidResponse
     case httpStatus(Int)
@@ -10,6 +11,7 @@ struct GitHubReleaseClient: Sendable {
     var session: URLSession = .shared
     var releasesURL = URL(string: "https://api.github.com/repos/Jubblin/Foghorn/releases")!
 
+    // periphery:ignore - Mac App Store build only (no Sparkle there); the Debug scan doesn't compile that path (#170)
     func fetchReleases() async throws -> [AppRelease] {
         var request = URLRequest(url: releasesURL)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
@@ -36,6 +38,7 @@ struct GitHubReleaseClient: Sendable {
     }
 }
 
+// periphery:ignore - Mac App Store build only (no Sparkle there); the Debug scan doesn't compile that path (#170)
 private struct GitHubReleasePayload: Decodable {
     let tagName: String
     let name: String?

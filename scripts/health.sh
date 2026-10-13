@@ -50,7 +50,9 @@ xcodebuild \
   -skip-testing:FoghornUITests \
   test
 
-# Same gate as CI: fail only on dead code missing from the baseline (#169).
+# Same gate as CI: any unused code fails; annotate false positives in source (#169, #170).
+# --clean-build: Periphery's cached index goes stale across incremental builds and
+# reports phantom findings locally; CI always builds clean.
 # Optional locally so contributors without Periphery aren't blocked.
 echo "== Dead code (Periphery) =="
 if command -v periphery >/dev/null 2>&1; then
@@ -59,7 +61,7 @@ if command -v periphery >/dev/null 2>&1; then
     --disable-update-check \
     --quiet \
     --strict \
-    --baseline .periphery_baseline.json
+    --clean-build
 else
   echo "warning: periphery not installed (brew install periphery); skipping dead-code check" >&2
 fi

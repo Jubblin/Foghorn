@@ -23,15 +23,6 @@ enum ConnectivityState: String, Equatable {
     var menuBarSymbol: String {
         "circle.fill"
     }
-
-    var showsAlert: Bool {
-        switch self {
-        case .outage:
-            return true
-        case .healthy, .degraded, .recovering:
-            return false
-        }
-    }
 }
 
 struct ConnectivityStatus: Equatable {

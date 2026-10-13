@@ -77,14 +77,6 @@ final class AppCoordinator: ObservableObject {
         updatePresentation()
     }
 
-    func stop() {
-        probeEngine.stop()
-        wakeObserver.stop()
-        #if canImport(AppKit)
-        AppUpdateService.shared.stopAutomaticChecks()
-        #endif
-    }
-
     func refreshNow() {
         Task {
             await refresh()

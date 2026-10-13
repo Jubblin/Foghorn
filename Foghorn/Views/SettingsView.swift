@@ -10,7 +10,9 @@ struct SettingsView: View {
     @ObservedObject private var settings = AppSettings.shared
     @ObservedObject private var alertService = AlertService.shared
     @State private var selectedTab: SettingsTab = .interrupt
+    // periphery:ignore - used only through its $binding, which Periphery doesn't count (#170)
     @State private var newHost = ""
+    // periphery:ignore - used only through its $binding, which Periphery doesn't count (#170)
     @State private var launchError: String?
     @State private var customHostsExpanded = UITestConfiguration.isActive
     @State private var paneHeights: [SettingsTab: CGFloat] = [:]
