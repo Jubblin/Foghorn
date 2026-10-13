@@ -48,12 +48,15 @@ Run on a **Release** build before tagging a GitHub release or uploading to TestF
 
 Needs a Developer ID copy one build behind the newest feed item (Sparkle only offers a higher `CFBundleVersion`). For pre-release builds, turn on **Include pre-release updates** first.
 
+A manual **Check for Updates…** is a user-initiated check, so Sparkle always shows its update window for it, even with automatic installs on. Silent installs apply to *scheduled* checks, which run about every 24 hours. To run one now, quit Foghorn and launch it with `open -a Foghorn --args -check-updates-now` (#180).
+
 - [ ] Live feed lists the release: `curl -fsSL https://github.com/Jubblin/Foghorn/releases/download/sparkle-appcast/appcast.xml` shows the new `sparkle:version`
-- [ ] With **Install updates automatically** on, **Check for Updates…** downloads in the background with no Sparkle prompt
+- [ ] With **Install updates automatically** on, `open -a Foghorn --args -check-updates-now` downloads the update with no Sparkle window
+- [ ] A manual **Check for Updates…** shows Sparkle's "A new version is available" window (by design)
 - [ ] Exactly one **"Foghorn &lt;version&gt; is ready"** notification appears, with **Restart Now** / **Later**
 - [ ] **Restart Now** (notification or Settings → Remembers) installs and relaunches on the new version
 - [ ] **Later** leaves the update waiting; quitting Foghorn installs it, and the next launch shows the new version
-- [ ] With **Install updates automatically** off, Sparkle's standard "A new version is available" prompt appears instead
+- [ ] With **Install updates automatically** off, the same launch option shows Sparkle's "A new version is available" window instead (Foghorn is a background app, so it may open behind other windows)
 
 ## App Store metadata (first submission)
 

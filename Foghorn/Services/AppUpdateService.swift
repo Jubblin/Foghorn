@@ -30,6 +30,8 @@ final class AppUpdateService: NSObject, ObservableObject {
     private var installNow: (() -> Void)?
     /// The version already announced, so each download notifies once.
     private var announcedReadyVersion: String?
+    /// The launch-time forced check runs once per process, not on every toggle (#180).
+    private var didForceLaunchCheck = false
 
     private let currentVersionProvider: () -> String
     private let notificationCenter: UNUserNotificationCenter
@@ -82,6 +84,15 @@ final class AppUpdateService: NSObject, ObservableObject {
         applyPreferencesToUpdater(updater)
         do {
             try updater.start()
+            // Sparkle's documented way to force a check at launch: right after start, and
+            // only while automatic checks are on. Unlike Check for Updates…, this is a
+            // scheduled-style check, so it honours silent installs (#180).
+            if !didForceLaunchCheck,
+               Self.shouldCheckAtLaunch(arguments: ProcessInfo.processInfo.arguments),
+               updater.automaticallyChecksForUpdates {
+                didForceLaunchCheck = true
+                updater.checkForUpdatesInBackground()
+            }
         } catch {
             status = .failed(error.localizedDescription)
         }
@@ -106,6 +117,12 @@ final class AppUpdateService: NSObject, ObservableObject {
 #if canImport(Sparkle) && !APP_STORE
         updaterController?.updater.automaticallyChecksForUpdates = false
 #endif
+    }
+
+    /// `open -a Foghorn --args -check-updates-now` runs a scheduled-style check at launch, so
+    /// silent installs can be tested without waiting for the daily check (#180).
+    nonisolated static func shouldCheckAtLaunch(arguments: [String]) -> Bool {
+        arguments.contains("-check-updates-now")
     }
 
     /// Silent installs only make sense while Foghorn is checking on its own.
