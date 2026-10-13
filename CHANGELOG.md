@@ -9,13 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **iPhone app.** Foghorn now runs on iOS 17+. Its home screen leads with a verdict and a Phone → Router → DNS → Internet ladder that lights only the failing layer. Evidence folds away while the connection is healthy, and the last outage stays for 24 hours. It also has pull-to-refresh and Settings for checks, alerts and help ([#113](https://github.com/Jubblin/Foghorn/issues/113), [#156](https://github.com/Jubblin/Foghorn/issues/156), [#139](https://github.com/Jubblin/Foghorn/issues/139), [#141](https://github.com/Jubblin/Foghorn/issues/141), [#142](https://github.com/Jubblin/Foghorn/issues/142))
+- iPhone background monitoring: instant alerts when the network link drops, plus a deep check that iOS schedules roughly every 15 minutes. A "Monitoring paused" banner explains when iOS stopped Foghorn in the background ([#116](https://github.com/Jubblin/Foghorn/issues/116))
+- **Updates install automatically** on Developer ID Macs: they download in the background and install when you quit Foghorn. Turn this off in Settings → Remembers → "Install updates automatically" ([#172](https://github.com/Jubblin/Foghorn/issues/172))
+- Bundled Instrument Sans and JetBrains Mono fonts on Mac and iPhone, so status text and probe rows look the same everywhere ([#117](https://github.com/Jubblin/Foghorn/issues/117), [#153](https://github.com/Jubblin/Foghorn/issues/153))
+
 ### Changed
 
+- Outage notifications name the failing layer ("DNS is failing") and add one plain line of evidence ([#156](https://github.com/Jubblin/Foghorn/issues/156))
+- The menu bar popover stays quiet once the connection settles: probe rows fold away after five minutes, and a recovered outage drops off after an hour. Both return immediately when something fails ([#106](https://github.com/Jubblin/Foghorn/issues/106), [#105](https://github.com/Jubblin/Foghorn/issues/105))
+- Settings → Remembers now holds standing behaviour (launch at login, updates), and Help holds the outage log beside version and build ([#96](https://github.com/Jubblin/Foghorn/issues/96), [#97](https://github.com/Jubblin/Foghorn/issues/97))
+- The Settings window resizes to fit each tab ([#77](https://github.com/Jubblin/Foghorn/issues/77))
+- The Checks battery helper describes what actually happens: 2s→4s, 5s→7.5s, 10s and 30s→8s ([#155](https://github.com/Jubblin/Foghorn/issues/155))
+- The Help text says how each build updates: appcast for Developer ID, App Store for Mac App Store builds, nothing on iPhone ([#163](https://github.com/Jubblin/Foghorn/issues/163))
+
 ### Fixed
+
+- **Mac in-app updates were stuck at 0.7.1.** The Intel release build couldn't unlock the signing keychain, so releases since September were published unsigned and never reached the update feed ([#172](https://github.com/Jubblin/Foghorn/issues/172))
+- Launch at login survives an app update instead of silently switching off ([#101](https://github.com/Jubblin/Foghorn/issues/101))
+- "View outage log…" opens one window, not two ([#95](https://github.com/Jubblin/Foghorn/issues/95))
+- Path probe details show why the network is unavailable instead of a raw system value ([#72](https://github.com/Jubblin/Foghorn/issues/72))
+- The iPhone app now ships its privacy manifest, which App Store review requires ([#154](https://github.com/Jubblin/Foghorn/issues/154))
 
 ### Removed
 
 - Duplicate "View outage log…" and "Reveal log file in Finder" entries from the menu bar popover; both remain in Settings, which DESIGN.md defines as their canonical home ([#76](https://github.com/Jubblin/Foghorn/issues/76))
+- The duplicate "Check for Updates" row from the menu bar popover; it remains in Settings ([#80](https://github.com/Jubblin/Foghorn/issues/80))
 
 ## [0.5.0] - 2026-08-28
 
