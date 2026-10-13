@@ -188,6 +188,7 @@ Two bands with a divider: what the app does on its own, without being asked.
 
 **Updates**
 - **Check for updates automatically** — Toggle (default on).
+- **Install updates automatically** — Toggle (default on), disabled while checks are off. Helper: "Downloads in the background and installs when you quit Foghorn." Developer ID builds only; hidden in App Store builds.
 - **Include pre-release updates** — Toggle (default off).
 - Short helper (official vs prerelease channel).
 - **Check for Updates…** / **Install Update…** — Sparkle presents install UI for Developer ID builds; App Store builds notify and open Releases.
@@ -318,3 +319,4 @@ No stacked floating cards: the verdict is the one surface; Evidence and Last out
 | 2026-10-08 | iPhone Settings is a grouped list, not tabs | A tab bar inside a sheet fights iOS conventions; promise wording survives as section headers. |
 | 2026-10-08 | iPhone last outage stays 24 hours | Phone sessions are sparse; the Mac's 1-hour window would hide most background outages. |
 | 2026-10-08 | Battery helper states the real mapping | The old helper promised doubling, but 10s and 30s run at 8s on battery. Kept the behaviour and fixed the words (#155). |
+| 2026-10-13 | Updates install silently by default | The Sparkle feed had been stuck since September; the first update in a month should just arrive. Remembers gains an "Install updates automatically" toggle (default on) so people can go back to being asked (#172). |

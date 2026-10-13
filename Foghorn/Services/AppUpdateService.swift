@@ -101,6 +101,11 @@ final class AppUpdateService: NSObject, ObservableObject {
 #endif
     }
 
+    /// Silent installs only make sense while Foghorn is checking on its own.
+    nonisolated static func installsUpdatesSilently(checksAutomatically: Bool, installAutomatically: Bool) -> Bool {
+        checksAutomatically && installAutomatically
+    }
+
     func applyChannelPreferences() {
 #if canImport(Sparkle) && !APP_STORE
         guard let updater = updaterController?.updater else { return }
@@ -207,6 +212,12 @@ final class AppUpdateService: NSObject, ObservableObject {
 #if canImport(Sparkle) && !APP_STORE
     private func applyPreferencesToUpdater(_ updater: SPUUpdater) {
         updater.automaticallyChecksForUpdates = AppSettings.shared.automaticUpdatesEnabled
+        // Set every time, not only via Info.plist's SUAutomaticallyUpdate, so installs
+        // that started with Sparkle's old "ask first" default follow the app setting (#172).
+        updater.automaticallyDownloadsUpdates = Self.installsUpdatesSilently(
+            checksAutomatically: AppSettings.shared.automaticUpdatesEnabled,
+            installAutomatically: AppSettings.shared.automaticallyInstallUpdates
+        )
         updater.updateCheckInterval = Self.automaticCheckInterval
         // Channel filtering is via SPUUpdaterDelegate.allowedChannels(for:).
     }
