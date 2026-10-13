@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+## [0.7.21] - 2026-10-13
+
+### Added
+
 - **iPhone app.** Foghorn now runs on iOS 17+. Its home screen leads with a verdict and a Phone → Router → DNS → Internet ladder that lights only the failing layer. Evidence folds away while the connection is healthy, and the last outage stays for 24 hours. It also has pull-to-refresh and Settings for checks, alerts and help ([#113](https://github.com/Jubblin/Foghorn/issues/113), [#156](https://github.com/Jubblin/Foghorn/issues/156), [#139](https://github.com/Jubblin/Foghorn/issues/139), [#141](https://github.com/Jubblin/Foghorn/issues/141), [#142](https://github.com/Jubblin/Foghorn/issues/142))
 - iPhone background monitoring: instant alerts when the network link drops, plus a deep check that iOS schedules roughly every 15 minutes. A "Monitoring paused" banner explains when iOS stopped Foghorn in the background ([#116](https://github.com/Jubblin/Foghorn/issues/116))
 - **Updates install automatically** on Developer ID Macs: they download in the background and install when you quit Foghorn. Turn this off in Settings → Remembers → "Install updates automatically" ([#172](https://github.com/Jubblin/Foghorn/issues/172))
@@ -35,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Duplicate "View outage log…" and "Reveal log file in Finder" entries from the menu bar popover; both remain in Settings, which DESIGN.md defines as their canonical home ([#76](https://github.com/Jubblin/Foghorn/issues/76))
 - The duplicate "Check for Updates" row from the menu bar popover; it remains in Settings ([#80](https://github.com/Jubblin/Foghorn/issues/80))
+
 
 ## [0.5.0] - 2026-08-28
 
