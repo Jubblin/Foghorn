@@ -55,10 +55,6 @@ enum LaunchAtLoginService {
         #endif
     }
 
-    static var isEnabled: Bool {
-        status == .enabled
-    }
-
     /// Re-registers when the stored preference says on but macOS has dropped the
     /// registration — what an in-place update does (#101). Losing the registration
     /// is not the user changing their mind, so it is repaired rather than recorded.

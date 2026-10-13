@@ -46,7 +46,7 @@ final class ConnectivityStateMachine: ObservableObject {
         }
 
         if snapshot.isFullyHealthy {
-            handleHealthy(snapshot: snapshot)
+            handleHealthy()
         } else if snapshot.isCriticalFailure {
             handleCriticalFailure(snapshot: snapshot)
         } else {
@@ -62,7 +62,7 @@ final class ConnectivityStateMachine: ObservableObject {
         onStateChanged?(status)
     }
 
-    private func handleHealthy(snapshot: ProbeSnapshot) {
+    private func handleHealthy() {
         consecutiveCriticalFailures = 0
         unhealthySince = nil
         degradedSince = nil

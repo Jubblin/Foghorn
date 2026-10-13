@@ -23,9 +23,4 @@ final class WakeObserver: ObservableObject {
         cancellable = nil
 #endif
     }
-
-    func stop() {
-        cancellable?.cancel()
-        cancellable = nil
-    }
 }

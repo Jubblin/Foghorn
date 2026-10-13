@@ -16,6 +16,7 @@ struct IOSSettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var settings = AppSettings.shared
     @ObservedObject private var alertService = AlertService.shared
+    // periphery:ignore - used only through its $binding, which Periphery doesn't count (#170)
     @State private var newHost = ""
     @State private var customHostsExpanded = false
     @State private var showOutageLog = false

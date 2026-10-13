@@ -20,9 +20,12 @@ struct AppReleaseAsset: Equatable {
 
 struct AppRelease: Equatable {
     let tagName: String
+    // periphery:ignore - release metadata kept on the model; set from Sparkle and GitHub, not yet shown in the UI (#170)
     let name: String?
+    // periphery:ignore - read only by the Mac App Store path (#170)
     let htmlURL: URL
     let isPrerelease: Bool
+    // periphery:ignore - release metadata kept on the model; set from Sparkle and GitHub, not yet shown in the UI (#170)
     let publishedAt: Date?
     let assets: [AppReleaseAsset]
 

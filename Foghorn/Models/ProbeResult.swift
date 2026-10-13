@@ -72,10 +72,6 @@ struct ProbeSnapshot: Equatable {
         !pathSatisfied || !allHTTPOK
     }
 
-    var isPartialFailure: Bool {
-        !isFullyHealthy && !isCriticalFailure
-    }
-
     func failureReason() -> FailureReason? {
         if isFullyHealthy { return nil }
 

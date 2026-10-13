@@ -179,6 +179,7 @@ final class StatusItemController: NSObject, ObservableObject {
         return hosting
     }
 
+    // periphery:ignore:parameters sender - the signature an @objc selector action requires (#170)
     @objc
     private func togglePopover(_ sender: Any?) {
         guard AppSettings.shared.showInMenuBar else { return }

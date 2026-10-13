@@ -13,3 +13,6 @@ retain_swift_ui_previews: true
 retain_codable_properties: true
 retain_objc_accessible: true
 relative_results: true
+# Annotations that are needed under one Xcode but superfluous under another (CI runs 26.6, some dev
+# machines run newer) must not fail the gate (#170).
+superfluous_ignore_comments: false
