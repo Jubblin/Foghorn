@@ -14,6 +14,8 @@ enum AppUpdateStatus: Equatable {
     case checking
     case upToDate(current: String)
     case available(AppRelease)
+    /// Downloaded in the background and waiting; installs on quit or via Restart Now (#176).
+    case readyToInstall(version: String)
     case failed(String)
 }
 
@@ -23,6 +25,11 @@ final class AppUpdateService: NSObject, ObservableObject {
 
     @Published private(set) var status: AppUpdateStatus = .idle
     @Published private(set) var lastCheckedAt: Date?
+
+    /// Sparkle's install-and-relaunch handler for a downloaded update (#176).
+    private var installNow: (() -> Void)?
+    /// The version already announced, so each download notifies once.
+    private var announcedReadyVersion: String?
 
     private let currentVersionProvider: () -> String
     private let notificationCenter: UNUserNotificationCenter
@@ -138,6 +145,31 @@ final class AppUpdateService: NSObject, ObservableObject {
 #endif
     }
 
+    /// True when a downloaded update is waiting and Restart Now can install it.
+    var canRestartToInstall: Bool {
+        installNow != nil
+    }
+
+    /// Install the downloaded update and relaunch (Restart Now, #176).
+    func restartToInstall() {
+        let install = installNow
+        installNow = nil
+        install?()
+    }
+
+    /// Announce each downloaded version once, however often Sparkle reports it.
+    nonisolated static func shouldAnnounceReady(version: String, alreadyAnnounced: String?) -> Bool {
+        version != alreadyAnnounced
+    }
+
+    fileprivate func updateReadyToInstall(version: String, install: @escaping () -> Void) {
+        installNow = install
+        status = .readyToInstall(version: version)
+        guard Self.shouldAnnounceReady(version: version, alreadyAnnounced: announcedReadyVersion) else { return }
+        announcedReadyVersion = version
+        AlertService.shared.notifyUpdateReady(version: version)
+    }
+
     func openAvailableUpdate() {
 #if canImport(Sparkle) && !APP_STORE
         updaterController?.checkForUpdates(nil)
@@ -168,7 +200,7 @@ final class AppUpdateService: NSObject, ObservableObject {
             if alert.runModal() == .alertFirstButtonReturn {
                 openAvailableUpdate()
             }
-        case .upToDate, .checking, .idle:
+        case .upToDate, .checking, .idle, .readyToInstall:
             let alert = NSAlert()
             alert.messageText = "You're up to date"
             alert.informativeText = statusSummary
@@ -204,6 +236,8 @@ final class AppUpdateService: NSObject, ObservableObject {
             return "Foghorn \(current) is up to date."
         case .available(let release):
             return "Foghorn \(Self.labeledVersion(release)) is available (you have \(currentVersionProvider()))."
+        case .readyToInstall(let version):
+            return "Foghorn \(version) is ready to install."
         case .failed(let message):
             return message
         }
@@ -312,6 +346,21 @@ extension AppUpdateService: SPUUpdaterDelegate {
             )
             status = .available(release)
         }
+    }
+
+    /// With automatic downloads on, Sparkle would wait silently for quit. Take over
+    /// so Foghorn can offer Restart Now; declining still installs on quit (#176).
+    nonisolated func updater(
+        _ updater: SPUUpdater,
+        willInstallUpdateOnQuit item: SUAppcastItem,
+        immediateInstallationBlock immediateInstallHandler: @escaping () -> Void
+    ) -> Bool {
+        _ = updater
+        let version = item.displayVersionString
+        Task { @MainActor in
+            updateReadyToInstall(version: version, install: immediateInstallHandler)
+        }
+        return true
     }
 
     nonisolated func updaterDidNotFindUpdate(_ updater: SPUUpdater, error: any Error) {

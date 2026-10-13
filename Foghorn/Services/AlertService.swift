@@ -50,6 +50,7 @@ final class AlertService: NSObject, ObservableObject {
 
         let center = UNUserNotificationCenter.current()
         center.delegate = self
+        center.setNotificationCategories(Self.categories)
 
         let settings = await center.notificationSettings()
         switch settings.authorizationStatus {
@@ -71,6 +72,7 @@ final class AlertService: NSObject, ObservableObject {
     func requestAuthorizationIfNeeded() async {
         let center = UNUserNotificationCenter.current()
         center.delegate = self
+        center.setNotificationCategories(Self.categories)
 
         let settings = await center.notificationSettings()
         switch settings.authorizationStatus {
@@ -187,6 +189,34 @@ final class AlertService: NSObject, ObservableObject {
         UNUserNotificationCenter.current().add(request)
     }
 
+    static let updateReadyCategory = "update-ready"
+    static let restartNowAction = "restart-now"
+
+    /// "Update ready" offers Restart Now / Later (#176); Later just dismisses, and the
+    /// update still installs the next time Foghorn quits.
+    private static var categories: Set<UNNotificationCategory> {
+        let restart = UNNotificationAction(identifier: restartNowAction, title: "Restart Now", options: [.foreground])
+        let later = UNNotificationAction(identifier: "later", title: "Later", options: [])
+        return [UNNotificationCategory(identifier: updateReadyCategory, actions: [restart, later], intentIdentifiers: [])]
+    }
+
+    func notifyUpdateReady(version: String) {
+        guard isAuthorized else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = "Foghorn \(version) is ready"
+        content.body = "Restart now to finish updating, or it installs next time Foghorn quits."
+        content.categoryIdentifier = Self.updateReadyCategory
+
+        let request = UNNotificationRequest(
+            identifier: "update-ready-\(version)",
+            content: content,
+            trigger: nil
+        )
+
+        UNUserNotificationCenter.current().add(request)
+    }
+
     func notifyRestored(duration: TimeInterval) {
         guard isAuthorized else { return }
 
@@ -220,5 +250,15 @@ extension AlertService: UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         [.banner, .sound]
+    }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse
+    ) async {
+        guard response.actionIdentifier == Self.restartNowAction else { return }
+        #if canImport(AppKit)
+        await MainActor.run { AppUpdateService.shared.restartToInstall() }
+        #endif
     }
 }

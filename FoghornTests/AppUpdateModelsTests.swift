@@ -128,3 +128,18 @@ final class AutomaticInstallTests: XCTestCase {
         XCTAssertEqual(Bundle.main.object(forInfoDictionaryKey: "SUAutomaticallyUpdate") as? Bool, true)
     }
 }
+
+/// "Update ready" announcements (#176): once per downloaded version.
+final class UpdateReadyTests: XCTestCase {
+    func testAnnouncesEachDownloadedVersionOnce() {
+        XCTAssertTrue(AppUpdateService.shouldAnnounceReady(version: "0.7.22", alreadyAnnounced: nil))
+        XCTAssertFalse(AppUpdateService.shouldAnnounceReady(version: "0.7.22", alreadyAnnounced: "0.7.22"))
+        XCTAssertTrue(AppUpdateService.shouldAnnounceReady(version: "0.7.23", alreadyAnnounced: "0.7.22"))
+    }
+
+    @MainActor func testRestartNowIsUnavailableWithoutADownload() {
+        XCTAssertFalse(AppUpdateService.shared.canRestartToInstall)
+        AppUpdateService.shared.restartToInstall()
+        XCTAssertFalse(AppUpdateService.shared.canRestartToInstall)
+    }
+}

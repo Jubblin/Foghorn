@@ -285,6 +285,14 @@ private struct SettingsRemembersSection: View {
                             }
                             .accessibilityIdentifier("settings.downloadUpdate")
                         }
+
+                        // Downloaded in the background and waiting for a quit (#176).
+                        if case .readyToInstall = updateService.status, updateService.canRestartToInstall {
+                            Button("Restart Now") {
+                                updateService.restartToInstall()
+                            }
+                            .accessibilityIdentifier("settings.restartToUpdate")
+                        }
                     }
 
                     SettingsHelperText(text: updateService.statusSummary, palette: palette)
