@@ -44,6 +44,17 @@ Run on a **Release** build before tagging a GitHub release or uploading to TestF
 - [ ] **TestFlight** — install succeeds; same version as GitHub tag
 - [ ] Release notes match CHANGELOG section for the version
 
+## In-app updates (manual, Developer ID install, #172 / #176)
+
+Needs a Developer ID copy one build behind the newest feed item (Sparkle only offers a higher `CFBundleVersion`). For pre-release builds, turn on **Include pre-release updates** first.
+
+- [ ] Live feed lists the release: `curl -fsSL https://github.com/Jubblin/Foghorn/releases/download/sparkle-appcast/appcast.xml` shows the new `sparkle:version`
+- [ ] With **Install updates automatically** on, **Check for Updates…** downloads in the background with no Sparkle prompt
+- [ ] Exactly one **"Foghorn &lt;version&gt; is ready"** notification appears, with **Restart Now** / **Later**
+- [ ] **Restart Now** (notification or Settings → Remembers) installs and relaunches on the new version
+- [ ] **Later** leaves the update waiting; quitting Foghorn installs it, and the next launch shows the new version
+- [ ] With **Install updates automatically** off, Sparkle's standard "A new version is available" prompt appears instead
+
 ## App Store metadata (first submission)
 
 - [ ] Privacy policy URL live (HTTPS)
