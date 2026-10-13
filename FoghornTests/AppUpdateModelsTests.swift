@@ -113,3 +113,18 @@ final class AppUpdateModelsTests: XCTestCase {
         ]
     }
 }
+
+/// Silent Sparkle installs (#172): on by default, and only while automatic checks are on.
+final class AutomaticInstallTests: XCTestCase {
+    func testSilentInstallRequiresBothToggles() {
+        XCTAssertTrue(AppUpdateService.installsUpdatesSilently(checksAutomatically: true, installAutomatically: true))
+        XCTAssertFalse(AppUpdateService.installsUpdatesSilently(checksAutomatically: true, installAutomatically: false))
+        XCTAssertFalse(AppUpdateService.installsUpdatesSilently(checksAutomatically: false, installAutomatically: true))
+        XCTAssertFalse(AppUpdateService.installsUpdatesSilently(checksAutomatically: false, installAutomatically: false))
+    }
+
+    /// Sparkle reads this for fresh installs before Foghorn applies its own setting.
+    func testInfoPlistDefaultsToAutomaticInstall() {
+        XCTAssertEqual(Bundle.main.object(forInfoDictionaryKey: "SUAutomaticallyUpdate") as? Bool, true)
+    }
+}

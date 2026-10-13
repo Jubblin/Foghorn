@@ -84,6 +84,8 @@ final class SettingsSmokeTests: XCTestCase {
 
         // Updates share the tab with launch-at-login: both are standing behaviour (#96).
         XCTAssertTrue(element(identifier: "settings.automaticUpdates").exists)
+        // Silent Sparkle installs, on by default (#172).
+        XCTAssertTrue(element(identifier: "settings.automaticallyInstallUpdates").exists)
     }
 
     // MARK: - T3

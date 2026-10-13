@@ -16,6 +16,7 @@ final class AppSettings: ObservableObject {
         static let appearancePreference = "appearancePreference"
         static let automaticUpdatesEnabled = "automaticUpdatesEnabled"
         static let includePrereleaseUpdates = "includePrereleaseUpdates"
+        static let automaticallyInstallUpdates = "automaticallyInstallUpdates"
     }
 
     @Published var customHosts: [String] {
@@ -69,6 +70,18 @@ final class AppSettings: ObservableObject {
         }
     }
 
+    /// When true (default), Sparkle downloads updates in the background and installs
+    /// them on the next quit without a prompt (Developer ID builds only, #172).
+    @Published var automaticallyInstallUpdates: Bool {
+        didSet {
+            UITestConfiguration.defaults.set(automaticallyInstallUpdates, forKey: Keys.automaticallyInstallUpdates)
+            guard !isRestoringDefaults else { return }
+            #if canImport(AppKit)
+            AppUpdateService.shared.applyChannelPreferences()
+            #endif
+        }
+    }
+
     private var isRestoringDefaults = true
 
     private init() {
@@ -96,6 +109,11 @@ final class AppSettings: ObservableObject {
         }
 
         includePrereleaseUpdates = UITestConfiguration.defaults.bool(forKey: Keys.includePrereleaseUpdates)
+        if UITestConfiguration.defaults.object(forKey: Keys.automaticallyInstallUpdates) == nil {
+            automaticallyInstallUpdates = true
+        } else {
+            automaticallyInstallUpdates = UITestConfiguration.defaults.bool(forKey: Keys.automaticallyInstallUpdates)
+        }
         isRestoringDefaults = false
         // Do not touch NSApp.appearance here — XCTest host bootstrap crashes if we
         // mutate appearance before the application finishes launching.
