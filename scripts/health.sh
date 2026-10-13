@@ -50,4 +50,18 @@ xcodebuild \
   -skip-testing:FoghornUITests \
   test
 
+# Same gate as CI: fail only on dead code missing from the baseline (#169).
+# Optional locally so contributors without Periphery aren't blocked.
+echo "== Dead code (Periphery) =="
+if command -v periphery >/dev/null 2>&1; then
+  periphery scan \
+    --config .periphery.yml \
+    --disable-update-check \
+    --quiet \
+    --strict \
+    --baseline .periphery_baseline.json
+else
+  echo "warning: periphery not installed (brew install periphery); skipping dead-code check" >&2
+fi
+
 echo "Health stack passed."

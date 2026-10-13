@@ -11,3 +11,4 @@ In QA mode, flag any code that does not match `DESIGN.md`.
 - lint: swiftlint lint --strict --quiet
 - test: xcodebuild -project Foghorn.xcodeproj -scheme Foghorn -configuration Debug -derivedDataPath build-health -destination 'platform=macOS' CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=NO -skip-testing:FoghornUITests test
 - shell: shellcheck scripts/*.sh
+- deadcode: periphery scan --config .periphery.yml --disable-update-check --quiet

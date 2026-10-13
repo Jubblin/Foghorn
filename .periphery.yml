@@ -1,0 +1,15 @@
+project: Foghorn.xcodeproj
+schemes:
+  - Foghorn
+  - FoghorniOS
+# Unsigned builds, matching the Health Stack and CI (#169).
+build_arguments:
+  - -configuration
+  - Debug
+  - CODE_SIGN_IDENTITY=-
+  - CODE_SIGNING_ALLOWED=NO
+# Known false-positive patterns for this app.
+retain_swift_ui_previews: true
+retain_codable_properties: true
+retain_objc_accessible: true
+relative_results: true
