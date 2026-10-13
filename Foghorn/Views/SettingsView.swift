@@ -246,6 +246,17 @@ private struct SettingsRemembersSection: View {
                     Toggle("Check for updates automatically", isOn: $settings.automaticUpdatesEnabled)
                         .accessibilityIdentifier("settings.automaticUpdates")
 
+                    #if !APP_STORE
+                    // Sparkle-only: App Store builds update through the store (#172).
+                    Toggle("Install updates automatically", isOn: $settings.automaticallyInstallUpdates)
+                        .disabled(!settings.automaticUpdatesEnabled)
+                        .accessibilityIdentifier("settings.automaticallyInstallUpdates")
+                    SettingsHelperText(
+                        text: "Downloads in the background and installs when you quit Foghorn.",
+                        palette: palette
+                    )
+                    #endif
+
                     Toggle("Include pre-release updates", isOn: $settings.includePrereleaseUpdates)
                         .accessibilityIdentifier("settings.includePrereleaseUpdates")
 
