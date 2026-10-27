@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+## [0.8.5] - 2026-10-27
+
+### Added
+
 - **Restart Now for downloaded updates.** On Developer ID Macs, once an update has downloaded in the background Foghorn shows one "Foghorn x.y is ready" notification with Restart Now and Later. Settings → Remembers also gets a Restart Now button beside Check for Updates…. Later, or ignoring it, still installs the update the next time Foghorn quits ([#177](https://github.com/Jubblin/Foghorn/pull/177))
 - `-check-updates-now` launch option that runs a background update check straight away, so the silent-install path can be tested on demand ([#181](https://github.com/Jubblin/Foghorn/pull/181))
 
@@ -19,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Removed
+
 
 ## [0.7.21] - 2026-10-13
 
